@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.topic_trove.ui.global_widgets.CommunityHeader
+import com.topic_trove.ui.global_widgets.CommunityTitle
 import com.topic_trove.ui.theme.TopicTroveTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +24,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    CommunityTitle(
+                        name= "community2",
+
+                    )
                 }
             }
         }
@@ -41,6 +46,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     TopicTroveTheme {
-        Greeting("Android")
+        CommunityTitle()
     }
 }
