@@ -1,6 +1,7 @@
 package com.topic_trove
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +25,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CommunityTitle(
-                        name= "community2",
-
-                    )
+                    CommunityTitle(){
+                        println(it)
+                    }
                 }
             }
         }
@@ -46,6 +46,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     TopicTroveTheme {
-        CommunityTitle()
+        CommunityTitle(){
+
+        }
     }
 }

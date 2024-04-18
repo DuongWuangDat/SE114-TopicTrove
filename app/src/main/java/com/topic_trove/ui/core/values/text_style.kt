@@ -20,8 +20,8 @@ class CustomTextStyle {
             return TextStyle(color = Color.Black, fontSize = 10.sp, fontWeight = FontWeight(300))
         }
 
-        fun joinButtonText() : TextStyle{
-            return TextStyle(color = Color.White, fontSize = 10.sp, fontWeight = FontWeight(600))
+        fun joinButtonText(color: Color) : TextStyle{
+            return TextStyle(color = color, fontSize = 10.sp, fontWeight = FontWeight(600))
         }
 
         fun communityDescription() : TextStyle{
