@@ -72,4 +72,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
+
+    implementation ("com.github.kittinunf.fuel:fuel:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-android:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-json:2.3.1")
 }

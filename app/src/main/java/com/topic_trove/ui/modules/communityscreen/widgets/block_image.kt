@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ImageBlock(){
@@ -35,7 +36,9 @@ fun ImageBlock(){
     
     var launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {uri: Uri?->
         imageUri = uri
-        println(imageUri)
+        runBlocking {
+
+        }
     }
     Column {
         AddImageRow {
