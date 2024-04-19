@@ -3,6 +3,8 @@ package com.topic_trove.ui.core.values
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -26,6 +28,30 @@ class CustomTextStyle {
 
         fun communityDescription() : TextStyle{
             return TextStyle(color = Color.Black, fontSize = 9.sp, fontWeight = FontWeight(400))
+        }
+
+        fun createPostHeader() : TextStyle{
+            return TextStyle(color = Color.Black, fontWeight = FontWeight(700), fontSize = 16.sp)
+        }
+
+        fun createTextButton(color: Color): TextStyle{
+            return TextStyle(color= color, fontWeight = FontWeight(600), fontSize = 10.sp)
+        }
+
+        fun titleFieldCreatePost(): TextStyle{
+            return TextStyle(color = AppColors.TitleFieldCreatePost, fontWeight = FontWeight(500), fontSize = 15.sp)
+        }
+
+        fun hintTextCreatePost(): TextStyle{
+            return TextStyle(color = AppColors.TextFieldColor, fontWeight = FontWeight(250), fontSize = 14.sp, fontStyle = FontStyle.Italic)
+        }
+
+        fun filedTextCreatePost(): TextStyle{
+            return TextStyle(color = Color.Black, fontWeight = FontWeight(400), fontSize = 14.sp)
+        }
+
+        fun addImgButtonCommunity(): TextStyle{
+            return createTextButton(AppColors.CreateTextButton)
         }
     }
 }
