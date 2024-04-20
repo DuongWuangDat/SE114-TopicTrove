@@ -24,6 +24,7 @@ fun CommunityScreen(
     community: Community = Community(),
     onNavigateToCreatePost: ()->Unit
 ){
+
     Scaffold {
         Column(modifier = Modifier
             .fillMaxSize()

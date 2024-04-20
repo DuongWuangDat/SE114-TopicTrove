@@ -17,6 +17,7 @@ class CommunityScreenVM : ViewModel() {
     private var _postData =  MutableStateFlow(Post())
     var postData : StateFlow<Post> = _postData.asStateFlow()
 
+    var isLoading = mutableStateOf(false)
     var isEnable = mutableStateOf(false)
         private set
     fun inputContent(it: String){
@@ -24,6 +25,12 @@ class CommunityScreenVM : ViewModel() {
             _postData.value.content = it
         }
 
+    }
+
+    fun inputImage(it: String){
+        viewModelScope.launch {
+            _postData.value.imageUrl = it
+        }
     }
 
     fun inputTitle(it: String){
