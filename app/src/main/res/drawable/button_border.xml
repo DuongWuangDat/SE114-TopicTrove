@@ -1,0 +1,6 @@
+<!-- res/drawable/button_border.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- button background color -->
+    <corners android:radius="15dp"/> <!-- button corner radius -->
+    <stroke android:color="#A1A1A1" android:width="3dp"/> <!-- border color and width -->
+</shape>
