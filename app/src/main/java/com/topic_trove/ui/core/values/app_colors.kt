@@ -16,6 +16,7 @@ class AppColors {
         val AddImgTextButton = CreateTextButton
         val DisableCreatePostButton = Color(convertHex("#DFDFDF"))
         val DisableTextCreatePost = Color(convertHex("#686868"))
+        val BackgroundIndicatorr = Color.Black.copy(alpha = 0.23f)
     }
 }
 
