@@ -14,6 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/adventure"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:visibility="visible"
         tools:visibility="visible" />
 
@@ -26,17 +28,35 @@
         android:layout_marginBottom="10dp"
         android:visibility="visible"
         tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/imageAvatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="@string/adventure"
-            android:scaleType="centerCrop"
-            android:src="@android:drawable/picture_frame"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:visibility="visible"
-            tools:visibility="visible" />
+            tools:visibility="visible">
+
+            <!-- Avatar-->
+            <ImageView
+                android:id="@+id/imageAvatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/adventure"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/picture_frame"
+                android:visibility="visible"
+                tools:visibility="visible" />
+
+            <!-- Verification Tick -->
+            <ImageView
+                android:id="@+id/imageVerificationTick"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="bottom|end"
+                android:contentDescription="@string/adventure"
+                android:src="@drawable/cancel_image"
+                android:visibility="visible"
+                tools:visibility="visible" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -47,6 +67,7 @@
             android:visibility="visible"
             tools:visibility="visible">
 
+            <!--Name-->
             <TextView
                 android:id="@+id/textName"
                 style="@android:style/TextAppearance.Widget.TextView"
@@ -54,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:text="@string/adventure"
+                android:textStyle="bold"
                 android:visibility="visible"
                 tools:visibility="visible" />
 
@@ -69,7 +91,18 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    <!-- Post Title -->
+    <TextView
+        android:id="@+id/textTitle"
+        style="@android:style/TextAppearance.Widget.TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/post_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:visibility="visible" />
     <!-- Post Content -->
     <TextView
         android:id="@+id/textContent"
@@ -77,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="@string/adventure"
+        android:text="@string/post_content"
         android:visibility="visible"
         tools:visibility="visible" />
 
@@ -91,10 +124,12 @@
 
         <com.topic_trove.ui.global_widgets.LikeButton
             android:id="@+id/btnLike"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:drawableStart="@android:drawable/radiobutton_off_background"
+            android:background="@drawable/button_border"
+            android:drawableStart="@drawable/add_btn"
             android:text="@string/adventure"
             android:visibility="visible"
             tools:visibility="visible" />
@@ -103,7 +138,8 @@
             android:id="@+id/btnComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@android:drawable/radiobutton_off_background"
+            android:background="@drawable/button_border"
+            android:drawableStart="@drawable/add_btn"
             android:text="@string/adventure"
             android:visibility="visible"
             tools:visibility="visible" />
