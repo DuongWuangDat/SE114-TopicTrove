@@ -1,96 +1,59 @@
-package com.topic_trove.ui.global_widgets
-
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import com.topic_trove.ui.global_widgets.CommentButton
+import com.topic_trove.ui.global_widgets.LikeButton
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.topic_trove.R
 
-class PostCard : LinearLayout {
+@Composable
+fun Post(hashtag: String, avatar: Int, name: String, date: String, title: String, content: String) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = hashtag, color = Color.Black, onTextLayout = { result -> /* Handle TextLayoutResult here */ })
+        Spacer(modifier = Modifier.height(8.dp))
 
-    private var textHashtag: TextView
-    private var imageAvatar: ImageView
-    private var imagetick: ImageView
-    private var textName: TextView
-    private var textDate: TextView
-    private var textContent: TextView
-    private var btnLike: LikeButton
-    private var btnComment: CommentButton
-    private var textTitle: TextView
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(painter = painterResource(id = avatar), contentDescription = null, modifier = Modifier.size(40.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                Text(text = name, onTextLayout = { result -> /* Handle TextLayoutResult here */ })
+                Text(text = date, onTextLayout = { result -> /* Handle TextLayoutResult here */ })
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
 
-    constructor(context: Context) : super(context) {
-        LayoutInflater.from(context).inflate(R.layout.sample_post_card, this, true)
-        textHashtag = findViewById(R.id.textHashtag)
-        imageAvatar = findViewById(R.id.imageAvatar)
-        imagetick = findViewById(R.id.imageVerificationTick)
-        textName = findViewById(R.id.textName)
-        textDate = findViewById(R.id.textDate)
-        textContent = findViewById(R.id.textContent)
-        btnLike = findViewById(R.id.btnLike)
-        btnComment = findViewById(R.id.btnComment)
-        textTitle = findViewById(R.id.textTitle)
-    }
+        Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis, onTextLayout = { result -> /* Handle TextLayoutResult here */ })
+        Spacer(modifier = Modifier.height(8.dp))
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        LayoutInflater.from(context).inflate(R.layout.sample_post_card, this, true)
-        textHashtag = findViewById(R.id.textHashtag)
-        imageAvatar = findViewById(R.id.imageAvatar)
-        imagetick = findViewById(R.id.imageVerificationTick)
-        textName = findViewById(R.id.textName)
-        textDate = findViewById(R.id.textDate)
-        textContent = findViewById(R.id.textContent)
-        btnLike = findViewById(R.id.btnLike)
-        btnComment = findViewById(R.id.btnComment)
-        textTitle = findViewById(R.id.textTitle)
-    }
+        Text(text = content, onTextLayout = { result -> /* Handle TextLayoutResult here */ })
+        Spacer(modifier = Modifier.height(8.dp))
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        LayoutInflater.from(context).inflate(R.layout.sample_post_card, this, true)
-        textHashtag = findViewById(R.id.textHashtag)
-        imageAvatar = findViewById(R.id.imageAvatar)
-        imagetick = findViewById(R.id.imageVerificationTick)
-        textName = findViewById(R.id.textName)
-        textDate = findViewById(R.id.textDate)
-        textContent = findViewById(R.id.textContent)
-        btnLike = findViewById(R.id.btnLike)
-        btnComment = findViewById(R.id.btnComment)
-        textTitle = findViewById(R.id.textTitle)
+        Row {
+            LikeButton()
+            Spacer(modifier = Modifier.width(16.dp))
+            CommentButton()
+        }
     }
+}
 
-    fun setHashtag(hashtag: String) {
-        textHashtag.text = hashtag
-    }
-
-    fun setAvatar(avatarDrawable: Drawable) {
-        imageAvatar.setImageDrawable(avatarDrawable)
-    }
-
-    fun setVerificationTick(verificationDrawable: Drawable){
-        imagetick.setImageDrawable(verificationDrawable)
-    }
-    fun setName(name: String) {
-        textName.text = name
-    }
-
-    fun setDate(date: String) {
-        textDate.text = date
-    }
-
-    fun setTitle(title: String) {
-        textTitle.text = title
-    }
-    fun setContent(content: String) {
-        textContent.text = content
-    }
-
-    fun setLikeButtonClickListener(listener: OnClickListener) {
-        btnLike.setOnClickListener(listener)
-    }
-
-    fun setCommentButtonClickListener(listener: OnClickListener) {
-        btnComment.setOnClickListener(listener)
-    }
+@Preview
+@Composable
+fun PreviewPost() {
+    Post(
+        hashtag = "#JetpackCompose",
+        avatar = R.drawable.add_btn,
+        name = "John Doe",
+        date = "2022-01-01",
+        title = "This is a post title",
+        content = "This is the content of the post."
+    )
 }

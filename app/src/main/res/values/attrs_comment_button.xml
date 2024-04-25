@@ -1,7 +1,0 @@
-<resources>
-    <declare-styleable name="CommentButton">
-        <attr name="iconsource" format="reference" />
-        <attr name="border_style" format="reference" />
-        <attr name="text" format="string" />
-    </declare-styleable>
-</resources>
