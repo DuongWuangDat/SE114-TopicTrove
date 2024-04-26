@@ -45,14 +45,19 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 
 
 @Composable
-fun LikeButton() {
-    var isLiked by remember { mutableStateOf(false) }
-    var likeCount by remember { mutableStateOf(0) }
+fun LikeButton(
+    interestCount : Int =0,
+    isLike: Boolean = false,
+    onLikePress : ()-> Unit
+) {
+    var isLiked by remember { mutableStateOf(isLike) }
+    var likeCount by remember { mutableStateOf(interestCount) }
 
     Row(modifier = Modifier
         .clickable {
-            isLiked = !isLiked
+
             likeCount = if (isLiked) likeCount - 1 else likeCount + 1
+            isLiked = !isLiked
         }
         .background(color = Color.Transparent)
         .border(
@@ -76,5 +81,7 @@ fun LikeButton() {
 @Preview
 @Composable
 fun PreviewLikeButton() {
-    LikeButton()
+    LikeButton(){
+
+    }
 }

@@ -18,6 +18,7 @@ class AppColors {
         val DisableTextCreatePost = Color(convertHex("#686868"))
         val BackgroundIndicatorr = Color.Black.copy(alpha = 0.23f)
         val BorderStrokeColor = Color(convertHex("#A1A1A1"))
+        val DividerColor = Color(convertHex("#555555"))
     }
 }
 
