@@ -6,4 +6,5 @@
     <string name="title_activity_like_button">Like_Button</string>
     <string name="title_activity_comment_button">Comment_Button</string>
     <string name="title_activity_post_card">PostCard</string>
+    <string name="title_activity_delete_button">Delete_Button</string>
 </resources>

@@ -45,14 +45,12 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 
 
 @Composable
-fun LikeButton() {
-    var isLiked by remember { mutableStateOf(false) }
-    var likeCount by remember { mutableStateOf(0) }
-
+fun DeleteButton(
+    onDeleteFunc: ()-> Unit,
+) {
     Row(modifier = Modifier
         .clickable {
-            isLiked = !isLiked
-            likeCount = if (isLiked) likeCount - 1 else likeCount + 1
+            onDeleteFunc()
         }
         .background(color = Color.Transparent)
         .border(
@@ -62,19 +60,7 @@ fun LikeButton() {
         ) // Border with 1.dp thickness and gray color
         .padding(5.dp)
     ) {
-        Image(
-            painter = painterResource(id = if (isLiked) LikeIcon else UnlikeIcon),
-            contentDescription = null,
-            modifier = Modifier.size(15.dp)
-        )
-
-        Text(text = likeCount.toString(), modifier = Modifier.padding(start = 8.dp), style = CustomTextStyle.LikeCommentText())
+        Text(text = "Delete", color = Color.Red ,modifier = Modifier.padding(start = 8.dp), style = CustomTextStyle.LikeCommentText())
         Spacer(modifier = Modifier.width(10.dp))
     }
-}
-
-@Preview
-@Composable
-fun PreviewLikeButton() {
-    LikeButton()
 }

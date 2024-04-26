@@ -14,32 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TopicTrove"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.global_widgets.PostCard"
-            android:exported="true"
-            android:label="@string/title_activity_post_card"
-            android:theme="@style/Theme.TopicTrove">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.global_widgets.Comment_Button"
-            android:exported="false"
-            android:label="@string/title_activity_comment_button"
-            android:theme="@style/Theme.TopicTrove" />
-        <activity
-            android:name=".ui.global_widgets.ui.theme.Comment_Button"
-            android:exported="false"
-            android:label="@string/title_activity_comment_button"
-            android:theme="@style/Theme.TopicTrove" />
-        <activity
-            android:name=".ui.global_widgets.Like_Button"
-            android:exported="false"
-            android:label="@string/title_activity_like_button"
-            android:theme="@style/Theme.TopicTrove" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

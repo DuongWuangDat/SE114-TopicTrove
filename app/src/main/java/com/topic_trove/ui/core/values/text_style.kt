@@ -1,12 +1,16 @@
 package com.topic_trove.ui.core.values
 
 
+import android.graphics.Paint.Align
+import android.text.Layout.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import java.lang.reflect.Modifier
 
 class CustomTextStyle {
     companion object{
@@ -31,8 +35,23 @@ class CustomTextStyle {
         }
 
         fun createPostHeader() : TextStyle{
-            return TextStyle(color = Color.Black, fontWeight = FontWeight(700), fontSize = 16.sp)
+            return TextStyle(color = Color.Black, fontWeight = FontWeight(700), fontSize = 13.sp)
         }
+
+        fun createPostTitle() : TextStyle{
+            return TextStyle(color = Color.Black, fontWeight = FontWeight(700), fontSize = 15.sp)
+        }
+        fun createPostDate() : TextStyle{
+            return TextStyle(color = Color.Gray, fontSize = 10.sp, fontWeight = FontWeight(400), textAlign =  TextAlign.Center)
+        }
+        fun LikeCommentText() : TextStyle{
+            return TextStyle(color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight(500), textAlign = TextAlign.Center,)
+        }
+
+        fun PostNameText() : TextStyle{
+            return TextStyle(color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight(700), textAlign = TextAlign.Center,)
+        }
+
 
         fun createTextButton(color: Color): TextStyle{
             return TextStyle(color= color, fontWeight = FontWeight(600), fontSize = 10.sp)
@@ -52,6 +71,10 @@ class CustomTextStyle {
 
         fun addImgButtonCommunity(): TextStyle{
             return createTextButton(AppColors.CreateTextButton)
+        }
+
+        fun contentPostCard(): TextStyle{
+            return TextStyle(color= Color.Black, fontWeight = FontWeight(400), fontSize = 11.sp)
         }
     }
 }
