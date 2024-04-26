@@ -32,6 +32,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 import com.topic_trove.ui.core.values.Assets.Companion.AuthorIcon
 import com.topic_trove.ui.core.values.CustomTextStyle
+import com.topic_trove.ui.global_widgets.DeleteButton
 
 @Composable
 fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean) {
