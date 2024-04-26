@@ -45,10 +45,12 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 
 
 @Composable
-fun DeleteButton(function: Function<R>) {
+fun DeleteButton(
+    onDeleteFunc: ()-> Unit,
+) {
     Row(modifier = Modifier
         .clickable {
-            function
+            onDeleteFunc()
         }
         .background(color = Color.Transparent)
         .border(

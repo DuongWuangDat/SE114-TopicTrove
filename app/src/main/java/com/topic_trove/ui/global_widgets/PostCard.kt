@@ -39,7 +39,7 @@ fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean) {
     val headerPost = createPostHeader()
     val datePost = createPostDate()
     val titlePost = createPostTitle()
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.background(color = Color.White).padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
         Text(text = "#"+data.communityName, style = headerPost)
         Spacer(modifier = Modifier.height(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -71,12 +71,14 @@ fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean) {
         Text(text = data.title, maxLines = 1, style = titlePost ,overflow = TextOverflow.Ellipsis)
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = data.content)
+        Text(text = data.content, style = CustomTextStyle.contentPostCard())
         Spacer(modifier = Modifier.height(8.dp))
         if(data.imageUrl !=""){
             Spacer(modifier = Modifier.height(5.dp))
-            AsyncImage(model = data.imageUrl, contentDescription = null, modifier = Modifier.size(250.dp))
-            Spacer(modifier = Modifier.height(5.dp))
+            AsyncImage(model = data.imageUrl, contentDescription = null, modifier = Modifier.clip(
+                RoundedCornerShape(10.dp)
+            ))
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
         Row {
