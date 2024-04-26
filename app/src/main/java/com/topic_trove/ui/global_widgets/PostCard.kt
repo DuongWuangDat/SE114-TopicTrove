@@ -75,7 +75,7 @@ fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean) {
         Spacer(modifier = Modifier.height(8.dp))
         if(data.imageUrl !=""){
             Spacer(modifier = Modifier.height(5.dp))
-            AsyncImage(model = data.imageUrl, contentDescription = null)
+            AsyncImage(model = data.imageUrl, contentDescription = null, modifier = Modifier.size(250.dp))
             Spacer(modifier = Modifier.height(5.dp))
         }
 

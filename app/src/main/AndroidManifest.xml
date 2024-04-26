@@ -15,6 +15,17 @@
         android:theme="@style/Theme.TopicTrove"
         tools:targetApi="31">
         <activity
+            android:name=".ui.global_widgets.Delete_Button"
+            android:exported="true"
+            android:label="@string/title_activity_delete_button"
+            android:theme="@style/Theme.TopicTrove">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.global_widgets.PostCard"
             android:exported="true"
             android:label="@string/title_activity_post_card"
