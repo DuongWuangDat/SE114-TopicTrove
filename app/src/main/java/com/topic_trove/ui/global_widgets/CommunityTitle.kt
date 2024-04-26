@@ -93,6 +93,7 @@ fun CommunityHeader(
             Text(text = if (community.communityName=="") "community1" else community.communityName, style = CustomTextStyle.communityTitle())
             Spacer(modifier = Modifier.height(3.dp))
             Text(text = "${community.memberCount} member", style = CustomTextStyle.communityCountMember())
+
         }
 
         var buttonJoin =createRef()
