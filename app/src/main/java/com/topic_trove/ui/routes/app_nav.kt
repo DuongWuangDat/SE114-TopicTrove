@@ -29,13 +29,11 @@ fun NavControll(navController: NavHostController){
         }
 
         composable(route = AppRoutes.communityRoute){
-            //CommunityScreen(
-            //    onNavigateToCreatePost = {
-            //        navController.navigate(AppRoutes.createPostRoute)
-            //    }
-            //)
-            PostCard(data = Post(communityName = "T1Bo", authorName = "Name", title = "T1",
-                content = "1qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 111111111qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"), isPostOwner = true, isCommunityOwner = true)
+            CommunityScreen(
+                onNavigateToCreatePost = {
+                    navController.navigate(AppRoutes.createPostRoute)
+                }
+            )
         }
     }
 }

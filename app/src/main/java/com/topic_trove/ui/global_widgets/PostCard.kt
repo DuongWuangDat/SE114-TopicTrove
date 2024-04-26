@@ -1,3 +1,4 @@
+import android.text.BoringLayout
 import android.text.Layout
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
@@ -37,8 +38,15 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.global_widgets.DeleteButton
 
 @Composable
-fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean, onDelete:()->Unit={},onLike: ()->Unit={}) {
-    val date = remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())) }
+fun PostCard(data : Post,
+             isPostOwner: Boolean,
+             isCommunityOwner: Boolean,
+             onDelete:()->Unit={},
+             onLike: ()->Unit={},
+             isLike: Boolean = false,
+             commentCount : Int = 0,
+             ) {
+    val date = remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)) }
     val headerPost = createPostHeader()
     val datePost = createPostDate()
     val titlePost = createPostTitle()
@@ -95,9 +103,14 @@ fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean, onDele
         }
 
         Row {
-            LikeButton()
+            LikeButton(
+                interestCount = data.interestCount,
+                isLike = isLike
+            ){
+                onLike()
+            }
             Spacer(modifier = Modifier.width(16.dp))
-            CommentButton()
+            CommentButton(count = commentCount)
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.topic_trove.data.model
 
+import java.util.Date
+
 
 data class Post (
     var id : String = "",
@@ -10,5 +12,7 @@ data class Post (
     var content: String = "",
     var title: String = "",
     var imageUrl: String = "",
-    var avatar: String =""
+    var avatar: String ="",
+    var createdAt: Date = Date(),
+    var interestCount: Int = 0
 )

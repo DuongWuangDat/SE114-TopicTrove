@@ -40,13 +40,12 @@ import com.topic_trove.ui.core.values.Assets.Companion.CommentIcon
 import com.topic_trove.ui.core.values.CustomTextStyle
 
 @Composable
-fun CommentButton() {
-    var commentCount by remember { mutableIntStateOf(15) }
+fun CommentButton(
+    count : Int = 15
+) {
+    var commentCount by remember { mutableIntStateOf(count) }
 
     Row(modifier = Modifier
-        .clickable {
-            commentCount += 1
-        }
         .background(color = Color.Transparent)
         .border(
             1.dp,
