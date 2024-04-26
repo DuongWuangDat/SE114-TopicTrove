@@ -3,6 +3,7 @@ import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,15 +34,26 @@ import java.time.format.TextStyle
 import java.util.Locale
 import com.topic_trove.ui.core.values.Assets.Companion.AuthorIcon
 import com.topic_trove.ui.core.values.CustomTextStyle
+import com.topic_trove.ui.global_widgets.DeleteButton
 
 @Composable
-fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean) {
+fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean, onDelete:()->Unit={},onLike: ()->Unit={}) {
     val date = remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())) }
     val headerPost = createPostHeader()
     val datePost = createPostDate()
     val titlePost = createPostTitle()
-    Column(modifier = Modifier.background(color = Color.White).padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
-        Text(text = "#"+data.communityName, style = headerPost)
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp.value
+    Column(modifier = Modifier
+        .background(color = Color.White)
+        .padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
+        Row  {
+            Text(text = "#"+data.communityName, style = headerPost)
+            if(isPostOwner || isCommunityOwner) {
+                Spacer(modifier = Modifier.width((screenWidth*0.65).dp))
+                DeleteButton(modifier = Modifier) {}
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             // Avatar
@@ -94,5 +107,5 @@ fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean) {
 fun PreviewPost() {
     val data = Post(communityName = "T1Bo", authorName = "Name", title = "T1",
         content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39")
-    PostCard(data,false,false)
+    PostCard(data,true,false)
 }

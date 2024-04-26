@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import com.topic_trove.R
 import com.topic_trove.ui.core.values.AppColors.Companion.BorderStrokeColor
@@ -46,9 +47,11 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 
 @Composable
 fun DeleteButton(
+    modifier: Modifier,
     onDeleteFunc: ()-> Unit,
 ) {
-    Row(modifier = Modifier
+
+    Row(modifier = modifier
         .clickable {
             onDeleteFunc()
         }
