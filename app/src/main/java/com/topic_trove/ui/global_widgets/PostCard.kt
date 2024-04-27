@@ -63,7 +63,7 @@ fun PostCard(data : Post,
         Row  {
             Text(text = "#"+data.communityName, style = headerPost)
             if(isPostOwner || isCommunityOwner) {
-                Spacer(modifier = Modifier.width((screenWidth*0.65).dp))
+                Spacer(modifier = Modifier.weight(1f))
                 DeleteButton(modifier = Modifier) {
                     onDelete()
                 }

@@ -3,6 +3,7 @@ package com.topic_trove.ui.modules.communityscreen
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Locale
+import java.util.logging.SimpleFormatter
 
 class CommunityScreenVM : ViewModel() {
     private var _postData =  MutableStateFlow(Post())
@@ -29,7 +34,7 @@ class CommunityScreenVM : ViewModel() {
     val base_url = AppStrings.BASE_URL
     var isLoading = mutableStateOf(false)
     var snackbarHostState = SnackbarHostState()
-
+    var postList = mutableStateListOf<Post>()
     var isEnable = mutableStateOf(false)
         private set
     fun inputContent(it: String){
@@ -63,10 +68,10 @@ class CommunityScreenVM : ViewModel() {
                         {
                             "author": "661ded639a9ecc4c2525774d",
                             "communityId": "662385ad314b50e0397a3a90",
-                            "title": "${_postData.value.title}",
+                            "title": "${_postData.value.title.replace("\n","\\n")}",
                             "content": [
                                 {
-                                    "body": "${_postData.value.content}",
+                                    "body": "${_postData.value.content.replace("\n","\\n")}}",
                                     "type": "text"
                                 }
                             ]
@@ -76,10 +81,10 @@ class CommunityScreenVM : ViewModel() {
                         {
                             "author": "661ded639a9ecc4c2525774d",
                             "communityId": "662385ad314b50e0397a3a90",
-                            "title": "${_postData.value.title}",
+                            "title": "${_postData.value.title.replace("\n","\\n")}}",
                             "content": [
                                 {
-                                    "body": "${_postData.value.content}",
+                                    "body": "${_postData.value.content.replace("\n","\\n")}}",
                                     "type": "text"
                                 },
                                 {
@@ -148,9 +153,51 @@ class CommunityScreenVM : ViewModel() {
 
     }
 
-    fun getPostList(){
+    fun getPostList(communityId : String){
         viewModelScope.launch {
+            postList.clear()
+            var formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
+                .header("Content-Type" to "application/json")
+                .authentication()
+                .bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+                .responseString(){ result ->
+                    result.fold(
+                        {d->
+                            val response = JSONObject(d)
+                            val arrayPost = response.getJSONArray("data")
+                            println(arrayPost)
+                            for(i in 0 until arrayPost.length()){
 
+                                val item = arrayPost.getJSONObject(i)
+                                val content = item.getJSONArray("content")
+                                val authorName = item.getJSONObject("author").getString("username")
+                                val contentText = content.getJSONObject(0).getString("body").replace("\\n","\n")
+                                var imageUrl = ""
+                                if(content.length() >=2){
+                                    imageUrl = content.getJSONObject(1).getString("body")
+                                }
+                                var post = Post(
+                                    id = item.getString("_id"),
+                                    authorID = item.getJSONObject("author").getString("_id"),
+                                    authorName = item.getJSONObject("author").getString("username"),
+                                    avatar = item.getJSONObject("author").getString("avatar"),
+                                    communityID = item.getJSONObject("communityId").getString("_id"),
+                                    communityName = item.getJSONObject("communityId").getString("communityName"),
+                                    content= contentText,
+                                    imageUrl = imageUrl,
+                                    createdAt = formatter.parse(item.getString("createdAt")),
+                                    interestCount = item.getInt("interestCount"),
+                                    title = item.getString("title")
+
+                                )
+                                postList.add(post)
+
+                            }
+                        },
+                        {err-> println(err) }
+                    )
+                }
         }
     }
 }
