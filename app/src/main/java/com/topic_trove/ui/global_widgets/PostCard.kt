@@ -3,6 +3,7 @@ import android.text.Layout
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.shape.CircleShape
@@ -43,6 +44,7 @@ fun PostCard(data : Post,
              isCommunityOwner: Boolean,
              onDelete:()->Unit={},
              onLike: ()->Unit={},
+             onClickable: ()->Unit = {},
              isLike: Boolean = false,
              commentCount : Int = 0,
              ) {
@@ -53,13 +55,18 @@ fun PostCard(data : Post,
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp.value
     Column(modifier = Modifier
+        .clickable {
+            onClickable()
+        }
         .background(color = Color.White)
         .padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
         Row  {
             Text(text = "#"+data.communityName, style = headerPost)
             if(isPostOwner || isCommunityOwner) {
                 Spacer(modifier = Modifier.width((screenWidth*0.65).dp))
-                DeleteButton(modifier = Modifier) {}
+                DeleteButton(modifier = Modifier) {
+                    onDelete()
+                }
             }
         }
         Spacer(modifier = Modifier.height(8.dp))

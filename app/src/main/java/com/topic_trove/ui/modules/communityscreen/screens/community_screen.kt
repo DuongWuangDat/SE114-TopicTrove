@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.Post
 import com.topic_trove.ui.core.values.AppColors
@@ -22,12 +23,13 @@ import com.topic_trove.ui.global_widgets.CommunityTitle
 import com.topic_trove.ui.modules.communityscreen.widgets.TextFieldCard
 import com.topic_trove.ui.modules.communityscreen.widgets.TopBarCreatePost
 import com.topic_trove.ui.modules.communityscreen.widgets.TopbarCommunity
+import com.topic_trove.ui.routes.AppRoutes
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CommunityScreen(
     community: Community = Community(),
-    onNavigateToCreatePost: ()->Unit
+    navController: NavController
 ){
     var PostList : List<Post> = listOf(Post(communityName = "T1Bo", authorName = "Name", title = "T1",
         content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"),
@@ -39,7 +41,9 @@ fun CommunityScreen(
             .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            TopbarCommunity(community = community, onNavigateToCreatePost=onNavigateToCreatePost)
+            TopbarCommunity(community = community, onNavigateToCreatePost={
+                navController.navigate(AppRoutes.createPostRoute)
+            })
             CommunityTitle {
 
             }
