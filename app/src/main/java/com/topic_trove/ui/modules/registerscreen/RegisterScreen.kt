@@ -142,7 +142,7 @@ fun RegisterScreen(
 
                     Password(passwordState = passwordState,
                         modifier = Modifier.focusRequester(focusRequester),
-                        onImeAction = { onSubmit() })
+                        onImeAction = { })
 
                     // Confirm password
                     Spacer(modifier = Modifier.height(8.dp))
@@ -160,7 +160,7 @@ fun RegisterScreen(
 
                     Password(passwordState = confirmPasswordState,
                         modifier = Modifier.focusRequester(focusRequester),
-                        onImeAction = { onSubmit() })
+                        onImeAction = { })
 
                     Button(
                         onClick = { onSubmit() },
