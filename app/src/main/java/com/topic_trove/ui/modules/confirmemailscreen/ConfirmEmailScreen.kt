@@ -37,7 +37,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.topic_trove.R
 import com.topic_trove.ui.core.utils.supportWideScreen
 import com.topic_trove.ui.core.values.AppColors
-import com.topic_trove.ui.modules.registerscreen.widgets.SignInSignUpTopAppBar
+import com.topic_trove.ui.global_widgets.MyTopCenterAppBar
 
 @Composable
 fun ConfirmEmailScreen(
@@ -47,7 +47,7 @@ fun ConfirmEmailScreen(
 ) {
     Scaffold(
         topBar = {
-            SignInSignUpTopAppBar(
+            MyTopCenterAppBar(
                 topAppBarText = stringResource(R.string.enter_6_character_code),
                 onNavUp = onNavUp,
             )

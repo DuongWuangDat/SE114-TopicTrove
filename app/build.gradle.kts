@@ -77,4 +77,5 @@ dependencies {
     implementation("com.github.kittinunf.fuel:fuel-android:2.3.1")
     implementation("com.github.kittinunf.fuel:fuel-json:2.3.1")
     implementation("androidx.compose.material:material-icons-extended:1.6.6")
+//    implementation("androidx.compose.material3:material3:1.1.0-rc01")
 }

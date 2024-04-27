@@ -1,6 +1,6 @@
 package com.topic_trove.ui.modules.communityscreen.screens
 
-import PostCard
+import com.topic_trove.ui.global_widgets.PostCard
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -19,27 +19,38 @@ import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.Post
 import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.global_widgets.CommunityTitle
-import com.topic_trove.ui.modules.communityscreen.widgets.TextFieldCard
-import com.topic_trove.ui.modules.communityscreen.widgets.TopBarCreatePost
 import com.topic_trove.ui.modules.communityscreen.widgets.TopbarCommunity
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CommunityScreen(
     community: Community = Community(),
-    onNavigateToCreatePost: ()->Unit
-){
-    var PostList : List<Post> = listOf(Post(communityName = "T1Bo", authorName = "Name", title = "T1",
-        content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"),
-        Post(communityName = "T1Bo", authorName = "Name", title = "T1",
-            content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"))
+    onNavigateToCreatePost: () -> Unit
+) {
+    var PostList: List<Post> = listOf(
+        Post(
+            communityName = "T1Bo",
+            authorName = "Name",
+            title = "T1",
+            content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111",
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"
+        ),
+        Post(
+            communityName = "T1Bo",
+            authorName = "Name",
+            title = "T1",
+            content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111",
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"
+        )
+    )
     Scaffold {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            TopbarCommunity(community = community, onNavigateToCreatePost=onNavigateToCreatePost)
+            TopbarCommunity(community = community, onNavigateToCreatePost = onNavigateToCreatePost)
             CommunityTitle {
 
             }

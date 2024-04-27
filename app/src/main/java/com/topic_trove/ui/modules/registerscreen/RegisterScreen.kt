@@ -32,9 +32,9 @@ import com.topic_trove.ui.modules.registerscreen.states.EmailState
 import com.topic_trove.ui.modules.registerscreen.states.EmailStateSaver
 import com.topic_trove.ui.modules.registerscreen.states.PasswordState
 import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
-import com.topic_trove.ui.modules.registerscreen.widgets.MyTextField
-import com.topic_trove.ui.modules.registerscreen.widgets.Password
-import com.topic_trove.ui.modules.registerscreen.widgets.SignInSignUpTopAppBar
+import com.topic_trove.ui.global_widgets.MyTextField
+import com.topic_trove.ui.global_widgets.MyTopCenterAppBar
+import com.topic_trove.ui.global_widgets.Password
 
 @Composable
 fun RegisterScreen(
@@ -45,7 +45,7 @@ fun RegisterScreen(
 
     Scaffold(
         topBar = {
-            SignInSignUpTopAppBar(
+            MyTopCenterAppBar(
                 topAppBarText = stringResource(id = R.string.register),
                 onNavUp = onNavUp,
             )
@@ -183,8 +183,6 @@ fun RegisterScreen(
                         )
                     }
                 }
-
-
             }
         })
 }

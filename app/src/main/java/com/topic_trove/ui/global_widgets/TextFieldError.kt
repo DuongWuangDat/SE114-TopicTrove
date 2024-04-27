@@ -1,4 +1,4 @@
-package com.topic_trove.ui.modules.registerscreen.widgets
+package com.topic_trove.ui.global_widgets
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
