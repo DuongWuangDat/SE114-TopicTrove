@@ -23,16 +23,12 @@ fun NavControll(navController: NavHostController){
         }
 
         composable(route = AppRoutes.createPostRoute){
-            createpostScreen(onBack = {
-                navController.popBackStack()
-            })
+            createpostScreen(navController = navController)
         }
 
         composable(route = AppRoutes.communityRoute){
             CommunityScreen(
-                onNavigateToCreatePost = {
-                    navController.navigate(AppRoutes.createPostRoute)
-                }
+                navController = navController
             )
         }
     }

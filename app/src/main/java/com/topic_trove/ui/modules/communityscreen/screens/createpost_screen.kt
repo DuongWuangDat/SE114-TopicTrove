@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
@@ -54,14 +55,12 @@ import kotlinx.coroutines.runBlocking
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun createpostScreen(
-    onBack: ()->Unit
+    navController: NavController
 ){
-    val base_url = AppStrings.BASE_URL
+
     val communityVM = viewModel<CommunityScreenVM>()
     val post by communityVM.postData.collectAsState()
-    var snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = communityVM.snackbarHostState
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -75,48 +74,11 @@ fun createpostScreen(
             Spacer(modifier = Modifier.height(8.dp))
             TopBarCreatePost(
                 state = communityVM.isEnable,
-                onBack = onBack,
+                onBack = {
+                         navController.popBackStack()
+                },
                 onCreateClick = {
-                    communityVM.isLoading.value= true
-                    val json = """
-                        {
-                            "author": "661ded639a9ecc4c2525774d",
-                            "communityId": "662385ad314b50e0397a3a90",
-                            "title": "${post.title}",
-                            "content": [
-                                {
-                                    "body": "${post.content}",
-                                    "type": "text"
-                                },
-                                {
-                                    "body": "${post.imageUrl}",
-                                    "type": "image"
-                                }
-                            ]
-                        }""".trimIndent()
-                    runBlocking {
-                        Fuel.post("$base_url/post/create")
-                            .header("Content-Type" to "application/json")
-                            .authentication()
-                            .bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
-                            .jsonBody(json)
-                            .responseString (){ result ->
-                                result.fold(
-                                    {d-> println(d)
-                                        communityVM.isLoading.value= false
-                                        GlobalScope.launch {
-                                            snackbarHostState.showSnackbar("Create post successfully")
-                                        }
-
-                                    },
-                                    {err ->
-                                        communityVM.isLoading.value=false
-                                        GlobalScope.launch {
-                                        snackbarHostState.showSnackbar("Something went wrong")
-                                    } }
-                                )
-                            }
-                    }
+                    communityVM.createPostApi()
                 }
             )
             collumnContent(
@@ -176,10 +138,14 @@ fun collumnContent(
         Spacer(modifier = Modifier.height(16.dp))
         ImageBlock(
             isLoading = communityVM.isLoading,
-            snackbarHostState = snackbarHostState
-        ){
-            communityVM.inputImage(it)
-        }
+            snackbarHostState = snackbarHostState,
+            uploadImage = {file ->
+                communityVM.uploadImgApi(file)
+            },
+            inputImage = {
+                communityVM.inputImage(it)
+            }
+        )
 
     }
 }
