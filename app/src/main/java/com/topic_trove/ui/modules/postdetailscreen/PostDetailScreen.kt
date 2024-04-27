@@ -52,6 +52,38 @@ fun PostDetailScreen() {
                         replies = listOf(),
                     )
                 ),
+            ),
+            Comment(
+                authorName = "Name2",
+                content = "11111111",
+                avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
+                replies = listOf(
+                    Comment(
+                        authorName = "Name3",
+                        content = "11111111",
+                        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
+                        replies = listOf(
+                            Comment(
+                                authorName = "Name3",
+                                content = "11111111",
+                                avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
+                                replies = listOf(),
+                            ),
+                            Comment(
+                                authorName = "Name3",
+                                content = "11111111",
+                                avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
+                                replies = listOf(),
+                            )
+                        ),
+                    ),
+                    Comment(
+                        authorName = "Name3",
+                        content = "11111111",
+                        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
+                        replies = listOf(),
+                    )
+                ),
             )
         )
     )
@@ -77,48 +109,38 @@ fun PostDetailScreen() {
                 )
             }
         })
-    }, content = { contentPadding ->
-        LazyColumn(
-            contentPadding = contentPadding,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.White),
-        ) {
-            item {
-                PostCard(
-                    data = postDetail.post,
-                    isPostOwner = postDetail.owner,
-                    isCommunityOwner = postDetail.isCommunityOwner,
-                    onDelete = null,
-                )
-                postDetail.comments.forEach { comment ->
-                    Divider(
-                        color = Color(convertHex("#E1E1E1")),
-                        thickness = 0.3.dp,
-                        modifier = Modifier.height(4.dp)
-                    )
-                    CommentCard(
-                        modifier = Modifier.padding(top = 15.dp, start = 15.dp),
-                        data = comment,
+    },
+        content = { contentPadding ->
+            LazyColumn(
+                contentPadding = contentPadding,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.White),
+            ) {
+                item {
+                    PostCard(
+                        data = postDetail.post,
+                        isPostOwner = postDetail.owner,
+                        isCommunityOwner = postDetail.isCommunityOwner,
                         onDelete = null,
-                        onLike = {},
-                        content = {
-                            comment.replies.forEach { reply ->
-                                CommentCard(
-                                    modifier = Modifier.padding(
-                                        top = 15.dp,
-                                        start = 15.dp,
-                                        end = 15.dp,
-                                    ),
-                                    data = reply,
-                                )
-                            }
-                        },
                     )
+                    postDetail.comments.forEach { comment ->
+                        Divider(
+                            color = Color(convertHex("#E1E1E1")),
+                            thickness = 0.3.dp,
+                            modifier = Modifier.height(4.dp)
+                        )
+                        CommentCard(
+                            modifier = Modifier.padding(top = 15.dp, start = 15.dp, bottom = 15.dp),
+                            data = comment,
+                            onDelete = null,
+                            onLike = {},
+                        )
+                    }
                 }
             }
         }
-    })
+    )
 }
 
 @Preview(showBackground = true)
