@@ -22,4 +22,7 @@
     <string name="comment">Comment</string>
     <string name="avatar">avatar</string>
     <string name="author">Author</string>
+    <string name="reply">Reply</string>
+    <string name="post">Post</string>
+    <string name="add_comment">Add comment</string>
 </resources>

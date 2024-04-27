@@ -15,12 +15,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.topic_trove.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopLeftAppBar(
+    icon: ImageVector = Icons.Filled.ArrowBack,
     topAppBarText: String,
     onNavUp: () -> Unit,
     actions: @Composable RowScope.() -> Unit = {},
@@ -32,13 +38,18 @@ fun MyTopLeftAppBar(
                 text = topAppBarText,
                 modifier = Modifier
                     .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
+                    .wrapContentSize(Alignment.CenterStart),
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(700),
+                    lineHeight = 20.sp,
+                )
             )
         },
         navigationIcon = {
             IconButton(onClick = { onNavUp() }) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = icon,
                     contentDescription = stringResource(id = R.string.back),
                     tint = Color.Black
                 )
@@ -49,4 +60,10 @@ fun MyTopLeftAppBar(
             actions()
         },
     )
+}
+
+@Preview
+@Composable
+private fun MyTopLeftAppBarPreview() {
+    MyTopLeftAppBar(topAppBarText = "Title", onNavUp = { })
 }

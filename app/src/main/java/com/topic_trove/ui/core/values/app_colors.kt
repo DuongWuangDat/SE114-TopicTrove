@@ -6,7 +6,7 @@ class AppColors {
 
     companion object {
         val White = Color(0xFFFFFFFF)
-        val Black = Color(0x00000000)
+        val Black = Color(convertHex("#000000"))
         val BorderStroke = Color(convertHex("#C3C7E5"))
         val CommunityTitleHeader = Color(convertHex("#004CDF"))
         val CommunityJoinButton = Color(convertHex("#0478FF"))

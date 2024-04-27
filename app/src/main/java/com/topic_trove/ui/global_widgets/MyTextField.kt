@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,10 +45,10 @@ fun MyTextField(
             unfocusedBorderColor = AppColors.BorderStroke,
         ),
         textStyle = TextStyle(
-            color = AppColors.BorderStroke,
-            fontStyle = FontStyle.Italic,
+            color = AppColors.Black,
+//            fontStyle = FontStyle.Italic,
             fontSize = 14.sp,
-            fontWeight = FontWeight(250),
+            fontWeight = FontWeight(400),
         ),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = imeAction,
