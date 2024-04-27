@@ -7,4 +7,14 @@
     <string name="title_activity_comment_button">Comment_Button</string>
     <string name="title_activity_post_card">PostCard</string>
     <string name="title_activity_delete_button">Delete_Button</string>
+    <string name="email">email</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="back">Back</string>
+    <string name="register">Register</string>
+    <string name="next">Next</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="display_name">Display name</string>
 </resources>
