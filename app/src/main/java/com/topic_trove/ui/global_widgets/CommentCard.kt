@@ -45,6 +45,7 @@ fun CommentCard(
     data: Comment,
     onDelete: (() -> Unit)? = {},
     onLike: () -> Unit = {},
+    onReply: () -> Unit = {},
     spacer: @Composable (() -> Unit)? = {},
 ) {
     val date = remember {
@@ -131,7 +132,7 @@ fun CommentCard(
                     ) { onLike() }
                     Spacer(modifier = Modifier.width(16.dp))
                     ReplyButton {
-
+                        onReply()
                     }
                 }
             }
@@ -161,7 +162,10 @@ fun CommentCard(
                         null
                     } else {
                         { Spacer(modifier = Modifier.height(15.dp)) }
-                    }
+                    },
+                    onReply = onReply,
+                    onDelete = {},
+                    onLike = {},
                 )
             }
 
@@ -187,7 +191,7 @@ fun PreviewCommentCard() {
     )
     CommentCard(
         data = data,
-        onDelete = {},
+        onDelete = null,
         onLike = {}
     )
 }

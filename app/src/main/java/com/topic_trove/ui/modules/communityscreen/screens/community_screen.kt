@@ -65,7 +65,8 @@ fun CommunityScreen(
                     var isPostOwner = (post.authorID == idUser)
 
                     Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
-                    PostCard(data = post,
+                    PostCard(
+                        data = post,
                         isPostOwner = isPostOwner,
                         isCommunityOwner = isCommunityOwner,
                         onLike = {
@@ -75,7 +76,13 @@ fun CommunityScreen(
                             //communityVM.deletePost(post.id)
                             communityVM.isShowDialog.value = true
                             communityVM.curPostId.value = post.id
-                        })
+                        },
+                        onClickable = {
+                            navController.navigate(
+                                "${AppRoutes.postDetailRoute}/${post.id}"
+                            )
+                        }
+                    )
                 }
             }
 

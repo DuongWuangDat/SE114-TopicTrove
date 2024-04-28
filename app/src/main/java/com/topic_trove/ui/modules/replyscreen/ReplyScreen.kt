@@ -37,6 +37,7 @@ import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
 
 @Composable
 fun ReplyScreen(
+    comment: (String) -> Unit,
     onNavUp: () -> Unit
 ) {
     val commentState = remember { TextFieldState() }
@@ -51,7 +52,7 @@ fun ReplyScreen(
                 },
                 actions = {
                     Button(
-                        onClick = { },
+                        onClick = { comment(commentState.text) },
                         contentPadding = PaddingValues(7.dp),
                         modifier = Modifier
                             .width(55.dp)
@@ -148,5 +149,5 @@ fun ReplyScreen(
 @Preview
 @Composable
 private fun ReplyScreenPreview() {
-    ReplyScreen(onNavUp = { })
+    ReplyScreen(comment = {}, onNavUp = { })
 }

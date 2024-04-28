@@ -1,5 +1,7 @@
 package com.topic_trove.di
 
+import com.topic_trove.data.repositories.PostRepository
+import com.topic_trove.data.repositories.PostRepositoryImpl
 import com.topic_trove.data.repositories.RegisterRepository
 import com.topic_trove.data.repositories.RegisterRepositoryImpl
 import dagger.Binds
@@ -13,4 +15,7 @@ internal interface RepositoryModule {
 
     @Binds
     fun bindRegisterRepository(repository: RegisterRepositoryImpl): RegisterRepository
+
+    @Binds
+    fun bindPostRepository(repository: PostRepositoryImpl): PostRepository
 }

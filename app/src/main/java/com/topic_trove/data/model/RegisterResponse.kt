@@ -7,4 +7,6 @@ data class RegisterResponse(
     val accessToken: String,
     @SerializedName("refreshToken")
     val refreshToken: String,
+    @SerializedName("data")
+    val data: User,
 )

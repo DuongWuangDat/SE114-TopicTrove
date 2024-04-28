@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,7 +44,7 @@ fun PostCard(
     isPostOwner: Boolean,
     isCommunityOwner: Boolean,
     onDelete: (() -> Unit)? = {},
-    onLike: () -> Unit = {},
+    onLike: (Boolean) -> Unit = {},
     onClickable: () -> Unit = {},
 ) {
     val date = remember {
@@ -63,6 +64,7 @@ fun PostCard(
         .clickable {
             onClickable()
         }
+        .fillMaxWidth()
         .background(color = Color.White)
         .padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
         Row {
@@ -134,10 +136,10 @@ fun PostCard(
                 interestCount = data.interestCount,
                 isLike = data.isLike
             ) {
-                onLike()
+                onLike(it)
             }
             Spacer(modifier = Modifier.width(16.dp))
-            CommentButton(count = data.commentCount)
+            CommentButton(commentCount = data.commentCount)
         }
     }
 }
@@ -146,6 +148,8 @@ fun PostCard(
 @Composable
 fun PreviewPost() {
     val data = Post(
+        interestCount = 8,
+        commentCount = 8,
         communityName = "T1Bo",
         authorName = "Name",
         title = "T1",

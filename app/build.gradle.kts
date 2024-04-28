@@ -75,20 +75,23 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.50")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    implementation ("com.google.code.gson:gson:2.10.1")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation (libs.retrofit2)
-    implementation (libs.retrofit2.converter.gson)
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.gson)
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation("com.github.kittinunf.fuel:fuel:2.3.1")
     implementation("com.github.kittinunf.fuel:fuel-android:2.3.1")
     implementation("com.github.kittinunf.fuel:fuel-json:2.3.1")
     implementation("androidx.compose.material:material-icons-extended:1.6.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("com.squareup.moshi:moshi:1.15.1")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
 }

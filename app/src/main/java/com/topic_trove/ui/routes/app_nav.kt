@@ -7,16 +7,20 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
+import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
+import com.topic_trove.ui.modules.postdetailscreen.PostDetailUiState
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
+import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.registerRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.communityRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
@@ -55,6 +59,37 @@ fun NavControl(navController: NavHostController) {
                     navController.navigate(AppRoutes.communityRoute)
                 },
                 onNavUp = navController::navigateUp,
+            )
+        }
+
+        composable(route = "${AppRoutes.createCommentRoute}/{postId}") { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            AddCommentRoute(
+                postId = postId ?: "",
+                onNavUp = navController::navigateUp,
+                onSuccess = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(route = AppRoutes.replyCommentRoute) {
+            val postDetail: PostDetailUiState =
+                navController.previousBackStackEntry?.savedStateHandle?.get("postDetail")
+                    ?: PostDetailUiState()
+            ReplyCommentRoute(
+                postDetail = postDetail,
+                onNavUp = navController::navigateUp,
+            )
+        }
+
+        composable(route = "${AppRoutes.postDetailRoute}/{postId}") { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            PostDetailRoute(
+                postId = postId ?: "",
+                onNavUp = navController::navigateUp,
+                onNavAddComment = { navController.navigate("${AppRoutes.createCommentRoute}/$postId") },
+                onReply = { navController.navigate(AppRoutes.replyCommentRoute) },
             )
         }
     }

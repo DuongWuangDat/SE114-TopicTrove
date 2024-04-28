@@ -7,5 +7,8 @@ class AppRoutes {
         val communityRoute = "/home/community"
         val registerRoute = "/register"
         val confirmEmailRoute = "/confirmemail"
+        val createCommentRoute = "/createcomment"
+        val replyCommentRoute = "/replycomment"
+        val postDetailRoute = "/postDetail"
     }
 }

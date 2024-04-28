@@ -1,5 +1,6 @@
 package com.topic_trove.data.model
 
+import java.io.Serializable
 import java.util.Date
 
 
@@ -17,4 +18,4 @@ data class Post(
     var interestCount: Int = 0,
     var isLike: Boolean = false,
     var commentCount: Int = 0
-)
+) : Serializable

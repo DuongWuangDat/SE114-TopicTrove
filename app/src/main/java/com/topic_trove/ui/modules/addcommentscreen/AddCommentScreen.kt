@@ -33,8 +33,9 @@ import com.topic_trove.ui.global_widgets.MyTopLeftAppBar
 import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
 
 @Composable
-fun AccCommentScreen(
-    onNavUp: () -> Unit
+fun AddCommentScreen(
+    comment: (String) -> Unit,
+    onNavUp: () -> Unit,
 ) {
     val commentState = remember { TextFieldState() }
     Scaffold(
@@ -47,7 +48,7 @@ fun AccCommentScreen(
                 },
                 actions = {
                     Button(
-                        onClick = { },
+                        onClick = { comment(commentState.text) },
                         contentPadding = PaddingValues(7.dp),
                         modifier = Modifier
                             .width(55.dp)
@@ -107,5 +108,5 @@ fun AccCommentScreen(
 @Preview
 @Composable
 private fun ReplyScreenPreview() {
-    AccCommentScreen(onNavUp = { })
+    AddCommentScreen(comment = {}, onNavUp = {})
 }

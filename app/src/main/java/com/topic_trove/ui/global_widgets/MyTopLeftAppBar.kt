@@ -40,6 +40,7 @@ fun MyTopLeftAppBar(
                     .fillMaxSize()
                     .wrapContentSize(Alignment.CenterStart),
                 style = TextStyle(
+                    color = Color.Black,
                     fontSize = 16.sp,
                     fontWeight = FontWeight(700),
                     lineHeight = 20.sp,
