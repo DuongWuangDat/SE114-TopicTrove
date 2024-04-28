@@ -8,27 +8,46 @@ import androidx.navigation.compose.composable
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
+import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
+import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 
 
 @Composable
-fun NavControll(navController: NavHostController){
-    NavHost(navController = navController, startDestination = AppRoutes.communityRoute){
-        composable(route = AppRoutes.homeRoute){
+fun NavControl(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = AppRoutes.registerRoute) {
+        composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
         }
 
-        composable(route = AppRoutes.createPostRoute){
+        composable(route = AppRoutes.createPostRoute) {
             createpostScreen(onBack = {
                 navController.popBackStack()
             })
         }
 
-        composable(route = AppRoutes.communityRoute){
+        composable(route = AppRoutes.communityRoute) {
             CommunityScreen(
                 onNavigateToCreatePost = {
                     navController.navigate(AppRoutes.createPostRoute)
                 }
+            )
+        }
+
+        composable(route = AppRoutes.registerRoute) {
+            RegisterRoute(
+                onSignUpSubmitted = {
+                    navController.navigate(AppRoutes.confirmEmailRoute)
+                },
+            )
+        }
+
+        composable(route = AppRoutes.confirmEmailRoute) {
+            ConfirmEmailRoute(
+                onSubmitted = {
+                    navController.navigate(AppRoutes.communityRoute)
+                },
+                onNavUp = navController::navigateUp,
             )
         }
     }

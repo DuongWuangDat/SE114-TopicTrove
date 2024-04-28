@@ -17,14 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.topic_trove.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopCenterAppBar(
     topAppBarText: String,
-    onNavUp: () -> Unit,
+    onNavUp: (() -> Unit)? = null,
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
@@ -33,16 +36,23 @@ fun MyTopCenterAppBar(
                 text = topAppBarText,
                 modifier = Modifier
                     .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
+                    .wrapContentSize(Alignment.Center),
+                style = TextStyle(
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight(500),
+                    color = Color.Black
+                )
             )
         },
         navigationIcon = {
-            IconButton(onClick = onNavUp) {
-                Icon(
-                    imageVector = Icons.Filled.ChevronLeft,
-                    contentDescription = stringResource(id = R.string.back),
-                    tint = Color.Black
-                )
+            if (onNavUp != null) {
+                IconButton(onClick = onNavUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ChevronLeft,
+                        contentDescription = stringResource(id = R.string.back),
+                        tint = Color.Black
+                    )
+                }
             }
         },
         // We need to balance the navigation icon, so we add a spacer.

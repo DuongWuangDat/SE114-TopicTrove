@@ -1,6 +1,8 @@
 package com.topic_trove.ui.modules.registerscreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,27 +29,25 @@ import androidx.compose.ui.unit.sp
 import com.topic_trove.R
 import com.topic_trove.ui.core.utils.supportWideScreen
 import com.topic_trove.ui.core.values.AppColors
+import com.topic_trove.ui.global_widgets.MyTextField
+import com.topic_trove.ui.global_widgets.MyTopCenterAppBar
+import com.topic_trove.ui.global_widgets.Password
 import com.topic_trove.ui.modules.registerscreen.states.ConfirmPasswordState
 import com.topic_trove.ui.modules.registerscreen.states.EmailState
 import com.topic_trove.ui.modules.registerscreen.states.EmailStateSaver
 import com.topic_trove.ui.modules.registerscreen.states.PasswordState
 import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
-import com.topic_trove.ui.global_widgets.MyTextField
-import com.topic_trove.ui.global_widgets.MyTopCenterAppBar
-import com.topic_trove.ui.global_widgets.Password
 
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
     onSignInSubmitted: (name: String, phone: String, email: String, password: String) -> Unit,
-    onNavUp: () -> Unit,
 ) {
 
     Scaffold(
         topBar = {
             MyTopCenterAppBar(
                 topAppBarText = stringResource(id = R.string.register),
-                onNavUp = onNavUp,
             )
         },
         content = { contentPadding ->
@@ -71,7 +71,9 @@ fun RegisterScreen(
 
             LazyColumn(
                 modifier = modifier
+                    .background(color = AppColors.White)
                     .padding(horizontal = 24.dp)
+                    .fillMaxSize()
                     .supportWideScreen(),
                 contentPadding = contentPadding,
             ) {
@@ -165,6 +167,7 @@ fun RegisterScreen(
                     Button(
                         onClick = { onSubmit() },
                         modifier = Modifier
+                            .background(color = AppColors.White)
                             .fillMaxWidth()
                             .padding(top = 24.dp, bottom = 40.dp),
                         shape = RoundedCornerShape(12.dp),
@@ -192,6 +195,5 @@ fun RegisterScreen(
 private fun RegisterScreenPreview() {
     RegisterScreen(
         onSignInSubmitted = { _, _, _, _ -> },
-        onNavUp = {},
     )
 }

@@ -1,5 +1,6 @@
 package com.topic_trove.ui.modules.confirmemailscreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,6 +56,7 @@ fun ConfirmEmailScreen(
     ) { contentPadding ->
         ConstraintLayout(
             modifier = modifier
+                .background(color = AppColors.White)
                 .padding(horizontal = 24.dp)
                 .fillMaxSize()
         ) {
@@ -124,7 +126,8 @@ fun ConfirmEmailScreen(
                                         Text(
                                             style = TextStyle(
                                                 fontSize = 34.sp,
-                                                fontWeight = FontWeight(300)
+                                                fontWeight = FontWeight(300),
+                                                color = AppColors.Black,
                                             ),
                                             text = char,
                                             textAlign = TextAlign.Center,

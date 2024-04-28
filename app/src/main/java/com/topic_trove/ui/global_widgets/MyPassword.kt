@@ -54,8 +54,8 @@ fun Password(
                 }
             },
         textStyle = TextStyle(
-            color = AppColors.BorderStroke,
-            fontStyle = FontStyle.Italic,
+            color = AppColors.Black,
+//            fontStyle = FontStyle.Italic,
             fontSize = 14.sp,
             fontWeight = FontWeight(250),
         ),
