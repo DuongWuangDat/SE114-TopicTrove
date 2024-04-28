@@ -38,9 +38,11 @@ import androidx.navigation.NavController
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
+import com.topic_trove.data.model.Community
 import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.core.values.AppStrings
 import com.topic_trove.ui.core.values.CustomTextStyle
+import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.modules.communityscreen.CommunityScreenVM
 import com.topic_trove.ui.modules.communityscreen.widgets.AddImageRow
 import com.topic_trove.ui.modules.communityscreen.widgets.CommunityCard
@@ -55,7 +57,8 @@ import kotlinx.coroutines.runBlocking
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun createpostScreen(
-    navController: NavController
+    navController: NavController,
+    communityName: String
 ){
 
     val communityVM = viewModel<CommunityScreenVM>()
@@ -79,34 +82,18 @@ fun createpostScreen(
                 },
                 onCreateClick = {
                     communityVM.createPostApi()
+
                 }
             )
             collumnContent(
                 communityVM = communityVM,
-                snackbarHostState= snackbarHostState
+                snackbarHostState= snackbarHostState,
+                communityName = communityName
             )
 
         }
         if(communityVM.isLoading.value){
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(AppColors.BackgroundIndicatorr)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {}
-                    )
-            ){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(color = AppColors.CreatePostButton)
-                }
-
-            }
+            OverlayLoading()
         }
     }
 }
@@ -114,6 +101,7 @@ fun createpostScreen(
 @Composable
 fun collumnContent(
     communityVM: CommunityScreenVM,
+    communityName : String,
     snackbarHostState: SnackbarHostState
 ){
     val scrollState = rememberScrollState()
@@ -124,7 +112,7 @@ fun collumnContent(
         )
         ) {
         Spacer(modifier = Modifier.height(15.dp))
-        CommunityCard(name = "Community1")
+        CommunityCard(name = communityName)
         Spacer(modifier = Modifier.height(16.dp))
         TextFieldCard(title = "Title"){
             communityVM.inputTitle(it)

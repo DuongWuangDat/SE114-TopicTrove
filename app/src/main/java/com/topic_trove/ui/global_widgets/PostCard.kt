@@ -45,8 +45,6 @@ fun PostCard(data : Post,
              onDelete:()->Unit={},
              onLike: ()->Unit={},
              onClickable: ()->Unit = {},
-             isLike: Boolean = false,
-             commentCount : Int = 0,
              ) {
     val date = remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)) }
     val headerPost = createPostHeader()
@@ -112,12 +110,12 @@ fun PostCard(data : Post,
         Row {
             LikeButton(
                 interestCount = data.interestCount,
-                isLike = isLike
+                isLike = data.isLike
             ){
                 onLike()
             }
             Spacer(modifier = Modifier.width(16.dp))
-            CommentButton(count = commentCount)
+            CommentButton(count = data.commentCount)
         }
     }
 }

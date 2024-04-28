@@ -16,5 +16,7 @@ data class Post (
     var imageUrl: String = "",
     var avatar: String ="",
     var createdAt: Date = Date(),
-    var interestCount: Int = 0
+    var interestCount: Int = 0,
+    var isLike: Boolean = false,
+    var commentCount: Int = 0
 )
