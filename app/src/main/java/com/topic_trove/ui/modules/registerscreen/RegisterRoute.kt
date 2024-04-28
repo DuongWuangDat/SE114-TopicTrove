@@ -23,7 +23,7 @@ fun RegisterRoute(
 
     RegisterScreen(
         onSignInSubmitted = { name, phone, email, password ->
-            registerViewModel.register(name, phone, email, password, onSignUpSubmitted)
+            registerViewModel.sendEmail(name, phone, email, password, onSignUpSubmitted)
         },
     )
 }
