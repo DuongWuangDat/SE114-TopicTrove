@@ -9,6 +9,11 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myapplication"
+    namespace = "com.topic_trove"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.topic_trove"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -66,4 +71,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-}
+
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+
+    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+    implementation("com.github.kittinunf.fuel:fuel-android:2.3.1")
+    implementation("com.github.kittinunf.fuel:fuel-json:2.3.1")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
+}}

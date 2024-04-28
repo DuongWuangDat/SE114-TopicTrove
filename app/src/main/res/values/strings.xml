@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Topic Trove</string>
+    <string name="adventure">#Adventure  </string>
+    <string name="post_title">Post Title</string>
+    <string name="post_content"><![CDATA[Post content: LCK mùa Xuân 2024: Đánh bại T1, GenG lập kỷ lục vô địch lần thứ 4 liên tiếp. Trong trận chung kết tổng LCK mùa Xuân 2024, GenG đánh bại T1 3-2, qua đó trở thành nhà vô địch giải đấu. Theo đó, GenG tạo kỷ lục là đội đầu tiên vô địch 4 lần liên tiếp, đồng thời trở thành hạt giống số 1 của LCK tại MSI 2024.]]></string>
+    <string name="title_activity_like_button">Like_Button</string>
+    <string name="title_activity_comment_button">Comment_Button</string>
+    <string name="title_activity_post_card">PostCard</string>
+    <string name="title_activity_delete_button">Delete_Button</string>
 </resources>
