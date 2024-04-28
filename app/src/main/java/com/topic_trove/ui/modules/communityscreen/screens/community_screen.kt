@@ -11,15 +11,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.Post
 import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.global_widgets.CommunityTitle
+import com.topic_trove.ui.global_widgets.OverlayLoading
+import com.topic_trove.ui.modules.communityscreen.CommunityScreenVM
 import com.topic_trove.ui.modules.communityscreen.widgets.TextFieldCard
 import com.topic_trove.ui.modules.communityscreen.widgets.TopBarCreatePost
 import com.topic_trove.ui.modules.communityscreen.widgets.TopbarCommunity
@@ -29,33 +34,50 @@ import com.topic_trove.ui.routes.AppRoutes
 @Composable
 fun CommunityScreen(
     community: Community = Community(),
+    idUser: String = "661ded639a9ecc4c2525774d",
     navController: NavController
 ){
-    var PostList : List<Post> = listOf(Post(communityName = "T1Bo", authorName = "Name", title = "T1",
-        content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"),
-        Post(communityName = "T1Bo", authorName = "Name", title = "T1",
-            content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111", imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"))
-    Scaffold {
+    val communityVM = viewModel<CommunityScreenVM>()
+    val snackbarHostState = communityVM.snackbarHostState
+    LaunchedEffect(key1 = navController) {
+        communityVM.getPostList("662385ad314b50e0397a3a90", idUser)
+    }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) {
         Column(modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             TopbarCommunity(community = community, onNavigateToCreatePost={
-                navController.navigate(AppRoutes.createPostRoute)
+                navController.navigate("${AppRoutes.createPostRoute}/${community.communityName}")
             })
             CommunityTitle {
 
             }
             Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
-                items(PostList) { post ->
+                items(communityVM.postList) { post ->
+                    var isCommunityOwner = if(community.id!="") (community.id == idUser) else false
+                    var isPostOwner = (post.authorID == idUser)
+
                     Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
-                    PostCard(data = post, isPostOwner = true, isCommunityOwner = true, onDelete = {
-                        println("Hello")
+                    PostCard(data = post, isPostOwner = isPostOwner, isCommunityOwner = isCommunityOwner,
+                        onLike = {
+                            communityVM.likePost(post.id, idUser, isLike = post.isLike)
+                        },
+                        onDelete = {
+                        communityVM.deletePost(post.id)
                     })
                 }
             }
+
+        }
+        if(communityVM.isLoading.value){
+            OverlayLoading()
         }
     }
 }
