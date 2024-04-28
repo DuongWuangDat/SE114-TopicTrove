@@ -9,20 +9,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.Post
 import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.global_widgets.CommunityTitle
+import com.topic_trove.ui.global_widgets.CustomDialog
 import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.modules.communityscreen.CommunityScreenVM
 import com.topic_trove.ui.modules.communityscreen.widgets.TextFieldCard
@@ -70,7 +75,9 @@ fun CommunityScreen(
                             communityVM.likePost(post.id, idUser, isLike = post.isLike)
                         },
                         onDelete = {
-                        communityVM.deletePost(post.id)
+                        //communityVM.deletePost(post.id)
+                            communityVM.isShowDialog.value=true
+                            communityVM.curPostId.value = post.id
                     })
                 }
             }
@@ -78,6 +85,19 @@ fun CommunityScreen(
         }
         if(communityVM.isLoading.value){
             OverlayLoading()
+        }
+        if(communityVM.isShowDialog.value){
+            CustomDialog(
+                onDismiss = {
+                    communityVM.isShowDialog.value=false
+                },
+                onConfirm = {
+                    communityVM.deletePost(communityVM.curPostId.value)
+                    communityVM.isShowDialog.value= false
+                },
+                title = "Delete this post",
+                text = "Are you sure to delete this post")
+
         }
     }
 }

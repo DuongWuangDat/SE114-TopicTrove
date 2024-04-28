@@ -36,6 +36,8 @@ class CommunityScreenVM : ViewModel() {
     var isLoading = mutableStateOf(false)
     var snackbarHostState = SnackbarHostState()
     var postList = mutableStateListOf<Post>()
+    var isShowDialog = mutableStateOf(false)
+    var curPostId = mutableStateOf("")
     var isEnable = mutableStateOf(false)
         private set
     fun inputContent(it: String){
