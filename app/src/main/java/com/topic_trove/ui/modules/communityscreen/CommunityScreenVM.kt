@@ -67,6 +67,7 @@ class CommunityScreenVM : ViewModel() {
     fun createPostApi(){
         viewModelScope.launch {
             isLoading.value= true
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
             val json = if(_postData.value.imageUrl == "")
                 """
                         {
@@ -102,7 +103,7 @@ class CommunityScreenVM : ViewModel() {
                 .timeoutRead(Int.MAX_VALUE)
                 .header("Content-Type" to "application/json")
                 .authentication()
-                .bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+                .bearer(accessToken)
                 .jsonBody(json)
                 .responseString (){ result ->
                     result.fold(
