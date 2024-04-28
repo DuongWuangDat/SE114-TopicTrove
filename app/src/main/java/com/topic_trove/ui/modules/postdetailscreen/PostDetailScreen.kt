@@ -1,5 +1,6 @@
 package com.topic_trove.ui.modules.postdetailscreen
 
+import PostCard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +29,6 @@ import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.core.values.convertHex
 import com.topic_trove.ui.global_widgets.CommentCard
 import com.topic_trove.ui.global_widgets.MyTopLeftAppBar
-import com.topic_trove.ui.global_widgets.PostCard
 
 @Composable
 fun PostDetailScreen() {

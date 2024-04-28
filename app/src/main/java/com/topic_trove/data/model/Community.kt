@@ -6,6 +6,6 @@ data class Community(
     val icon : String = "",
     val description: String = "",
     val rules: String = "",
-    val communityName : String = "",
+    val communityName : String = "community1",
     val memberCount : Int = 0
 )

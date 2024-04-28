@@ -1,7 +1,6 @@
-package com.topic_trove.ui.global_widgets
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,40 +31,47 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostDate
 import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostHeader
 import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostTitle
+import com.topic_trove.ui.global_widgets.CommentButton
+import com.topic_trove.ui.global_widgets.DeleteButton
+import com.topic_trove.ui.global_widgets.LikeButton
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 fun PostCard(
-    modifier: Modifier = Modifier,
     data: Post,
     isPostOwner: Boolean,
     isCommunityOwner: Boolean,
     onDelete: (() -> Unit)? = {},
     onLike: () -> Unit = {},
-    isLike: Boolean = false,
-    commentCount: Int = 0,
+    onClickable: () -> Unit = {},
 ) {
     val date = remember {
         mutableStateOf(
-            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)
+            SimpleDateFormat(
+                "dd/MM/yyyy",
+                Locale.getDefault()
+            ).format(data.createdAt)
         )
     }
     val headerPost = createPostHeader()
     val datePost = createPostDate()
     val titlePost = createPostTitle()
     val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp.value
-    Column(
-        modifier = modifier
-            .background(color = Color.White)
-            .padding(15.dp)
-    ) {
+    configuration.screenWidthDp.dp.value
+    Column(modifier = Modifier
+        .clickable {
+            onClickable()
+        }
+        .background(color = Color.White)
+        .padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
         Row {
             Text(text = "#" + data.communityName, style = headerPost)
             if ((isPostOwner || isCommunityOwner) && onDelete != null) {
-                Spacer(modifier = Modifier.width((screenWidth * 0.65).dp))
-                DeleteButton(modifier = Modifier) { onDelete() }
+                Spacer(modifier = Modifier.weight(1f))
+                DeleteButton(modifier = Modifier) {
+                    onDelete()
+                }
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -126,12 +132,12 @@ fun PostCard(
         Row {
             LikeButton(
                 interestCount = data.interestCount,
-                isLike = isLike
+                isLike = data.isLike
             ) {
                 onLike()
             }
             Spacer(modifier = Modifier.width(16.dp))
-            CommentButton(count = commentCount)
+            CommentButton(count = data.commentCount)
         }
     }
 }
@@ -146,5 +152,5 @@ fun PreviewPost() {
         content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111",
         imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"
     )
-    PostCard(data = data, isPostOwner = true, isCommunityOwner = false)
+    PostCard(data, true, false)
 }

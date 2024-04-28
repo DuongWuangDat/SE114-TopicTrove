@@ -3,8 +3,10 @@ package com.topic_trove.ui.routes
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
@@ -20,17 +22,22 @@ fun NavControl(navController: NavHostController) {
             ChatScreen()
         }
 
-        composable(route = AppRoutes.createPostRoute) {
-            createpostScreen(onBack = {
-                navController.popBackStack()
-            })
+        composable(route = "${AppRoutes.createPostRoute}/{communityName}",
+            arguments = listOf(
+                navArgument("communityName") {
+                    type = NavType.StringType
+                }
+            )) { entry ->
+            val name = entry.arguments?.getString("communityName")
+            requireNotNull(name)
+            createpostScreen(navController = navController, communityName = name)
         }
 
-        composable(route = AppRoutes.communityRoute) {
+        composable(
+            route = AppRoutes.communityRoute
+        ) {
             CommunityScreen(
-                onNavigateToCreatePost = {
-                    navController.navigate(AppRoutes.createPostRoute)
-                }
+                navController = navController
             )
         }
 

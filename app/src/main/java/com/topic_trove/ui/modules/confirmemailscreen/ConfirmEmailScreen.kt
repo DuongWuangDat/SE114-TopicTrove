@@ -99,7 +99,7 @@ fun ConfirmEmailScreen(
                             }
                         },
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.Text
                         ),
                         decorationBox = {
                             Row(
