@@ -15,6 +15,7 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.topic_trove.data.model.Post
+import com.topic_trove.ui.core.utils.CheckRefreshToken
 import com.topic_trove.ui.core.values.AppStrings
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -127,6 +128,7 @@ class CommunityScreenVM : ViewModel() {
 
     fun uploadImgApi(file : File){
         viewModelScope.launch {
+
             isLoading.value= true
             // Tải lên hình ảnh
             Fuel.upload("https://topictrovebe.onrender.com/api/v1/upload/image")
@@ -165,12 +167,14 @@ class CommunityScreenVM : ViewModel() {
         viewModelScope.launch {
             postList.clear()
             var formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+
             Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
                 .timeout(Int.MAX_VALUE)
                 .timeoutRead(Int.MAX_VALUE)
                 .header("Content-Type" to "application/json")
                 .authentication()
-                .bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+                .bearer(accessToken)
                 .responseString(){ result ->
                     result.fold(
                         {d->
@@ -223,11 +227,12 @@ class CommunityScreenVM : ViewModel() {
     fun deletePost(id: String){
         viewModelScope.launch {
             isLoading.value= true
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
             Fuel.delete("$base_url/post/delete/$id")
                 .timeout(Int.MAX_VALUE)
                 .timeoutRead(Int.MAX_VALUE)
                 .authentication()
-                .bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+                .bearer(accessToken)
                 .responseString(){ result ->
                     result.fold(
                         {d->
@@ -251,6 +256,7 @@ class CommunityScreenVM : ViewModel() {
     fun likePost(id: String, userId: String, isLike: Boolean){
         viewModelScope.launch {
             FuelManager.instance.forceMethods= true
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
             val interest = if(!isLike) 1 else -1
             val json = """
                 {
@@ -261,7 +267,7 @@ class CommunityScreenVM : ViewModel() {
             Fuel.patch("$base_url/post/likepost/$id")
                 .header("Content-Type" to "application/json")
                 .authentication()
-                .bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+                .bearer(accessToken)
                 .jsonBody(json)
                 .responseString(){_,response,result ->
                     result.fold(
