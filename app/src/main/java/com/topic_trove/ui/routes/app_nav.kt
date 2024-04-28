@@ -14,6 +14,7 @@ import com.topic_trove.ui.global_widgets.CommunityTitle
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
+import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
 
 
 @Composable
@@ -40,6 +41,10 @@ fun NavControll(navController: NavHostController){
             CommunityScreen(
                 navController = navController
             )
+        }
+
+        composable(route = AppRoutes.loginRoute){
+            LoginScreen()
         }
     }
 }

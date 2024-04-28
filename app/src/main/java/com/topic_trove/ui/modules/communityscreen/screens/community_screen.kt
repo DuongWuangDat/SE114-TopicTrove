@@ -45,7 +45,7 @@ fun CommunityScreen(
     val communityVM = viewModel<CommunityScreenVM>()
     val snackbarHostState = communityVM.snackbarHostState
     LaunchedEffect(key1 = navController) {
-        communityVM.getPostList("662385ad314b50e0397a3a90", idUser)
+        communityVM.getPostList("662385ad314b50e0397a3a90", idUser, navController)
     }
     Scaffold(
         snackbarHost = {
@@ -72,7 +72,7 @@ fun CommunityScreen(
                     Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
                     PostCard(data = post, isPostOwner = isPostOwner, isCommunityOwner = isCommunityOwner,
                         onLike = {
-                            communityVM.likePost(post.id, idUser, isLike = post.isLike)
+                            communityVM.likePost(post.id, idUser, isLike = post.isLike, navController)
                         },
                         onDelete = {
                         //communityVM.deletePost(post.id)
@@ -92,7 +92,7 @@ fun CommunityScreen(
                     communityVM.isShowDialog.value=false
                 },
                 onConfirm = {
-                    communityVM.deletePost(communityVM.curPostId.value)
+                    communityVM.deletePost(communityVM.curPostId.value,navController)
                     communityVM.isShowDialog.value= false
                 },
                 title = "Delete this post",
