@@ -81,7 +81,7 @@ fun createpostScreen(
                          navController.popBackStack()
                 },
                 onCreateClick = {
-                    communityVM.createPostApi()
+                    communityVM.createPostApi(navController)
 
                 }
             )
