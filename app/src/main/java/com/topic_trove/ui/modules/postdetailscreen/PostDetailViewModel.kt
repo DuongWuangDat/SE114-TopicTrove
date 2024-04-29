@@ -1,5 +1,6 @@
 package com.topic_trove.ui.modules.postdetailscreen
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.topic_trove.data.model.CommentResponse
@@ -8,6 +9,7 @@ import com.topic_trove.data.model.Post
 import com.topic_trove.data.repositories.PostRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +32,8 @@ class PostDetailViewModel @Inject constructor(
 
     private val _postDetailUiState = MutableStateFlow(PostDetailUiState())
     val postDetailUiState: StateFlow<PostDetailUiState> = _postDetailUiState.asStateFlow()
+
+    var snackBarHostState = SnackbarHostState()
 
     fun likePost(
         authorId: String,
@@ -121,6 +125,7 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteComment(deleteId).onSuccess {
                 getCommentByPostId(postDetailUiState.value.post.id)
+                snackBarHostState.showSnackbar("Delete comment successfully")
             }.onFailure {
                 // TODO handle error
             }

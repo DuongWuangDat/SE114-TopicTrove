@@ -1,3 +1,5 @@
+package com.topic_trove.ui.global_widgets
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,9 +32,7 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostDate
 import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostHeader
 import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostTitle
-import com.topic_trove.ui.global_widgets.CommentButton
-import com.topic_trove.ui.global_widgets.DeleteButton
-import com.topic_trove.ui.global_widgets.LikeButton
+import com.topic_trove.ui.routes.AppRoutes
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -44,6 +44,7 @@ fun PostCard(
     onDelete: (() -> Unit)? = {},
     onLike: (Boolean) -> Unit = {},
     onClickable: () -> Unit = {},
+    fromRoute: String = AppRoutes.communityRoute,
 ) {
     val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)
     val headerPost = createPostHeader()
@@ -123,11 +124,18 @@ fun PostCard(
         }
 
         Row {
-            LikeButton(
-                interestCount = data.interestCount,
-                isLike = data.isLike
-            ) {
-                onLike(it)
+            if (fromRoute == AppRoutes.postDetailRoute) {
+                LikeDetailPostButton(
+                    interestCount = data.interestCount,
+                    isLike = data.isLike
+                ) {
+                    onLike(it)
+                }
+            } else {
+                LikeButton(
+                    interestCount = data.interestCount,
+                    isLike = data.isLike
+                ) { onLike(false) }
             }
             Spacer(modifier = Modifier.width(16.dp))
             CommentButton(commentCount = data.commentCount)
@@ -147,5 +155,5 @@ fun PreviewPost() {
         content = "1qqqqqqqqqqqqqqqqqqqqqqq 11111111",
         imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"
     )
-    PostCard(data, true, false)
+    PostCard(data, isPostOwner = true, isCommunityOwner = false)
 }

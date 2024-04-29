@@ -12,6 +12,7 @@ import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
+import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
@@ -44,6 +45,10 @@ fun NavControl(navController: NavHostController) {
             )
         }
 
+        composable(route = AppRoutes.loginRoute) {
+            LoginScreen()
+        }
+
         composable(route = AppRoutes.registerRoute) {
             RegisterRoute(
                 onSignUpSubmitted = {
@@ -55,6 +60,7 @@ fun NavControl(navController: NavHostController) {
         composable(route = AppRoutes.confirmEmailRoute) {
             ConfirmEmailRoute(
                 onSubmitted = {
+                    // TODO navigation to login
                     navController.navigate(AppRoutes.communityRoute)
                 },
                 onNavUp = navController::navigateUp,

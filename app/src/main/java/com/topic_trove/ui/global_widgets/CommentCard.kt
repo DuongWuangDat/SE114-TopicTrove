@@ -122,7 +122,7 @@ fun CommentCard(
                 Text(text = data.content, style = CustomTextStyle.contentPostCard())
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
-                    LikeButton(
+                    LikeDetailPostButton(
                         interestCount = data.interestCount,
                         isLike = data.liked,
                     ) { onLike(it, data.id) }

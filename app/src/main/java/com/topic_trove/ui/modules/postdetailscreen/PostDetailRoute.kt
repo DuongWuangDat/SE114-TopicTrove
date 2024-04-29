@@ -20,6 +20,7 @@ fun PostDetailRoute(
     }
     val postDetailUiState: PostDetailUiState by viewModel.postDetailUiState.collectAsStateWithLifecycle()
     PostDetailScreen(
+        snackBarHostState = viewModel.snackBarHostState,
         postDetail = postDetailUiState,
         onNavUp = onNavUp,
         onNavAddComment = onNavAddComment,

@@ -10,5 +10,6 @@ class AppRoutes {
         val createCommentRoute = "/createcomment"
         val replyCommentRoute = "/replycomment"
         val postDetailRoute = "/postDetail"
+        val loginRoute = "/login"
     }
 }

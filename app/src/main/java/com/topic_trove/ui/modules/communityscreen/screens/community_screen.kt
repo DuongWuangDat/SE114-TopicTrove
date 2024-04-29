@@ -1,6 +1,6 @@
 package com.topic_trove.ui.modules.communityscreen.screens
 
-import PostCard
+import com.topic_trove.ui.global_widgets.PostCard
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ fun CommunityScreen(
     val communityVM = viewModel<CommunityScreenVM>()
     val snackbarHostState = communityVM.snackbarHostState
     LaunchedEffect(key1 = navController) {
-        communityVM.getPostList("662385ad314b50e0397a3a90", idUser)
+        communityVM.getPostList("662385ad314b50e0397a3a90", idUser, navController)
     }
     Scaffold(
         snackbarHost = {
@@ -60,9 +60,9 @@ fun CommunityScreen(
             Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
                 items(communityVM.postList) { post ->
-                    var isCommunityOwner =
+                    val isCommunityOwner =
                         if (community.id != "") (community.id == idUser) else false
-                    var isPostOwner = (post.authorID == idUser)
+                    val isPostOwner = (post.authorID == idUser)
 
                     Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
                     PostCard(
@@ -70,7 +70,12 @@ fun CommunityScreen(
                         isPostOwner = isPostOwner,
                         isCommunityOwner = isCommunityOwner,
                         onLike = {
-                            communityVM.likePost(post.id, idUser, isLike = post.isLike)
+                            communityVM.likePost(
+                                post.id,
+                                idUser,
+                                isLike = post.isLike,
+                                navController
+                            )
                         },
                         onDelete = {
                             //communityVM.deletePost(post.id)
@@ -96,13 +101,12 @@ fun CommunityScreen(
                     communityVM.isShowDialog.value = false
                 },
                 onConfirm = {
-                    communityVM.deletePost(communityVM.curPostId.value)
+                    communityVM.deletePost(communityVM.curPostId.value, navController)
                     communityVM.isShowDialog.value = false
                 },
                 title = "Delete this post",
                 text = "Are you sure to delete this post"
             )
-
         }
     }
 }

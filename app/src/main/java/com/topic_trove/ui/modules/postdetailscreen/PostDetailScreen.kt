@@ -1,6 +1,5 @@
 package com.topic_trove.ui.modules.postdetailscreen
 
-import PostCard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +12,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,6 +30,8 @@ import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.core.values.convertHex
 import com.topic_trove.ui.global_widgets.CommentCard
 import com.topic_trove.ui.global_widgets.MyTopLeftAppBar
+import com.topic_trove.ui.global_widgets.PostCard
+import com.topic_trove.ui.routes.AppRoutes
 
 @Composable
 fun PostDetailScreen(
@@ -39,30 +42,35 @@ fun PostDetailScreen(
     onReply: (String, String) -> Unit,
     onDelete: (String) -> Unit,
     onLikeComment: (Boolean, String) -> Unit,
+    snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
-    Scaffold(topBar = {
-        MyTopLeftAppBar(topAppBarText = "", onNavUp = { onNavUp() }, actions = {
-            Button(
-                onClick = { onNavAddComment() },
-                contentPadding = PaddingValues(7.dp),
-                modifier = Modifier
-                    .width(78.dp)
-                    .height(30.dp)
-                    .padding(end = 14.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(AppColors.CommunityJoinButton),
-            ) {
-                Text(
-                    text = stringResource(id = R.string.comment), style = TextStyle(
-                        color = AppColors.White,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight(600),
-                        lineHeight = 12.sp,
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
+        topBar = {
+            MyTopLeftAppBar(topAppBarText = "", onNavUp = { onNavUp() }, actions = {
+                Button(
+                    onClick = { onNavAddComment() },
+                    contentPadding = PaddingValues(7.dp),
+                    modifier = Modifier
+                        .width(78.dp)
+                        .height(30.dp)
+                        .padding(end = 14.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(AppColors.CommunityJoinButton),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.comment), style = TextStyle(
+                            color = AppColors.White,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight(600),
+                            lineHeight = 12.sp,
+                        )
                     )
-                )
-            }
-        })
-    },
+                }
+            })
+        },
         content = { contentPadding ->
             LazyColumn(
                 contentPadding = contentPadding,
@@ -76,7 +84,8 @@ fun PostDetailScreen(
                         isPostOwner = postDetail.owner,
                         isCommunityOwner = postDetail.isCommunityOwner,
                         onDelete = null,
-                        onLike = { onLike(it) }
+                        onLike = { onLike(it) },
+                        fromRoute = AppRoutes.postDetailRoute,
                     )
                     postDetail.comments.forEach { comment ->
                         Divider(
