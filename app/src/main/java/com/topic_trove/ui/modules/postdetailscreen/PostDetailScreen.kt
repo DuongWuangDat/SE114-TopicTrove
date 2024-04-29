@@ -36,7 +36,9 @@ fun PostDetailScreen(
     onNavUp: () -> Unit,
     onNavAddComment: () -> Unit,
     onLike: (Boolean) -> Unit,
-    onReply: () -> Unit,
+    onReply: (String, String) -> Unit,
+    onDelete: (String) -> Unit,
+    onLikeComment: (Boolean, String) -> Unit,
 ) {
     Scaffold(topBar = {
         MyTopLeftAppBar(topAppBarText = "", onNavUp = { onNavUp() }, actions = {
@@ -74,9 +76,7 @@ fun PostDetailScreen(
                         isPostOwner = postDetail.owner,
                         isCommunityOwner = postDetail.isCommunityOwner,
                         onDelete = null,
-                        onLike = {
-                            onLike(it)
-                        }
+                        onLike = { onLike(it) }
                     )
                     postDetail.comments.forEach { comment ->
                         Divider(
@@ -87,9 +87,15 @@ fun PostDetailScreen(
                         CommentCard(
                             modifier = Modifier.padding(top = 15.dp, start = 15.dp, bottom = 15.dp),
                             data = comment,
-                            onDelete = null,
-                            onLike = {},
-                            onReply = onReply,
+                            onDelete = { commentId ->
+                                onDelete(commentId)
+                            },
+                            onLike = { isLiked, id ->
+                                onLikeComment(isLiked, id)
+                            },
+                            onReply = { content, parentComment ->
+                                onReply(content, parentComment)
+                            },
                         )
                     }
                 }
@@ -109,58 +115,13 @@ private fun PostDetailScreenPreview() {
                 title = "T1",
                 content = "11111111",
                 imageUrl = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39"
-            ), comments = listOf(
-                Comment(
-                    authorName = "Name2",
-                    content = "11111111",
-                    avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                    replies = listOf(
-                        Comment(
-                            authorName = "Name3",
-                            content = "11111111",
-                            avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                            replies = listOf(),
-                        )
-                    ),
-                ),
-                Comment(
-                    authorName = "Name2",
-                    content = "11111111",
-                    avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                    replies = listOf(
-                        Comment(
-                            authorName = "Name3",
-                            content = "11111111",
-                            avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                            replies = listOf(
-                                Comment(
-                                    authorName = "Name3",
-                                    content = "11111111",
-                                    avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                                    replies = listOf(),
-                                ),
-                                Comment(
-                                    authorName = "Name3",
-                                    content = "11111111",
-                                    avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                                    replies = listOf(),
-                                )
-                            ),
-                        ),
-                        Comment(
-                            authorName = "Name3",
-                            content = "11111111",
-                            avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2F1000002488.jpg?alt=media&token=f47b647a-c17c-404f-b42d-120b34c14e39",
-                            replies = listOf(),
-                        )
-                    ),
-                )
-            )
-
+            ),
         ),
         onNavUp = {},
         onNavAddComment = {},
         onLike = {},
-        onReply = {},
+        onReply = { _, _ -> },
+        onDelete = {},
+        onLikeComment = { _, _ -> }
     )
 }

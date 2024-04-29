@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,14 +45,7 @@ fun PostCard(
     onLike: (Boolean) -> Unit = {},
     onClickable: () -> Unit = {},
 ) {
-    val date = remember {
-        mutableStateOf(
-            SimpleDateFormat(
-                "dd/MM/yyyy",
-                Locale.getDefault()
-            ).format(data.createdAt)
-        )
-    }
+    val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)
     val headerPost = createPostHeader()
     val datePost = createPostDate()
     val titlePost = createPostTitle()
@@ -108,7 +99,7 @@ fun PostCard(
                 Spacer(modifier = Modifier.width(10.dp))
                 // Date
                 Text(
-                    text = date.value,
+                    text = date,
                     style = datePost,
                     modifier = Modifier.align(Alignment.Bottom)
                 )

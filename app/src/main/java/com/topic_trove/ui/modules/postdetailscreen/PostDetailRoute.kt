@@ -11,11 +11,12 @@ fun PostDetailRoute(
     viewModel: PostDetailViewModel = hiltViewModel(),
     postId: String,
     onNavUp: () -> Unit,
-    onReply: () -> Unit,
+    onReply: (String, String) -> Unit,
     onNavAddComment: () -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getPostById(postId)
+        viewModel.getCommentByPostId(postId)
     }
     val postDetailUiState: PostDetailUiState by viewModel.postDetailUiState.collectAsStateWithLifecycle()
     PostDetailScreen(
@@ -29,6 +30,18 @@ fun PostDetailRoute(
                 interest = if (it) 1 else -1,
             )
         },
-        onReply = onReply,
+        onReply = { content, parentComment ->
+            onReply(content, parentComment)
+        },
+        onDelete = { id ->
+            viewModel.deleteComment(id)
+        },
+        onLikeComment = { isLiked, id ->
+            viewModel.likeComment(
+                authorId = postDetailUiState.post.authorID,
+                interest = if (isLiked) 1 else -1,
+                commentId = id,
+            )
+        }
     )
 }

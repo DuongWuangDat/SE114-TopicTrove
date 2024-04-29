@@ -13,7 +13,6 @@ import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
-import com.topic_trove.ui.modules.postdetailscreen.PostDetailUiState
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 
@@ -73,13 +72,15 @@ fun NavControl(navController: NavHostController) {
             )
         }
 
-        composable(route = AppRoutes.replyCommentRoute) {
-            val postDetail: PostDetailUiState =
-                navController.previousBackStackEntry?.savedStateHandle?.get("postDetail")
-                    ?: PostDetailUiState()
+        composable(route = "${AppRoutes.replyCommentRoute}/{postId}/{parentComment}/{comment}") { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            val parentComment = backStackEntry.arguments?.getString("parentComment")
+            val comment = backStackEntry.arguments?.getString("comment")
             ReplyCommentRoute(
-                postDetail = postDetail,
+                postId = postId ?: "",
+                parentComment = parentComment ?: "",
                 onNavUp = navController::navigateUp,
+                content = comment ?: "",
             )
         }
 
@@ -89,7 +90,9 @@ fun NavControl(navController: NavHostController) {
                 postId = postId ?: "",
                 onNavUp = navController::navigateUp,
                 onNavAddComment = { navController.navigate("${AppRoutes.createCommentRoute}/$postId") },
-                onReply = { navController.navigate(AppRoutes.replyCommentRoute) },
+                onReply = { content, parentComment ->
+                    navController.navigate("${AppRoutes.replyCommentRoute}/$postId/$parentComment/$content")
+                },
             )
         }
     }

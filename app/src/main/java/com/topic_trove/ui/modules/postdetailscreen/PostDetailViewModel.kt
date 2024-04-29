@@ -2,7 +2,8 @@ package com.topic_trove.ui.modules.postdetailscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.topic_trove.data.model.LikePostRequest
+import com.topic_trove.data.model.CommentResponse
+import com.topic_trove.data.model.LikeRequest
 import com.topic_trove.data.model.Post
 import com.topic_trove.data.repositories.PostRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
@@ -38,7 +39,7 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.likePost(
                 id = postId,
-                likePostRequest = LikePostRequest(authorId, interest),
+                likeRequest = LikeRequest(authorId, interest),
             ).onSuccess {
                 _postDetailUiState.update { uiState ->
                     uiState.copy(
@@ -78,9 +79,65 @@ class PostDetailViewModel @Inject constructor(
                             isLike = response.interestUserList?.contains(idUser) ?: false,
                             commentCount = response.commentCount ?: 0,
                         ),
-                        comments = listOf(),
                     )
                 }
+            }.onFailure {
+                // TODO handle error
+            }
+        }
+    }
+
+    fun getCommentByPostId(id: String) {
+        viewModelScope.launch {
+            repository.getCommentByPostId(id).onSuccess { response ->
+                _postDetailUiState.update { uiState ->
+                    uiState.copy(
+                        comments = mapData(response),
+                    )
+                }
+            }.onFailure {
+                // TODO handle error
+            }
+        }
+    }
+
+    private fun mapData(list: List<CommentResponse>): List<Comment> {
+        return list.map {
+            Comment(
+                id = it.comment?.id ?: "",
+                authorName = it.comment?.author?.username ?: "",
+                content = it.comment?.content ?: "",
+                createdAt = it.comment?.createdAt ?: Date(),
+                avatar = it.comment?.author?.avatar ?: "",
+                interestCount = it.comment?.interestCount ?: 0,
+                liked = it.comment?.interestUserList?.contains(idUser) ?: false,
+                owner = (it.comment?.author?.id == idUser),
+                replies = mapData(it.children ?: listOf())
+            )
+        }
+    }
+
+    fun deleteComment(deleteId: String) {
+        viewModelScope.launch {
+            repository.deleteComment(deleteId).onSuccess {
+                getCommentByPostId(postDetailUiState.value.post.id)
+            }.onFailure {
+                // TODO handle error
+            }
+        }
+    }
+
+    fun likeComment(
+        authorId: String,
+        commentId: String,
+        interest: Int,
+    ) {
+        viewModelScope.launch {
+            repository.likeComment(
+                id = commentId,
+                likeRequest = LikeRequest(authorId, interest),
+            ).onSuccess {
+                getCommentByPostId(postDetailUiState.value.post.id)
             }.onFailure {
                 // TODO handle error
             }

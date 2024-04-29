@@ -37,6 +37,7 @@ import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
 
 @Composable
 fun ReplyScreen(
+    content: String,
     comment: (String) -> Unit,
     onNavUp: () -> Unit
 ) {
@@ -110,7 +111,7 @@ fun ReplyScreen(
                             .padding(horizontal = 12.dp, vertical = 16.dp)
                     ) {
                         Text(
-                            text = "Delete",
+                            text = content,
                             color = AppColors.Black,
                             modifier = Modifier.padding(start = 8.dp),
                             style = TextStyle(
@@ -149,5 +150,5 @@ fun ReplyScreen(
 @Preview
 @Composable
 private fun ReplyScreenPreview() {
-    ReplyScreen(comment = {}, onNavUp = { })
+    ReplyScreen(content = "", comment = {}, onNavUp = { })
 }

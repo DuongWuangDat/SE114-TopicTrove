@@ -17,8 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,16 +41,12 @@ fun CommentCard(
     modifier: Modifier = Modifier,
     divider: Boolean = false,
     data: Comment,
-    onDelete: (() -> Unit)? = {},
-    onLike: () -> Unit = {},
-    onReply: () -> Unit = {},
+    onDelete: (String) -> Unit,
+    onLike: (Boolean, String) -> Unit,
+    onReply: (String, String) -> Unit,
     spacer: @Composable (() -> Unit)? = {},
 ) {
-    val date = remember {
-        mutableStateOf(
-            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)
-        )
-    }
+    val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)
     val datePost = createPostDate()
     Column(
         modifier = modifier
@@ -71,7 +65,7 @@ fun CommentCard(
                     thickness = 0.3.dp
                 )
             }
-            Column(modifier = Modifier.padding(start = 15.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 15.dp)) {
                 if (spacer != null) {
                     spacer()
                 }
@@ -84,7 +78,7 @@ fun CommentCard(
                             .clip(CircleShape)
                     ) {
                         AsyncImage(
-                            model = data.avatar,
+                            if (data.avatar == "") "https://firebasestorage.googleapis.com/v0/b/skillexchange-62da0.appspot.com/o/files%2FArtificial%20Intelligence%20Programming.png?alt=media&token=3accd6fe-5296-4e68-94e4-eefe98660110" else data.avatar,
                             contentDescription = stringResource(R.string.avatar),
                             modifier = Modifier.size(20.dp),
                             contentScale = ContentScale.Crop,
@@ -110,7 +104,7 @@ fun CommentCard(
                     // Date
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
-                        text = date.value,
+                        text = date,
                         style = datePost,
                     )
                     Spacer(
@@ -118,8 +112,10 @@ fun CommentCard(
                             .width(10.dp)
                             .weight(1f)
                     )
-                    if (onDelete != null) {
-                        DeleteButton(modifier = Modifier) { onDelete() }
+                    if (data.owner) {
+                        DeleteButton(modifier = Modifier) {
+                            onDelete(data.id)
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -129,10 +125,10 @@ fun CommentCard(
                     LikeButton(
                         interestCount = data.interestCount,
                         isLike = data.liked,
-                    ) { onLike() }
+                    ) { onLike(it, data.id) }
                     Spacer(modifier = Modifier.width(16.dp))
                     ReplyButton {
-                        onReply()
+                        onReply(data.content, data.id)
                     }
                 }
             }
@@ -154,7 +150,6 @@ fun CommentCard(
                     modifier = Modifier.padding(
                         top = if (index == 0) 15.dp else 0.dp,
                         start = 15.dp,
-                        end = 15.dp,
                     ),
                     divider = true,
                     data = reply,
@@ -164,8 +159,12 @@ fun CommentCard(
                         { Spacer(modifier = Modifier.height(15.dp)) }
                     },
                     onReply = onReply,
-                    onDelete = {},
-                    onLike = {},
+                    onDelete = {
+                        onDelete(reply.id)
+                    },
+                    onLike = { isLiked, id ->
+                        onLike(isLiked, id)
+                    },
                 )
             }
 
@@ -191,7 +190,8 @@ fun PreviewCommentCard() {
     )
     CommentCard(
         data = data,
-        onDelete = null,
-        onLike = {}
+        onDelete = { },
+        onLike = { _, _ -> },
+        onReply = { _, _ -> },
     )
 }
