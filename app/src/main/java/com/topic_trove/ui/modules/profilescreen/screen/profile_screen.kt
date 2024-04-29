@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,16 +33,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.topic_trove.R
 import com.topic_trove.data.model.User
 import com.topic_trove.ui.core.values.convertHex
+import com.topic_trove.ui.modules.profilescreen.ProfileScreenVM
 
 @Composable
-fun ProfileScreen(user: User = User()) {
+fun ProfileScreen(
+    user: User = User(),
+    navController: NavController
+) {
+    val profileVM = viewModel<ProfileScreenVM>()
+
+    LaunchedEffect(key1 = navController) {
+        profileVM.getPosts()
+    }
     Scaffold(topBar = {
-        HeaderBar(onBackButtonPressed = { /*TODO*/ })
+        HeaderBar(onBackButtonPressed = { navController.popBackStack() })
     }
 
     ) { innerPadding ->
@@ -61,7 +73,13 @@ fun ProfileScreen(user: User = User()) {
                 placeholder = painterResource(R.drawable.suzy),
                 contentDescription = "Profile Picture",
             )
-            Text(text = user.username,  color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 14.sp, modifier = Modifier.padding(8.dp))
+            Text(
+                text = user.username,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(8.dp)
+            )
             Button(
                 onClick = { /*TODO*/ },
                 colors = ButtonColors(
@@ -80,7 +98,7 @@ fun ProfileScreen(user: User = User()) {
             Button(
                 onClick = { /*TODO*/ },
                 colors = ButtonColors(
-                    containerColor =  Color(convertHex("#E90000")),
+                    containerColor = Color(convertHex("#E90000")),
                     contentColor = Color.White,
                     disabledContainerColor = Color.Yellow,
                     disabledContentColor = Color.Cyan,
@@ -105,6 +123,7 @@ fun ProfileScreenPreview() {
             "1234567890",
             "android.resource://com.topic_trove/drawable/add_btn",
             emptyList()
-        )
+        ),
+        navController = NavController(LocalContext.current)
     )
 }

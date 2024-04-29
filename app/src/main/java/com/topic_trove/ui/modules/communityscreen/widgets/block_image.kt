@@ -49,7 +49,8 @@ import kotlin.coroutines.suspendCoroutine
 fun ImageBlock(
     isLoading : MutableState<Boolean>,
     snackbarHostState: SnackbarHostState,
-    inputImage: (String)-> Unit
+    inputImage: (String)-> Unit,
+    uploadImage: (File)-> Unit
 ){
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp.value
@@ -103,39 +104,7 @@ fun ImageBlock(
                             inputStream.copyTo(fileOut)
                         }
                     }
-
-                    isLoading.value= true
-                    // Tải lên hình ảnh
-                    runBlocking {
-                        Fuel.upload("https://topictrovebe.onrender.com/api/v1/upload/image")
-                            .add(FileDataPart(file, name = "image"))
-                            .responseString() { result ->
-                                result.fold(
-                                    { d ->
-                                        val jsonObject = JSONObject(d)
-                                        val imageUrl = jsonObject.getString("image")
-                                        println("Image URL: $imageUrl")
-                                        isLoading.value=false
-                                        inputImage(imageUrl)
-                                        GlobalScope.launch {
-                                            snackbarHostState.showSnackbar("Upload image successfully")
-                                        }
-
-
-                                    },
-                                    { err ->
-                                        isLoading.value=false
-                                        GlobalScope.launch {
-                                        snackbarHostState.showSnackbar("Something went wrong")
-                                    }
-
-                                    }
-                                )
-                            }
-                    }
-
-
-
+                    uploadImage(file)
                 }
             }, colors = ButtonDefaults.buttonColors(
                 AppColors.AddImgPostButton

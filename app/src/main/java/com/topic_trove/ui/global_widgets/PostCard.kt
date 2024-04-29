@@ -1,7 +1,9 @@
+import android.text.BoringLayout
 import android.text.Layout
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.shape.CircleShape
@@ -37,21 +39,32 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.global_widgets.DeleteButton
 
 @Composable
-fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean, onDelete:()->Unit={},onLike: ()->Unit={}) {
-    val date = remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())) }
+fun PostCard(data : Post,
+             isPostOwner: Boolean,
+             isCommunityOwner: Boolean,
+             onDelete:()->Unit={},
+             onLike: ()->Unit={},
+             onClickable: ()->Unit = {},
+             ) {
+    val date = remember { mutableStateOf(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(data.createdAt)) }
     val headerPost = createPostHeader()
     val datePost = createPostDate()
     val titlePost = createPostTitle()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp.value
     Column(modifier = Modifier
+        .clickable {
+            onClickable()
+        }
         .background(color = Color.White)
         .padding(top = 7.dp, start = 15.dp, end = 15.dp, bottom = 10.dp)) {
         Row  {
             Text(text = "#"+data.communityName, style = headerPost)
             if(isPostOwner || isCommunityOwner) {
-                Spacer(modifier = Modifier.width((screenWidth*0.65).dp))
-                DeleteButton(modifier = Modifier) {}
+                Spacer(modifier = Modifier.weight(1f))
+                DeleteButton(modifier = Modifier) {
+                    onDelete()
+                }
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -95,9 +108,14 @@ fun PostCard(data : Post,isPostOwner: Boolean, isCommunityOwner: Boolean, onDele
         }
 
         Row {
-            LikeButton()
+            LikeButton(
+                interestCount = data.interestCount,
+                isLike = data.isLike
+            ){
+                onLike()
+            }
             Spacer(modifier = Modifier.width(16.dp))
-            CommentButton()
+            CommentButton(count = data.commentCount)
         }
     }
 }

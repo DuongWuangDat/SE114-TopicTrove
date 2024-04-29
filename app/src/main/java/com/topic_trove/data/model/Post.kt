@@ -1,5 +1,9 @@
 package com.topic_trove.data.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.util.Date
+
 
 data class Post (
     var id : String = "",
@@ -10,5 +14,9 @@ data class Post (
     var content: String = "",
     var title: String = "",
     var imageUrl: String = "",
-    var avatar: String =""
+    var avatar: String ="",
+    var createdAt: Date = Date(),
+    var interestCount: Int = 0,
+    var isLike: Boolean = false,
+    var commentCount: Int = 0
 )

@@ -4,11 +4,6 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
-    compileSdk = 34
-
-    defaultConfig {
-        applicationId = "com.example.myapplication"
     namespace = "com.topic_trove"
     compileSdk = 34
 
@@ -80,9 +75,13 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
-    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
-    implementation("com.github.kittinunf.fuel:fuel-android:2.3.1")
-    implementation("com.github.kittinunf.fuel:fuel-json:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-android:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-json:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-coroutines:2.3.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.compose.material3:material3:1.2.1")
-}}
+}
