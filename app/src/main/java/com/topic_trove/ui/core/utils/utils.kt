@@ -17,23 +17,40 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController) : Stri
     runBlocking {
 
         Fuel.get("$baseUrl/token/refresh-token")
+            .timeoutRead(Int.MAX_VALUE)
+            .timeout(Int.MAX_VALUE)
             .authentication()
             .bearer(refreshToken)
             .awaitStringResponseResult()
-            .third.fold(
-                {d-> var jsonObj = JSONObject(d)
-                    print(jsonObj)
-                    accessToken = jsonObj.getString("access_token")},
-                {err->
-                    println("Navigate to login")
-                    navController.navigate(AppRoutes.loginRoute){
-                        popUpTo(navController.graph.startDestinationId){
-                            inclusive=true
+            .let { (request, response, result) ->
+                when(response.statusCode){
+                    200 -> {
+                        result.fold(
+                            { d ->
+                                var jsonObj = JSONObject(d)
+                                print(jsonObj)
+                                accessToken = jsonObj.getString("access_token")
+                            },
+                            { err ->
+                                println("Error: $err")
+                            }
+                        )
+                    }
+                    401 -> {
+                        println("Navigate to login")
+                        navController.navigate(AppRoutes.loginRoute) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop=true
+                    }
+                    else ->{
+                        println("Something went wrong")
                     }
                 }
-            )
+            }
+
     }
     if(accessToken==""){
         return ""
