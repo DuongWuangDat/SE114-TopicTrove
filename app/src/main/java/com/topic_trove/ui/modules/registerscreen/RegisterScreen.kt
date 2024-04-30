@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,9 +44,13 @@ import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
 fun RegisterScreen(
     modifier: Modifier = Modifier,
     onSignInSubmitted: (name: String, phone: String, email: String, password: String) -> Unit,
+    snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
         topBar = {
             MyTopCenterAppBar(
                 topAppBarText = stringResource(id = R.string.register),

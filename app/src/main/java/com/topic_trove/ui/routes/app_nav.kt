@@ -16,11 +16,12 @@ import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
+import com.topic_trove.ui.modules.uploadavatar.UploadAvatarRoute
 
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.communityRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.registerRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
@@ -52,7 +53,7 @@ fun NavControl(navController: NavHostController) {
         composable(route = AppRoutes.registerRoute) {
             RegisterRoute(
                 onSignUpSubmitted = {
-                    navController.navigate(AppRoutes.confirmEmailRoute)
+                    navController.navigate(AppRoutes.uploadAvatar)
                 },
             )
         }
@@ -99,6 +100,15 @@ fun NavControl(navController: NavHostController) {
                 onReply = { content, parentComment ->
                     navController.navigate("${AppRoutes.replyCommentRoute}/$postId/$parentComment/$content")
                 },
+            )
+        }
+
+        composable(route = AppRoutes.uploadAvatar) {
+            UploadAvatarRoute(
+                onSubmitted = {
+                    navController.navigate(AppRoutes.confirmEmailRoute)
+                },
+                onNavUp = navController::navigateUp,
             )
         }
     }

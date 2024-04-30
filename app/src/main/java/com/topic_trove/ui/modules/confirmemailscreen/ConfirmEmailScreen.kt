@@ -18,6 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,8 +47,12 @@ fun ConfirmEmailScreen(
     modifier: Modifier = Modifier,
     onSubmitted: (otpValue: String) -> Unit,
     onNavUp: () -> Unit,
+    snackBarHostState: SnackbarHostState = SnackbarHostState()
 ) {
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
         topBar = {
             MyTopCenterAppBar(
                 topAppBarText = stringResource(R.string.enter_6_character_code),
@@ -57,7 +63,7 @@ fun ConfirmEmailScreen(
         ConstraintLayout(
             modifier = modifier
                 .background(color = AppColors.White)
-                .padding(horizontal = 24.dp)
+                .padding(start = 22.dp, end = 16.dp)
                 .fillMaxSize()
         ) {
             var otpValue by remember {
@@ -79,7 +85,7 @@ fun ConfirmEmailScreen(
                 contentPadding = contentPadding,
             ) {
                 item {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         textAlign = TextAlign.Center,
                         text = stringResource(R.string.enter_the_code),
@@ -90,7 +96,7 @@ fun ConfirmEmailScreen(
                             lineHeight = 17.sp,
                         )
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
                     BasicTextField(
                         value = otpValue,
                         onValueChange = {
@@ -103,7 +109,7 @@ fun ConfirmEmailScreen(
                         ),
                         decorationBox = {
                             Row(
-                                horizontalArrangement = Arrangement.Center,
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 repeat(6) { index ->
@@ -114,7 +120,7 @@ fun ConfirmEmailScreen(
                                     val isFocused = index == otpValue.length
                                     Box(
                                         modifier = Modifier
-                                            .width(50.dp)
+                                            .weight(1f)
                                             .height(80.dp)
                                             .border(
                                                 width = if (isFocused) 2.dp else 1.dp,
@@ -136,7 +142,6 @@ fun ConfirmEmailScreen(
 
                                     Spacer(modifier = Modifier.width(6.dp))
                                 }
-
                             }
                         }
                     )

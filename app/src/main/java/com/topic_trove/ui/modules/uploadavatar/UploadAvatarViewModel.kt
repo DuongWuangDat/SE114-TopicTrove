@@ -1,4 +1,4 @@
-package com.topic_trove.ui.modules.registerscreen
+package com.topic_trove.ui.modules.uploadavatar
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
@@ -7,36 +7,28 @@ import com.topic_trove.data.repositories.RegisterRepository
 import com.topic_trove.ui.core.utils.SavedUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
+
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
+class UploadAvatarViewModel @Inject constructor(
     private val repository: RegisterRepository,
     private val savedUser: SavedUser,
 ) : ViewModel() {
 
     var snackBarHostState = SnackbarHostState()
-
-    fun sendEmail(
-        name: String,
-        phone: String,
-        email: String,
-        password: String,
-        sendEmailSuccess: () -> Unit,
-    ) {
-        savedUser.username = name
-        savedUser.email = email
-        savedUser.password = password
-        savedUser.phoneNumber = phone
+    fun uploadAvatar(image: File, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            repository.sendEmail(email)
-                .onSuccess { response ->
-                    savedUser.userCode = response.userCode
-                    sendEmailSuccess()
-                }
-                .onFailure { error ->
+            repository.uploadAvatar(image)
+                .onSuccess {
+                    savedUser.avatar = it.image ?: ""
+                    onSuccess()
+                }.onFailure { error ->
                     snackBarHostState.showSnackbar("${error.message}")
                 }
         }
     }
+
+
 }
