@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun CustomDialog(
-    onDismiss: ()-> Unit,
-    onConfirm: ()-> Unit,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
     title: String,
     text: String,
-){
+) {
     AlertDialog(
         title = {
             Text(text = title)

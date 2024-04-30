@@ -2,9 +2,7 @@ package com.topic_trove.ui.core.utils
 
 import androidx.navigation.NavController
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.await
 import com.github.kittinunf.fuel.core.extensions.authentication
-import com.github.kittinunf.fuel.coroutines.awaitStringResponse
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.topic_trove.ui.core.values.AppStrings
 import com.topic_trove.ui.routes.AppRoutes
@@ -12,8 +10,8 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 val baseUrl = AppStrings.BASE_URL
-fun CheckRefreshToken(refreshToken: String, navController: NavController) : String {
-    var accessToken= ""
+fun CheckRefreshToken(refreshToken: String, navController: NavController): String {
+    var accessToken = ""
     runBlocking {
 
         Fuel.get("$baseUrl/token/refresh-token")
@@ -23,7 +21,7 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController) : Stri
             .bearer(refreshToken)
             .awaitStringResponseResult()
             .let { (request, response, result) ->
-                when(response.statusCode){
+                when (response.statusCode) {
                     200 -> {
                         result.fold(
                             { d ->
@@ -36,6 +34,7 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController) : Stri
                             }
                         )
                     }
+
                     401 -> {
                         println("Navigate to login")
                         navController.navigate(AppRoutes.loginRoute) {
@@ -45,17 +44,17 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController) : Stri
                             launchSingleTop = true
                         }
                     }
-                    else ->{
+
+                    else -> {
                         println("Something went wrong")
                     }
                 }
             }
 
     }
-    if(accessToken==""){
+    if (accessToken == "") {
         return ""
-    }
-    else{
+    } else {
         return accessToken
     }
 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import com.topic_trove.ui.core.values.AppColors
 
 @Composable
-fun OverlayLoading(){
+fun OverlayLoading() {
     Box(
         Modifier
             .fillMaxSize()
@@ -25,7 +25,7 @@ fun OverlayLoading(){
                 indication = null,
                 onClick = {}
             )
-    ){
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

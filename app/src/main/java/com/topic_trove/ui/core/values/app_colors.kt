@@ -4,8 +4,10 @@ import androidx.compose.ui.graphics.Color
 
 class AppColors {
 
-    companion object{
+    companion object {
         val White = Color(0xFFFFFFFF)
+        val Black = Color(convertHex("#000000"))
+        val BorderStroke = Color(convertHex("#C3C7E5"))
         val CommunityTitleHeader = Color(convertHex("#004CDF"))
         val CommunityJoinButton = Color(convertHex("#0478FF"))
         val CreatePostButton = Color(convertHex("#0072DB"))
@@ -22,6 +24,6 @@ class AppColors {
     }
 }
 
-fun convertHex(hex: String): Int{
+fun convertHex(hex: String): Int {
     return android.graphics.Color.parseColor(hex)
 }
