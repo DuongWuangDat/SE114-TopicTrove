@@ -7,4 +7,22 @@
     <string name="title_activity_comment_button">Comment_Button</string>
     <string name="title_activity_post_card">PostCard</string>
     <string name="title_activity_delete_button">Delete_Button</string>
+    <string name="email">email</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="back">Back</string>
+    <string name="register">Register</string>
+    <string name="next">Next</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="display_name">Display name</string>
+    <string name="enter_the_code">Enter the code sent to your email\nto complete registration</string>
+    <string name="enter_6_character_code">Enter 6-Character Code</string>
+    <string name="comment">Comment</string>
+    <string name="avatar">avatar</string>
+    <string name="author">Author</string>
+    <string name="reply">Reply</string>
+    <string name="post">Post</string>
+    <string name="add_comment">Add comment</string>
 </resources>
