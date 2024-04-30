@@ -258,6 +258,7 @@ class CommunityScreenVM : ViewModel() {
     fun likePost(id: String, userId: String, isLike: Boolean, navController: NavController){
         viewModelScope.launch {
             FuelManager.instance.forceMethods= true
+            println(isLike)
             val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU", navController)
             val interest = if(!isLike) 1 else -1
             val json = """
@@ -273,7 +274,10 @@ class CommunityScreenVM : ViewModel() {
                 .jsonBody(json)
                 .responseString(){_,response,result ->
                     result.fold(
-                        {d-> println(d) },
+                        {d->
+                            println(d)
+                            postList.find { it.id === id }?.isLike = !isLike
+                        },
                         {err-> println(response) }
                     )
                 }
