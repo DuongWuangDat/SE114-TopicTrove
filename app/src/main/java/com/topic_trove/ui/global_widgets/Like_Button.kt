@@ -39,6 +39,7 @@ fun LikeButton(
     Row(modifier = Modifier
         .clickable {
             onLikePress()
+            println(isLiked)
             likeCount = if (isLiked) likeCount - 1 else likeCount + 1
             isLiked = !isLiked
         }
