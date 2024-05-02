@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
+import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
 import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
@@ -20,29 +21,39 @@ import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.communityRoute) {
+    NavHost(navController = navController, startDestination = "${AppRoutes.communityRoute}") {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
         }
 
-        composable(route = "${AppRoutes.createPostRoute}/{communityName}",
+        composable(route = "${AppRoutes.createPostRoute}/{communityName}/{communityId}",
             arguments = listOf(
                 navArgument("communityName") {
+                    type = NavType.StringType
+                },
+                navArgument("communityId"){
                     type = NavType.StringType
                 }
             )) { entry ->
             val name = entry.arguments?.getString("communityName")
+            val id = entry.arguments?.getString("communityId")
             requireNotNull(name)
-            createpostScreen(navController = navController, communityName = name)
+            requireNotNull(id)
+            createpostScreen(navController = navController, communityName = name, communityId = id)
         }
 
         composable(
-            route = AppRoutes.communityRoute
+            route = "${AppRoutes.communityRoute}",
+            //arguments = listOf(
+            //    navArgument("communityId") {
+            //        type = NavType.StringType
+            //    }
+            //)
         ) {
-            CommunityScreen(
-                navController = navController
-            )
+            //val id = entry.arguments?.getString("communityId")
+            //requireNotNull(id)
+            CommunityScreenRoute(navController = navController, communityId = "662385ad314b50e0397a3a90")
         }
 
         composable(route = AppRoutes.loginRoute) {

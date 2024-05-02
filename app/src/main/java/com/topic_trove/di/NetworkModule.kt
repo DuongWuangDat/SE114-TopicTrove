@@ -23,7 +23,7 @@ object NetworkModule {
             .addInterceptor { chain ->
                 // TODO access token when login
                 val authorization =
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU"
+                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxNDYxNDg0MCwiZXhwIjoxNzE3MjA2ODQwfQ.JFAvJ3PObzeKH-k5O36UEbEqCsdgNNcs0XDNpJYpK0A"
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", authorization).build()
 

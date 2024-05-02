@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import com.topic_trove.ui.global_widgets.JoinedButton
 
 @Composable
 fun TopbarCommunity(
+    isJoin : Boolean,
     community: Community,
     onNavigateToCreatePost: ()->Unit
 ){
@@ -63,27 +65,30 @@ fun TopbarCommunity(
             top.linkTo(parent.top, margin = 5.dp)
             start.linkTo(icon.end, margin = 20.dp)
         }) {
-            Text(text = if (community.communityName=="") "community1" else community.communityName, style = CustomTextStyle.communityTitle())
+            Text(text = if (community.communityName== "") "community1" else community.communityName, style = CustomTextStyle.communityTitle())
             Spacer(modifier = Modifier.height(3.dp))
             Text(text = "${community.memberCount} member", style = CustomTextStyle.communityCountMember())
         }
 
         var icon2 = createRef()
-        Box(modifier = Modifier
-            .clickable {
-                println("Create post")
-                onNavigateToCreatePost()
-            }
-            .constrainAs(icon2) {
-                top.linkTo(parent.top, margin = 4.5.dp)
-                end.linkTo(parent.end, margin = 14.dp)
-            }
-            .background(color = Color.Transparent))
+        if(isJoin){
+            Box(modifier = Modifier
+                .clickable {
+                    println("Create post")
+                    onNavigateToCreatePost()
+                }
+                .constrainAs(icon2) {
+                    top.linkTo(parent.top, margin = 4.5.dp)
+                    end.linkTo(parent.end, margin = 14.dp)
+                }
+                .background(color = Color.Transparent))
             {
-            Image(painter =  painterResource(id = Assets.CreatePostImg), contentDescription = null,
-                modifier = Modifier.width(27.dp).height(27.dp)
+                Image(painter =  painterResource(id = Assets.CreatePostImg), contentDescription = null,
+                    modifier = Modifier.width(27.dp).height(27.dp)
                 )
+            }
         }
+
 
     }
 }
