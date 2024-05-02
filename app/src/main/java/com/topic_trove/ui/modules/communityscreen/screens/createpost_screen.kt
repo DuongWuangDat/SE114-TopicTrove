@@ -32,7 +32,9 @@ import com.topic_trove.ui.modules.communityscreen.widgets.TopBarCreatePost
 @Composable
 fun createpostScreen(
     navController: NavController,
-    communityName: String
+    communityName: String,
+    communityId: String,
+    userId: String = "661ded639a9ecc4c2525774d"
 ) {
 
     val communityVM = viewModel<CommunityScreenVM>()
@@ -56,7 +58,7 @@ fun createpostScreen(
                     navController.popBackStack()
                 },
                 onCreateClick = {
-                    communityVM.createPostApi(navController)
+                    communityVM.createPostApi(navController, communityId, userId)
 
                 }
             )

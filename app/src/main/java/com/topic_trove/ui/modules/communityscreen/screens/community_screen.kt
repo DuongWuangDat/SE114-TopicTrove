@@ -12,13 +12,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.topic_trove.data.model.Author
 import com.topic_trove.data.model.Community
 import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.global_widgets.CommunityTitle
@@ -31,15 +36,16 @@ import com.topic_trove.ui.routes.AppRoutes
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CommunityScreen(
-    community: Community = Community(),
+    isAuthor: Boolean,
+    community : Community,
+    communityId : String,
     idUser: String = "661ded639a9ecc4c2525774d",
-    navController: NavController
+    navController: NavController,
+    communityVM: CommunityScreenVM
 ) {
-    val communityVM = viewModel<CommunityScreenVM>()
     val snackbarHostState = communityVM.snackbarHostState
-    LaunchedEffect(key1 = navController) {
-        communityVM.getPostList("662385ad314b50e0397a3a90", idUser, navController)
-    }
+    val isJoin by communityVM.isJoined
+    println(isJoin)
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -51,17 +57,20 @@ fun CommunityScreen(
                 .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            TopbarCommunity(community = community, onNavigateToCreatePost = {
-                navController.navigate("${AppRoutes.createPostRoute}/${community.communityName}")
+            TopbarCommunity(isJoin = communityVM.isJoined.value,community = community, onNavigateToCreatePost = {
+                navController.navigate("${AppRoutes.createPostRoute}/${community.communityName}/${community.id}")
             })
-            CommunityTitle {
-
+            CommunityTitle (community= community,
+                isAuthor = isAuthor,
+                isJoin = communityVM.isJoined
+            ) {
+                communityVM.JoinCommunity(communityId,navController,idUser)
             }
             Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
                 items(communityVM.postList) { post ->
                     val isCommunityOwner =
-                        if (community.id != "") (community.id == idUser) else false
+                        if (community.id != "") (community.owner == idUser) else false
                     val isPostOwner = (post.authorID == idUser)
 
                     Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
