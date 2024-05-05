@@ -2,10 +2,12 @@ package com.topic_trove.data.service
 
 import com.topic_trove.data.model.EmailRequest
 import com.topic_trove.data.model.LoginRequest
+import com.topic_trove.data.model.RefreshResponse
 import com.topic_trove.data.model.RegisterRequest
 import com.topic_trove.data.model.RegisterResponse
 import com.topic_trove.data.model.SendEmailResponse
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthService {
@@ -18,4 +20,7 @@ interface AuthService {
 
     @POST("/api/v1/user/login")
     suspend fun login(@Body loginRequest: LoginRequest): RegisterResponse
+
+    @GET("/api/v1/token/refresh-token")
+    suspend fun refresh(): RefreshResponse
 }

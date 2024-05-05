@@ -2,6 +2,7 @@ package com.topic_trove.data.repositories
 
 import com.topic_trove.data.model.EmailRequest
 import com.topic_trove.data.model.LoginRequest
+import com.topic_trove.data.model.RefreshResponse
 import com.topic_trove.data.model.RegisterRequest
 import com.topic_trove.data.model.RegisterResponse
 import com.topic_trove.data.model.SendEmailResponse
@@ -21,6 +22,7 @@ interface RegisterRepository {
     suspend fun sendEmail(email: String): Result<SendEmailResponse>
 
     suspend fun login(email: String, password: String): Result<RegisterResponse>
+    suspend fun refresh(): Result<RefreshResponse>
 }
 
 class RegisterRepositoryImpl @Inject constructor(
@@ -52,6 +54,15 @@ class RegisterRepositoryImpl @Inject constructor(
     override suspend fun login(email: String, password: String): Result<RegisterResponse> {
         return try {
             val response = service.login(LoginRequest(email, password))
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun refresh(): Result<RefreshResponse> {
+        return try {
+            val response = service.refresh()
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

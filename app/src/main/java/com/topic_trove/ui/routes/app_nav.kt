@@ -17,11 +17,12 @@ import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
+import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.welcome) {
+    NavHost(navController = navController, startDestination = AppRoutes.splash) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
@@ -129,6 +130,13 @@ fun NavControl(navController: NavHostController) {
                 register = {
                     navController.navigate(AppRoutes.registerRoute)
                 },
+            )
+        }
+
+        composable(route = AppRoutes.splash) {
+            SplashRoute(
+                onLogin = { navController.navigate(AppRoutes.welcome) },
+                onCommunity = { navController.navigate(AppRoutes.communityRoute) }
             )
         }
     }
