@@ -9,7 +9,6 @@ import com.topic_trove.data.model.Post
 import com.topic_trove.data.repositories.PostRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +53,7 @@ class PostDetailViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
-                // TODO handle error
+                snackBarHostState.showSnackbar("Like post fail with message ${it.message}")
             }
         }
     }
@@ -127,7 +126,7 @@ class PostDetailViewModel @Inject constructor(
                 getCommentByPostId(postDetailUiState.value.post.id)
                 snackBarHostState.showSnackbar("Delete comment successfully")
             }.onFailure {
-                // TODO handle error
+                snackBarHostState.showSnackbar("Delete comment fail")
             }
         }
     }
@@ -144,7 +143,7 @@ class PostDetailViewModel @Inject constructor(
             ).onSuccess {
                 getCommentByPostId(postDetailUiState.value.post.id)
             }.onFailure {
-                // TODO handle error
+                snackBarHostState.showSnackbar("Like comment fail with message ${it.message}")
             }
         }
     }

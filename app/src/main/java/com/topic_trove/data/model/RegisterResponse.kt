@@ -3,10 +3,9 @@ package com.topic_trove.data.model
 import com.google.gson.annotations.SerializedName
 
 data class RegisterResponse(
-    @SerializedName("accessToken")
+    @SerializedName("access_token")
     val accessToken: String,
-    @SerializedName("refreshToken")
+    @SerializedName("refresh_token")
     val refreshToken: String,
-    @SerializedName("data")
     val data: User,
 )

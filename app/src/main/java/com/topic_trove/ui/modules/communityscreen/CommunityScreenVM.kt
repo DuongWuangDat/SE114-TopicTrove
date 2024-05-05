@@ -1,11 +1,8 @@
 package com.topic_trove.ui.modules.communityscreen
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -16,8 +13,10 @@ import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.Post
+import com.topic_trove.data.sharepref.SharePreferenceProvider
 import com.topic_trove.ui.core.utils.CheckRefreshToken
 import com.topic_trove.ui.core.values.AppStrings
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,8 +27,12 @@ import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
-class CommunityScreenVM : ViewModel() {
+@HiltViewModel
+class CommunityScreenVM @Inject constructor(
+    private val sharePreferenceProvider: SharePreferenceProvider,
+) : ViewModel() {
     private var _postData = MutableStateFlow(Post())
     var postData: StateFlow<Post> = _postData.asStateFlow()
     val base_url = AppStrings.BASE_URL
@@ -41,10 +44,10 @@ class CommunityScreenVM : ViewModel() {
     private var _communityData = MutableStateFlow(Community())
     var community: StateFlow<Community> = _communityData.asStateFlow()
     var isJoined = mutableStateOf(false)
-    var refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxNDYxNDg0MCwiZXhwIjoxNzE3MjA2ODQwfQ.JFAvJ3PObzeKH-k5O36UEbEqCsdgNNcs0XDNpJYpK0A"
+    var refreshToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxNDYxNDg0MCwiZXhwIjoxNzE3MjA2ODQwfQ.JFAvJ3PObzeKH-k5O36UEbEqCsdgNNcs0XDNpJYpK0A"
     var isEnable = mutableStateOf(false)
         private set
-
 
 
     fun inputContent(it: String) {
@@ -298,11 +301,11 @@ class CommunityScreenVM : ViewModel() {
                 .responseString { _, response, result ->
                     result.fold(
 
-                        {d->
+                        { d ->
                             println(d)
                             postList.find { it.id === id }?.isLike = !isLike
                         },
-                        {err-> println(response) }
+                        { err -> println(response) }
 
                     )
                 }
@@ -310,22 +313,22 @@ class CommunityScreenVM : ViewModel() {
         }
     }
 
-    fun getCommunityByID(communityId: String, navController: NavController){
+    fun getCommunityByID(communityId: String, navController: NavController) {
         viewModelScope.launch {
             val accessToken = CheckRefreshToken(refreshToken, navController)
             Fuel.get("$base_url/community/findbyid/$communityId")
                 .authentication()
                 .bearer(accessToken)
-                .responseString {_,response,result ->
+                .responseString { _, response, result ->
                     result.fold(
-                        {d->
+                        { d ->
                             val response = JSONObject(d)
                             val data = response.getJSONObject("data")
-                            _communityData.update { it->
+                            _communityData.update { it ->
                                 it.copy(
                                     id = data.getString("_id"),
                                     owner = data.getJSONObject("owner").getString("_id"),
-                                    icon  = data.getString("icon"),
+                                    icon = data.getString("icon"),
                                     description = data.getString("description"),
                                     rules = data.getString("rules"),
                                     communityName = data.getString("communityName"),
@@ -335,7 +338,7 @@ class CommunityScreenVM : ViewModel() {
 
                             println(community)
                         },
-                        {err->
+                        { err ->
                             println(response)
                         }
                     )
@@ -343,10 +346,10 @@ class CommunityScreenVM : ViewModel() {
         }
     }
 
-    fun CheckIsJoined(communityId: String,  navController: NavController, userId: String ){
+    fun CheckIsJoined(communityId: String, navController: NavController, userId: String) {
         viewModelScope.launch {
             val accessToken = CheckRefreshToken(refreshToken, navController)
-            var json= """
+            var json = """
                 {
                     "userId": "$userId"
                 }
@@ -356,14 +359,14 @@ class CommunityScreenVM : ViewModel() {
                 .authentication()
                 .bearer(accessToken)
                 .jsonBody(json)
-                .responseString(){result ->
+                .responseString() { result ->
                     result.fold(
-                        {d->
+                        { d ->
                             var data = JSONObject(d)
                             isJoined.value = data.getBoolean("result")
                             println(isJoined.value)
                         },
-                        {err->
+                        { err ->
                             println(err)
                         }
                     )
@@ -371,12 +374,12 @@ class CommunityScreenVM : ViewModel() {
         }
     }
 
-    fun JoinCommunity(communityId: String, navController: NavController, userId: String){
+    fun JoinCommunity(communityId: String, navController: NavController, userId: String) {
         viewModelScope.launch {
             println(isJoined)
             val accessToken = CheckRefreshToken(refreshToken, navController)
-            val code = if(isJoined.value) 1 else -1
-            val json= """
+            val code = if (isJoined.value) 1 else -1
+            val json = """
                 {
                     "userId": "$userId",
                     "communityId":"$communityId",
@@ -388,16 +391,16 @@ class CommunityScreenVM : ViewModel() {
                 .authentication()
                 .bearer(accessToken)
                 .jsonBody(json)
-                .responseString(){_,response, result ->
+                .responseString() { _, response, result ->
                     result.fold(
-                        {d->
-                            _communityData.update { it->
+                        { d ->
+                            _communityData.update { it ->
                                 it.copy(
-                                    memberCount = if(isJoined.value) it.memberCount+1 else it.memberCount-1
+                                    memberCount = if (isJoined.value) it.memberCount + 1 else it.memberCount - 1
                                 )
                             }
                         },
-                        {err->
+                        { err ->
                             println(response)
                         }
                     )
