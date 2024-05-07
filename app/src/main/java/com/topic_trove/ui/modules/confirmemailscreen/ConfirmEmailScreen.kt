@@ -18,6 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,8 +47,12 @@ fun ConfirmEmailScreen(
     modifier: Modifier = Modifier,
     onSubmitted: (otpValue: String) -> Unit,
     onNavUp: () -> Unit,
+    snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
         topBar = {
             MyTopCenterAppBar(
                 topAppBarText = stringResource(R.string.enter_6_character_code),

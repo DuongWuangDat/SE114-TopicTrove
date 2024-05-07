@@ -15,27 +15,7 @@ class SharePreferenceProvider @Inject constructor(
     companion object {
         const val NAME_SHARE_PREFERENCE = "topic_trove_share_preference"
         const val USER_ID = "user_id"
-        const val REFRESH_TOKEN = "refresh_token"
-    }
-
-    // Phương thức để lưu refresh token
-    fun saveRefreshToken(token: String) {
-        sharedPreferences.edit().putString(REFRESH_TOKEN, token).apply()
-    }
-
-    // Phương thức để lấy refresh token
-    fun getRefreshToken(): String? {
-        return sharedPreferences.getString(REFRESH_TOKEN, null)
-    }
-
-    // Phương thức để lưu user ID
-    fun saveUserId(userId: String) {
-        sharedPreferences.edit().putString(USER_ID, userId).apply()
-    }
-
-    // Phương thức để lấy user ID
-    fun getUserId(): String? {
-        return sharedPreferences.getString(USER_ID, null)
+        const val ACCESS_TOKEN = "access_token"
     }
 
     @ToJson

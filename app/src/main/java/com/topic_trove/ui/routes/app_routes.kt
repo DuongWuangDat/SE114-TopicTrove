@@ -11,5 +11,7 @@ class AppRoutes {
         val replyCommentRoute = "/replycomment"
         val postDetailRoute = "/postDetail"
         val loginRoute = "/login"
+        val welcome = "/welcome"
+        val splash = "/splash"
     }
 }
