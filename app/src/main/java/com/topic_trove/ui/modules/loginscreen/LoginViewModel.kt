@@ -3,6 +3,7 @@ package com.topic_trove.ui.modules.loginscreen
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.topic_trove.data.model.User
 import com.topic_trove.data.repositories.RegisterRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,14 +28,10 @@ class LoginViewModel @Inject constructor(
                 email = email,
                 password = password,
             ).onSuccess {
-                sharePreferenceProvider.save<String>(
-                    SharePreferenceProvider.ACCESS_TOKEN,
-                    it.accessToken
-                )
-                sharePreferenceProvider.save<String>(
-                    SharePreferenceProvider.USER_ID,
-                    it.data.id
-                )
+                sharePreferenceProvider.saveAccessToken(it.accessToken)
+                sharePreferenceProvider.saveUserId(it.data.id)
+                sharePreferenceProvider.saveRefreshToken(it.refreshToken)
+                sharePreferenceProvider.saveUser(it.data)
                 registerSuccess()
                 snackBarHostState.showSnackbar("Login successfully")
             }.onFailure { error ->

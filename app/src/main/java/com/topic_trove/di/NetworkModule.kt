@@ -28,7 +28,7 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val accessToken =
-                    sharePreferenceProvider.get<String>(SharePreferenceProvider.ACCESS_TOKEN)
+                    sharePreferenceProvider.getAccessToken()
                 val authorization =
                     "Bearer $accessToken"
                 val request = chain.request().newBuilder()

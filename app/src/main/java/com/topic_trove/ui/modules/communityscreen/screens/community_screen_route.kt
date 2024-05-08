@@ -12,9 +12,10 @@ import com.topic_trove.ui.modules.communityscreen.CommunityScreenVM
 fun CommunityScreenRoute(
     communityVM: CommunityScreenVM = hiltViewModel(),
     navController: NavController,
-    idUser: String = "661decfc04225e07fbc92f80",
     communityId: String
 ) {
+    var idUser : String= communityVM.IdUser!!
+
     LaunchedEffect(key1 = true) {
         communityVM.getCommunityByID(communityId, navController)
         communityVM.getPostList(communityId, idUser, navController)

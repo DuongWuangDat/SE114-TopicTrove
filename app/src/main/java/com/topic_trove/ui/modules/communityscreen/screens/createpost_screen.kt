@@ -11,10 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +35,6 @@ fun createpostScreen(
 ) {
 
     val communityVM = viewModel<CommunityScreenVM>()
-    val post by communityVM.postData.collectAsState()
     val snackbarHostState = communityVM.snackbarHostState
     Scaffold(
         snackbarHost = {
@@ -62,9 +58,8 @@ fun createpostScreen(
 
                 }
             )
-            collumnContent(
+            CollumnContent(
                 communityVM = communityVM,
-                snackbarHostState = snackbarHostState,
                 communityName = communityName
             )
 
@@ -76,10 +71,9 @@ fun createpostScreen(
 }
 
 @Composable
-fun collumnContent(
+fun CollumnContent(
     communityVM: CommunityScreenVM,
     communityName: String,
-    snackbarHostState: SnackbarHostState
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -103,13 +97,8 @@ fun collumnContent(
         }
         Spacer(modifier = Modifier.height(16.dp))
         ImageBlock(
-            isLoading = communityVM.isLoading,
-            snackbarHostState = snackbarHostState,
             uploadImage = { file ->
                 communityVM.uploadImgApi(file)
-            },
-            inputImage = {
-                communityVM.inputImage(it)
             }
         )
 

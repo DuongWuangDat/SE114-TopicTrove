@@ -22,7 +22,6 @@ fun AddImageRow(
 ){
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp.value
-    val screenHeight = configuration.screenHeightDp.dp
     Row{
         Text(text = "Image", style = CustomTextStyle.titleFieldCreatePost())
         Spacer(modifier = Modifier.width((screenWidth*0.55).dp))
