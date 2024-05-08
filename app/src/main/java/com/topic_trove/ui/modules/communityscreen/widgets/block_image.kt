@@ -18,10 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,23 +37,19 @@ import java.io.FileInputStream
 
 @Composable
 fun ImageBlock(
-    isLoading: MutableState<Boolean>,
-    snackbarHostState: SnackbarHostState,
-    inputImage: (String) -> Unit,
     uploadImage: (File) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp.value
-    val screenHeight = configuration.screenHeightDp.dp
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
-    var context = LocalContext.current
+    val context = LocalContext.current
     var bitmap by remember {
         mutableStateOf<Bitmap?>(null)
     }
 
-    var launcher =
+    val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             imageUri = uri
 

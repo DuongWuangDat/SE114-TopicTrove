@@ -11,6 +11,8 @@ import com.github.kittinunf.fuel.core.FileDataPart
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
+import com.github.kittinunf.fuel.coroutines.awaitStringResponse
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.Post
 import com.topic_trove.data.sharepref.SharePreferenceProvider
@@ -76,10 +78,12 @@ class CommunityScreenVM @Inject constructor(
     fun createPostApi(navController: NavController, communityId: String, userId: String) {
         viewModelScope.launch {
             isLoading.value = true
-            val accessToken = CheckRefreshToken(
-                refreshToken,
-                navController
-            )
+            var accessToken = sharePreferenceProvider.getAccessToken()
+            var isRetry :Boolean = false
+            //val accessToken = CheckRefreshToken(
+            //    refreshToken,
+            //    navController
+            //)
             val json = if (_postData.value.imageUrl == "")
                 """
                         {
@@ -110,31 +114,53 @@ class CommunityScreenVM @Inject constructor(
                                 }
                             ]
                         }""".trimIndent()
-            Fuel.post("$base_url/post/create")
-                .timeout(Int.MAX_VALUE)
-                .timeoutRead(Int.MAX_VALUE)
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString { result ->
-                    result.fold(
-                        { d ->
-                            println(d)
+                while(isRetry){
+                    if (accessToken != null || accessToken == "") {
+                        Fuel.post("$base_url/post/create")
+                            .timeout(Int.MAX_VALUE)
+                            .timeoutRead(Int.MAX_VALUE)
+                            .header("Content-Type" to "application/json")
+                            .authentication()
+                            .bearer(accessToken)
+                            .jsonBody(json)
+                            .awaitStringResponseResult()
+                            .let {(_,response, result) ->
+                                result.fold(
+                                    { d ->
+                                        println(d)
 
-                            GlobalScope.launch {
-                                snackbarHostState.showSnackbar("Create post successfully")
-                            }
-                            isLoading.value = false
+                                        GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Create post successfully")
+                                        }
+                                        isLoading.value = false
+                                        isRetry = false
+                                    },
+                                    { err ->
+                                        if(response.statusCode == 401){
+                                            accessToken= CheckRefreshToken(refreshToken,navController)
+                                            sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                            isRetry = true
 
-                        },
-                        { err ->
-                            isLoading.value = false
-                            GlobalScope.launch {
-                                snackbarHostState.showSnackbar("Something went wrong")
+                                        } else{
+                                            isLoading.value = false
+                                            isRetry = false
+                                            GlobalScope.launch {
+                                                snackbarHostState.showSnackbar("Something went wrong")
+                                            }
+                                        }
+
+                                    }
+                                )
                             }
+                    }
+                    else{
+                        isLoading.value = false
+                        isRetry=false
+                        GlobalScope.launch {
+                            snackbarHostState.showSnackbar("Something went wrong")
                         }
-                    )
+                    }
+
                 }
 
         }
@@ -182,99 +208,139 @@ class CommunityScreenVM @Inject constructor(
         viewModelScope.launch {
             postList.clear()
             val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-            val accessToken = CheckRefreshToken(
-                refreshToken,
-                navController
-            )
+            var accessToken = sharePreferenceProvider.getAccessToken()
+            var isRetry : Boolean = false
 
-            Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
-                .timeout(Int.MAX_VALUE)
-                .timeoutRead(Int.MAX_VALUE)
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .responseString() { result ->
-                    result.fold(
-                        { d ->
-                            val response = JSONObject(d)
-                            val arrayPost = response.getJSONArray("data")
-                            println(arrayPost)
+            while(isRetry){
+                if (accessToken != null || accessToken == "") {
+                    Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
+                        .timeout(Int.MAX_VALUE)
+                        .timeoutRead(Int.MAX_VALUE)
+                        .header("Content-Type" to "application/json")
+                        .authentication()
+                        .bearer(accessToken)
+                        .awaitStringResponseResult()
+                        .let { (_,response,result) ->
+                            result.fold(
+                                { d ->
+                                    val response = JSONObject(d)
+                                    val arrayPost = response.getJSONArray("data")
+                                    println(arrayPost)
 
-                            for (i in 0 until arrayPost.length()) {
+                                    for (i in 0 until arrayPost.length()) {
 
-                                val item = arrayPost.getJSONObject(i)
-                                val userLikeList = item.getJSONArray("interestUserList")
-                                val listUser =
-                                    List(userLikeList.length()) { userLikeList.getString(it) }
-                                var isLike = false
-                                if (listUser.contains(userId)) {
-                                    isLike = true
+                                        val item = arrayPost.getJSONObject(i)
+                                        val userLikeList = item.getJSONArray("interestUserList")
+                                        val listUser =
+                                            List(userLikeList.length()) { userLikeList.getString(it) }
+                                        var isLike = false
+                                        if (listUser.contains(userId)) {
+                                            isLike = true
+                                        }
+
+                                        val content = item.getJSONArray("content")
+                                        val authorName = item.getJSONObject("author").getString("username")
+                                        val contentText =
+                                            content.getJSONObject(0).getString("body").replace("\\n", "\n")
+                                        var imageUrl = ""
+                                        if (content.length() >= 2) {
+                                            imageUrl = content.getJSONObject(1).getString("body")
+                                        }
+                                        val post = Post(
+                                            id = item.getString("_id"),
+                                            authorID = item.getJSONObject("author").getString("_id"),
+                                            authorName = item.getJSONObject("author").getString("username"),
+                                            avatar = item.getJSONObject("author").getString("avatar"),
+                                            communityID = item.getJSONObject("communityId")
+                                                .getString("_id"),
+                                            communityName = item.getJSONObject("communityId")
+                                                .getString("communityName"),
+                                            content = contentText,
+                                            imageUrl = imageUrl,
+                                            createdAt = formatter.parse(item.getString("createdAt")),
+                                            interestCount = item.getInt("interestCount"),
+                                            title = item.getString("title"),
+                                            isLike = isLike,
+                                            commentCount = item.getInt("commentCount")
+
+                                        )
+                                        postList.add(post)
+                                        isRetry = false
+                                    }
+                                },
+                                { err ->
+                                    if(response.statusCode==401){
+                                        accessToken= CheckRefreshToken(refreshToken, navController)
+                                        sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                        isRetry = true
+                                    } else{
+                                        isRetry = false
+                                        GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Something went wrong")
+                                        }
+                                    }
                                 }
-
-                                val content = item.getJSONArray("content")
-                                val authorName = item.getJSONObject("author").getString("username")
-                                val contentText =
-                                    content.getJSONObject(0).getString("body").replace("\\n", "\n")
-                                var imageUrl = ""
-                                if (content.length() >= 2) {
-                                    imageUrl = content.getJSONObject(1).getString("body")
-                                }
-                                val post = Post(
-                                    id = item.getString("_id"),
-                                    authorID = item.getJSONObject("author").getString("_id"),
-                                    authorName = item.getJSONObject("author").getString("username"),
-                                    avatar = item.getJSONObject("author").getString("avatar"),
-                                    communityID = item.getJSONObject("communityId")
-                                        .getString("_id"),
-                                    communityName = item.getJSONObject("communityId")
-                                        .getString("communityName"),
-                                    content = contentText,
-                                    imageUrl = imageUrl,
-                                    createdAt = formatter.parse(item.getString("createdAt")),
-                                    interestCount = item.getInt("interestCount"),
-                                    title = item.getString("title"),
-                                    isLike = isLike,
-                                    commentCount = item.getInt("commentCount")
-
-                                )
-                                postList.add(post)
-                            }
-                        },
-                        { err -> println(err) }
-                    )
+                            )
+                        }
                 }
+                else{
+                    isRetry=false
+                    GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Something went wrong")
+                    }
+                }
+            }
+
         }
     }
 
     fun deletePost(id: String, navController: NavController) {
         viewModelScope.launch {
             isLoading.value = true
-            val accessToken = CheckRefreshToken(
-                refreshToken,
-                navController
-            )
-            Fuel.delete("$base_url/post/delete/$id")
-                .timeout(Int.MAX_VALUE)
-                .timeoutRead(Int.MAX_VALUE)
-                .authentication()
-                .bearer(accessToken)
-                .responseString() { result ->
-                    result.fold(
-                        { d ->
-                            postList.removeIf { x -> x.id == id }
-                            isLoading.value = false
-                            GlobalScope.launch {
-                                snackbarHostState.showSnackbar("Delete successffuly")
-                            }
+            var accessToken = sharePreferenceProvider.getAccessToken()
+            var isRetry : Boolean = false
+            while (isRetry){
+                if (accessToken != null) {
+                    Fuel.delete("$base_url/post/delete/$id")
+                        .timeout(Int.MAX_VALUE)
+                        .timeoutRead(Int.MAX_VALUE)
+                        .authentication()
+                        .bearer(accessToken)
+                        .awaitStringResponseResult().let { (_,response,result) ->
+                            result.fold(
+                                { d ->
+                                    postList.removeIf { x -> x.id == id }
+                                    isLoading.value = false
+                                    GlobalScope.launch {
+                                        snackbarHostState.showSnackbar("Delete successffuly")
+                                    }
+                                    isRetry=false
 
-                        },
-                        { err ->
-                            GlobalScope.launch {
-                                snackbarHostState.showSnackbar("Something went wrong")
-                            }
+                                },
+                                { err ->
+                                    if(response.statusCode == 401){
+                                        accessToken = CheckRefreshToken(refreshToken, navController)
+                                        sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                        isRetry = true
+                                    }else{
+                                        isRetry =false
+                                        GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Something went wrong")
+                                        }
+                                    }
+
+                                }
+                            )
                         }
-                    )
                 }
+                else{
+                    isRetry=false
+                    GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Something went wrong")
+                    }
+                }
+            }
+
         }
     }
 
@@ -282,10 +348,8 @@ class CommunityScreenVM @Inject constructor(
         viewModelScope.launch {
 
             FuelManager.instance.forceMethods = true
-            val accessToken = CheckRefreshToken(
-                refreshToken,
-                navController
-            )
+            var accessToken = sharePreferenceProvider.getAccessToken()
+            var isRetry : Boolean = false
             val interest = if (!isLike) 1 else -1
             val json = """
                 {
@@ -293,91 +357,158 @@ class CommunityScreenVM @Inject constructor(
                     "interest": "$interest"
                 }
             """.trimIndent()
-            Fuel.patch("$base_url/post/likepost/$id")
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString { _, response, result ->
-                    result.fold(
+            while(isRetry){
+                if (accessToken != null || accessToken == "") {
+                    Fuel.patch("$base_url/post/likepost/$id")
+                        .header("Content-Type" to "application/json")
+                        .authentication()
+                        .bearer(accessToken)
+                        .jsonBody(json)
+                        .awaitStringResponseResult().let { (_, response, result) ->
+                            result.fold(
 
-                        { d ->
-                            println(d)
-                            postList.find { it.id === id }?.isLike = !isLike
-                        },
-                        { err -> println(response) }
+                                { d ->
+                                    println(d)
+                                    postList.find { it.id === id }?.isLike = !isLike
+                                    isRetry=false
+                                },
+                                { err ->
+                                    if(response.statusCode==401){
+                                        accessToken= CheckRefreshToken(refreshToken,navController)
+                                        sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                        isRetry=true
+                                    }else{
+                                        isRetry=false
+                                        GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Something went wrong")
+                                        }
+                                    }
+                                }
 
-                    )
+                            )
+                        }
                 }
+                else{
+                    isRetry=false
+                    GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Something went wrong")
+                    }
+                }
+            }
+
 
         }
     }
 
     fun getCommunityByID(communityId: String, navController: NavController) {
         viewModelScope.launch {
-            val accessToken = CheckRefreshToken(refreshToken, navController)
-            Fuel.get("$base_url/community/findbyid/$communityId")
-                .authentication()
-                .bearer(accessToken)
-                .responseString { _, response, result ->
-                    result.fold(
-                        { d ->
-                            val response = JSONObject(d)
-                            val data = response.getJSONObject("data")
-                            _communityData.update { it ->
-                                it.copy(
-                                    id = data.getString("_id"),
-                                    owner = data.getJSONObject("owner").getString("_id"),
-                                    icon = data.getString("icon"),
-                                    description = data.getString("description"),
-                                    rules = data.getString("rules"),
-                                    communityName = data.getString("communityName"),
-                                    memberCount = data.getInt("memberCount"),
-                                )
-                            }
-
-                            println(community)
-                        },
-                        { err ->
-                            println(response)
+            var accessToken =  sharePreferenceProvider.getAccessToken()
+            var isRetry : Boolean = false
+            while(isRetry){
+                if (accessToken != null || accessToken == "") {
+                    Fuel.get("$base_url/community/findbyid/$communityId")
+                        .authentication()
+                        .bearer(accessToken)
+                        .awaitStringResponseResult().let { (_, response, result) ->
+                            result.fold(
+                                { d ->
+                                    val response = JSONObject(d)
+                                    val data = response.getJSONObject("data")
+                                    _communityData.update { it ->
+                                        it.copy(
+                                            id = data.getString("_id"),
+                                            owner = data.getJSONObject("owner").getString("_id"),
+                                            icon = data.getString("icon"),
+                                            description = data.getString("description"),
+                                            rules = data.getString("rules"),
+                                            communityName = data.getString("communityName"),
+                                            memberCount = data.getInt("memberCount"),
+                                        )
+                                    }
+                                    isRetry=false
+                                    println(community)
+                                },
+                                { err ->
+                                    if(response.statusCode==401){
+                                        accessToken = CheckRefreshToken(refreshToken,navController)
+                                        sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                        isRetry=true
+                                    }else{
+                                        isRetry= false
+                                        GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Something went wrong")
+                                        }
+                                    }
+                                }
+                            )
                         }
-                    )
                 }
+                else{
+                    isRetry=false
+                    GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Something went wrong")
+                    }
+                }
+            }
+
         }
     }
 
     fun CheckIsJoined(communityId: String, navController: NavController, userId: String) {
         viewModelScope.launch {
-            val accessToken = CheckRefreshToken(refreshToken, navController)
+            var accessToken = sharePreferenceProvider.getAccessToken()
+            var isRetry : Boolean =false
             var json = """
                 {
                     "userId": "$userId"
                 }
             """.trimIndent()
-            Fuel.post("$base_url/community/checkisjoin/$communityId")
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString() { result ->
-                    result.fold(
-                        { d ->
-                            var data = JSONObject(d)
-                            isJoined.value = data.getBoolean("result")
-                            println(isJoined.value)
-                        },
-                        { err ->
-                            println(err)
+            while(isRetry){
+                if (accessToken != null|| accessToken=="") {
+                    Fuel.post("$base_url/community/checkisjoin/$communityId")
+                        .header("Content-Type" to "application/json")
+                        .authentication()
+                        .bearer(accessToken)
+                        .jsonBody(json)
+                        .awaitStringResponseResult().let { (_,response,result) ->
+                            result.fold(
+                                { d ->
+                                    var data = JSONObject(d)
+                                    isJoined.value = data.getBoolean("result")
+                                    println(isJoined.value)
+                                },
+                                { err ->
+                                    if(response.statusCode==401){
+                                        accessToken = CheckRefreshToken(refreshToken,navController)
+                                        sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                        isRetry=true
+                                    }
+                                    else{
+                                        isRetry= false
+                                        GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Something went wrong")
+                                        }
+                                    }
+                                }
+                            )
                         }
-                    )
                 }
+                else{
+                    isRetry= false
+                    GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Something went wrong")
+                    }
+                }
+            }
+
         }
     }
 
     fun JoinCommunity(communityId: String, navController: NavController, userId: String) {
         viewModelScope.launch {
             println(isJoined)
-            val accessToken = CheckRefreshToken(refreshToken, navController)
+            var accessToken = sharePreferenceProvider.getAccessToken()
+            var isRetry: Boolean = false
             val code = if (isJoined.value) 1 else -1
             val json = """
                 {
@@ -386,26 +517,48 @@ class CommunityScreenVM @Inject constructor(
                     "code": $code
                 }
             """.trimIndent()
-            Fuel.post("$base_url/user/joincommunity")
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString() { _, response, result ->
-                    result.fold(
-                        { d ->
-                            _communityData.update { it ->
-                                it.copy(
-                                    memberCount = if (isJoined.value) it.memberCount + 1 else it.memberCount - 1
-                                )
-                            }
-                        },
-                        { err ->
-                            println(response)
-                        }
-                    )
+            while(isRetry){
+                if (accessToken != null || accessToken == "") {
+                    Fuel.post("$base_url/user/joincommunity")
+                        .header("Content-Type" to "application/json")
+                        .authentication()
+                        .bearer(accessToken)
+                        .jsonBody(json)
+                        .awaitStringResponseResult().let { (_, response, result) ->
+                            result.fold(
+                                { d ->
+                                    _communityData.update { it ->
+                                        it.copy(
+                                            memberCount = if (isJoined.value) it.memberCount + 1 else it.memberCount - 1
+                                        )
+                                    }
+                                    isRetry=false
+                                },
+                                { err ->
+                                    if(response.statusCode==401){
+                                        accessToken= CheckRefreshToken(refreshToken,navController)
+                                        sharePreferenceProvider.saveAccessToken(accessToken!!)
+                                        isRetry=true
+                                    }
+                                    else{
+                                        isRetry=false
+                                        GlobalScope.launch(){
+                                            snackbarHostState.showSnackbar("Something went wrong")
+                                        }
+                                    }
+                                }
+                            )
 
+                        }
                 }
+                else{
+                    isRetry=false
+                    GlobalScope.launch(){
+                        snackbarHostState.showSnackbar("Something went wrong")
+                    }
+                }
+            }
+
 
         }
     }

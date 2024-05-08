@@ -9,26 +9,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil.compose.rememberAsyncImagePainter
 import com.topic_trove.data.model.Community
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
-import com.topic_trove.ui.global_widgets.JoinButton
-import com.topic_trove.ui.global_widgets.JoinedButton
 
 @Composable
 fun TopbarCommunity(
@@ -41,7 +31,7 @@ fun TopbarCommunity(
         .height(36.dp)
         .background(color = Color.White)
     ) {
-        var icon = createRef()
+        val icon = createRef()
         Box(modifier = Modifier
             .clickable {
                 println("Back")
@@ -59,7 +49,7 @@ fun TopbarCommunity(
         }
 
 
-        var column = createRef()
+        val column = createRef()
 
         Column(modifier = Modifier.constrainAs(column){
             top.linkTo(parent.top, margin = 5.dp)
@@ -70,7 +60,7 @@ fun TopbarCommunity(
             Text(text = "${community.memberCount} member", style = CustomTextStyle.communityCountMember())
         }
 
-        var icon2 = createRef()
+        val icon2 = createRef()
         if(isJoin){
             Box(modifier = Modifier
                 .clickable {
