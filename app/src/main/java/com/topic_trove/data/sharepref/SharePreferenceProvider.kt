@@ -50,6 +50,14 @@ class SharePreferenceProvider @Inject constructor(
     fun getAccessToken(): String?{
         return sharedPreferences.getString(ACCESS_TOKEN, null)
     }
+
+    fun saveUser(data : Any){
+        save<User>(USER, data)
+    }
+    //Get user
+    fun getUser(): User? {
+        return get(USER);
+    }
     @ToJson
     inline fun <reified T> save(key: String, any: Any) {
         val editor = sharedPreferences.edit()

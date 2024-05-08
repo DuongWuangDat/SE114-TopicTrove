@@ -28,19 +28,10 @@ class LoginViewModel @Inject constructor(
                 email = email,
                 password = password,
             ).onSuccess {
-                sharePreferenceProvider.save<String>(
-                    SharePreferenceProvider.ACCESS_TOKEN,
-                    it.accessToken
-                )
-                sharePreferenceProvider.save<String>(
-                    SharePreferenceProvider.USER_ID,
-                    it.data.id
-                )
+                sharePreferenceProvider.saveAccessToken(it.accessToken)
+                sharePreferenceProvider.saveUserId(it.data.id)
                 sharePreferenceProvider.saveRefreshToken(it.refreshToken)
-                sharePreferenceProvider.save<User>(
-                    SharePreferenceProvider.USER,
-                    it.data
-                )
+                sharePreferenceProvider.saveUser(it.data)
                 registerSuccess()
                 snackBarHostState.showSnackbar("Login successfully")
             }.onFailure { error ->
