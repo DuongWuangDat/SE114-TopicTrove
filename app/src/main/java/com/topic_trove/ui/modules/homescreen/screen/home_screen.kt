@@ -35,7 +35,6 @@ import com.topic_trove.ui.routes.AppRoutes
 @Composable
 fun Home_Screen(
     community : Community,
-    communityId : String,
     user: User,
     navController: NavController,
     homeScreenVM: HomeScreenViewModel
@@ -134,7 +133,6 @@ fun HomeScreenPreview() {
     )
     Home_Screen(
         community = mockCommunity,
-        communityId = "mockCommunityId",
         user,
         navController = mockNavController,
         homeScreenVM = mockHomeScreenViewModel

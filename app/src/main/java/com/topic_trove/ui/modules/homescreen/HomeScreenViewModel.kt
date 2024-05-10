@@ -45,69 +45,39 @@ class HomeScreenViewModel : ViewModel() {
     var isEnable = mutableStateOf(false)
         private set
 
-
-
-
-
-    fun inputImage(it: String) {
+    fun inputCommunityName(it: String) {
         viewModelScope.launch {
-            _postData.value.imageUrl = it
+            _postData.value.title = it
         }
     }
-
-    fun createPostApi(navController: NavController, communityId: String, userId: String) {
+    fun inputCommunityDescription(it: String) {
         viewModelScope.launch {
+            _postData.value.content = it
+        }
+
+    }
+
+    fun uploadImgApi(file: File) {
+        viewModelScope.launch {
+
             isLoading.value = true
-            val accessToken = CheckRefreshToken(
-                refreshToken,
-                navController
-            )
-            val json = if (_postData.value.imageUrl == "")
-                """
-                        {
-                            "author": "$userId",
-                            "communityId": "$communityId",
-                            "title": "${_postData.value.title.replace("\n", "\\n")}",
-                            "content": [
-                                {
-                                    "body": "${_postData.value.content.replace("\n", "\\n")}",
-                                    "type": "text"
-                                }
-                            ]
-                        }""".trimIndent()
-            else
-                """
-                        {
-                            "author": "$userId",
-                            "communityId": "$communityId",
-                            "title": "${_postData.value.title.replace("\n", "\\n")}",
-                            "content": [
-                                {
-                                    "body": "${_postData.value.content.replace("\n", "\\n")}",
-                                    "type": "text"
-                                },
-                                {
-                                    "body": "${_postData.value.imageUrl}",
-                                    "type": "image"
-                                }
-                            ]
-                        }""".trimIndent()
-            Fuel.post("$base_url/post/create")
+            // Tải lên hình ảnh
+            Fuel.upload("https://topictrovebe.onrender.com/api/v1/upload/image")
+                .add(FileDataPart(file, name = "image"))
                 .timeout(Int.MAX_VALUE)
                 .timeoutRead(Int.MAX_VALUE)
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString { result ->
+                .responseString() { result ->
                     result.fold(
                         { d ->
-                            println(d)
-
-                            GlobalScope.launch {
-                                snackbarHostState.showSnackbar("Create post successfully")
-                            }
+                            val jsonObject = JSONObject(d)
+                            val imageUrl = jsonObject.getString("image")
+                            println("Image URL: $imageUrl")
                             isLoading.value = false
+                            inputImage(imageUrl)
+                            GlobalScope.launch {
+                                snackbarHostState.showSnackbar("Upload image successfully")
+                            }
+
 
                         },
                         { err ->
@@ -115,12 +85,23 @@ class HomeScreenViewModel : ViewModel() {
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Something went wrong")
                             }
+
                         }
                     )
                 }
 
         }
 
+    }
+    fun checkIsEnable() {
+        isEnable.value = postData.value.content.isNotBlank() && postData.value.title.isNotBlank()
+    }
+
+
+    fun inputImage(it: String) {
+        viewModelScope.launch {
+            _postData.value.imageUrl = it
+        }
     }
 
     fun getPostList(communityId: String, userId: String, navController: NavController) {
@@ -132,7 +113,7 @@ class HomeScreenViewModel : ViewModel() {
                 navController
             )
 
-            Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
+            Fuel.get("$base_url/api/v1/post/findall")
                 .timeout(Int.MAX_VALUE)
                 .timeoutRead(Int.MAX_VALUE)
                 .header("Content-Type" to "application/json")
@@ -184,6 +165,7 @@ class HomeScreenViewModel : ViewModel() {
                                 )
                                 postList.add(post)
                             }
+                            postList.shuffle()
                         },
                         { err -> println(err) }
                     )
@@ -258,103 +240,6 @@ class HomeScreenViewModel : ViewModel() {
         }
     }
 
-    fun getCommunityByID(communityId: String, navController: NavController){
-        viewModelScope.launch {
-            val accessToken = CheckRefreshToken(refreshToken, navController)
-            Fuel.get("$base_url/community/findbyid/$communityId")
-                .authentication()
-                .bearer(accessToken)
-                .responseString {_,response,result ->
-                    result.fold(
-                        {d->
-                            val response = JSONObject(d)
-                            val data = response.getJSONObject("data")
-                            _communityData.update { it->
-                                it.copy(
-                                    id = data.getString("_id"),
-                                    owner = data.getJSONObject("owner").getString("_id"),
-                                    icon  = data.getString("icon"),
-                                    description = data.getString("description"),
-                                    rules = data.getString("rules"),
-                                    communityName = data.getString("communityName"),
-                                    memberCount = data.getInt("memberCount"),
-                                )
-                            }
 
-                            println(community)
-                        },
-                        {err->
-                            println(response)
-                        }
-                    )
-                }
-        }
-    }
-
-    fun CheckIsJoined(communityId: String,  navController: NavController, userId: String ){
-        viewModelScope.launch {
-            val accessToken = CheckRefreshToken(refreshToken, navController)
-            var json= """
-                {
-                    "userId": "$userId"
-                }
-            """.trimIndent()
-            Fuel.post("$base_url/community/checkisjoin/$communityId")
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString(){result ->
-                    result.fold(
-                        {d->
-                            var data = JSONObject(d)
-                            isJoined.value = data.getBoolean("result")
-                            println(isJoined.value)
-                        },
-                        {err->
-                            println(err)
-                        }
-                    )
-                }
-        }
-    }
-
-    fun JoinCommunity(communityId: String, navController: NavController, userId: String){
-        viewModelScope.launch {
-            println(isJoined)
-            val accessToken = CheckRefreshToken(refreshToken, navController)
-            val code = if(isJoined.value) 1 else -1
-            val json= """
-                {
-                    "userId": "$userId",
-                    "communityId":"$communityId",
-                    "code": $code
-                }
-            """.trimIndent()
-            Fuel.post("$base_url/user/joincommunity")
-                .header("Content-Type" to "application/json")
-                .authentication()
-                .bearer(accessToken)
-                .jsonBody(json)
-                .responseString(){_,response, result ->
-                    result.fold(
-                        {d->
-                            _communityData.update { it->
-                                it.copy(
-                                    memberCount = if(isJoined.value) it.memberCount+1 else it.memberCount-1
-                                )
-                            }
-                        },
-                        {err->
-                            println(response)
-                        }
-                    )
-
-                }
-
-        }
-    }
-
-    fun GetJoinCommunities(communityId: String, navController: NavController, userId: String){}
 }
 

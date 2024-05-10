@@ -28,10 +28,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.painterResource
+import androidx.constraintlayout.compose.ConstraintLayout
+import com.topic_trove.ui.routes.AppRoutes
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -44,8 +50,14 @@ fun CommunityTab(
 
     AnimatedVisibility(
         visible = isVisible,
-        enter = slideInHorizontally(initialOffsetX = { -200 }, animationSpec = tween(durationMillis = 300)),
-        exit = slideOutHorizontally(targetOffsetX = { -200 }, animationSpec = tween(durationMillis = 300))
+        enter = slideInHorizontally(
+            initialOffsetX = { -200 },
+            animationSpec = tween(durationMillis = 300)
+        ),
+        exit = slideOutHorizontally(
+            targetOffsetX = { -200 },
+            animationSpec = tween(durationMillis = 300)
+        )
     ) {
         Box(
             Modifier
@@ -57,15 +69,18 @@ fun CommunityTab(
             Column {
                 Text(text = "Your Communities", style = CustomTextStyle.communityTitleInHome())
                 Spacer(modifier = Modifier.height(10.dp))
-                LazyColumn {
-                    items(communities) { community ->
-                        Item_Community(community = community, navController = navController)
+                    CreateCommunityButton(navController = navController)
+                Spacer(modifier = Modifier.height(10.dp))
+                    LazyColumn {
+                        items(communities) { community ->
+                            Item_Community(community = community, navController = navController)
+                        }
                     }
-                }
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

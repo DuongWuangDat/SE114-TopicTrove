@@ -13,6 +13,7 @@ import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
+import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
 import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
@@ -111,6 +112,11 @@ fun NavControl(navController: NavHostController) {
                     navController.navigate("${AppRoutes.replyCommentRoute}/$postId/$parentComment/$content")
                 },
             )
+        }
+
+        //ĐQP
+        composable(route=AppRoutes.createCommunity){
+            CreateCommunityScreen(navController = navController)
         }
     }
 }
