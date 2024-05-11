@@ -15,36 +15,52 @@ import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.profilescreen.screen.ProfileScreen
+import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
+import com.topic_trove.ui.modules.profilescreen.screen.EditProfile
 
 
 @Composable
-fun NavControll(navController: NavHostController){
-    NavHost(navController = navController, startDestination = AppRoutes.communityRoute){
-        composable(route = AppRoutes.homeRoute){
+fun NavControll(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = AppRoutes.editProfileRoute) {
+        composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
         }
 
         composable(route = "${AppRoutes.createPostRoute}/{communityName}",
-            arguments = listOf(
-                navArgument("communityName"){
-                    type= NavType.StringType
-                }
-            )){entry->
+            arguments = listOf(navArgument("communityName") {
+                type = NavType.StringType
+            })
+        ) { entry ->
             val name = entry.arguments?.getString("communityName")
             requireNotNull(name)
             createpostScreen(navController = navController, communityName = name)
         }
 
-        composable(route = AppRoutes.communityRoute
-            ){
+        composable(
+            route = AppRoutes.communityRoute
+        ) {
             CommunityScreen(
                 navController = navController
             )
         }
 
-//        composable(route = AppRoutes.profileRoute){
-//            ProfileScreen()
-//        }
+        composable(route = AppRoutes.profileRoute) {
+            ProfileScreen(
+                navController = navController
+            )
+        }
+
+        composable(route = AppRoutes.loginRoute) {
+            LoginScreen()
+        }
+
+        composable(route = AppRoutes.editProfileRoute) {
+
+            EditProfile(
+
+                navController = navController
+            )
+        }
     }
 }

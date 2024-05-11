@@ -1,24 +1,25 @@
 package com.topic_trove.ui.modules.profilescreen.screen
 
 import HeaderBar
+import PostCard
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,31 +37,42 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.topic_trove.R
 import com.topic_trove.data.model.User
+import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.core.values.convertHex
+import com.topic_trove.ui.global_widgets.CustomDialog
+import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.modules.profilescreen.ProfileScreenVM
+import com.topic_trove.ui.routes.AppRoutes
 
 @Composable
 fun ProfileScreen(
-    user: User = User(),
-    navController: NavController
+    user: User = User(
+        "662cc6b65b4d055e982936ce",
+        "Eren Yeager",
+        "quoctruong@mail.com",
+        "0987654321",
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbuffer.com%2Flibrary%2Ffree-images%2F&psig=AOvVaw3ahVGsupVozBkj6Vj13Mhz&ust=1714487449663000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLi6ns3R54UDFQAAAAAdAAAAABAE"
+    ), navController: NavController
 ) {
     val profileVM = viewModel<ProfileScreenVM>()
-
+    val snackBarHostState = profileVM.snackBarHostState
     LaunchedEffect(key1 = navController) {
-        profileVM.getPosts()
+        profileVM.getPosts(userId = user.id, navController = navController)
     }
     Scaffold(topBar = {
         HeaderBar(onBackButtonPressed = { navController.popBackStack() })
+    }, snackbarHost = {
+        SnackbarHost(hostState = snackBarHostState)
     }
 
     ) { innerPadding ->
         (Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .background(color = Color.White),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -81,49 +93,67 @@ fun ProfileScreen(
                 modifier = Modifier.padding(8.dp)
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(AppRoutes.editProfileRoute) },
                 colors = ButtonColors(
                     containerColor = Color.White,
-                    contentColor = Color(convertHex("#FF0000")),
-                    disabledContainerColor = Color.Yellow,
-                    disabledContentColor = Color.Cyan,
+                    contentColor = Color(convertHex("#0072DB")),
+                    disabledContainerColor = Color.Gray,
+                    disabledContentColor = Color.Black,
                 ),
                 border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
                 contentPadding = PaddingValues(35.dp, 8.dp),
-                modifier = Modifier
 
-            ) {
+                ) {
                 Text(text = "Edit")
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { profileVM.logout(navController) },
                 colors = ButtonColors(
                     containerColor = Color(convertHex("#E90000")),
                     contentColor = Color.White,
-                    disabledContainerColor = Color.Yellow,
-                    disabledContentColor = Color.Cyan,
+                    disabledContainerColor = Color.Gray,
+                    disabledContentColor = Color.Black,
                 ),
-                modifier = Modifier
             ) {
                 Text(text = "Log out")
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyColumn {
+                items(profileVM.posts) { post ->
+                    HorizontalDivider(thickness = 0.3.dp, color = AppColors.DividerColor)
+                    PostCard(data = post, isPostOwner = true, isCommunityOwner = false, onLike = {
+                        profileVM.likePost(
+                            post.id, user.id, isLike = post.isLike, navController
+                        )
+                    }, onDelete = {
+                        //profileVM.deletePost(post.id)
+                        profileVM.isShowDialog.value = true
+                        profileVM.curPostId.value = post.id
+                    })
+                }
             }
 
         })
     }
+    if (profileVM.isLoading.value) {
+        OverlayLoading()
+    }
+    if (profileVM.isShowDialog.value) {
+        CustomDialog(onDismiss = {
+            profileVM.isShowDialog.value = false
+        }, onConfirm = {
+            profileVM.deletePost(profileVM.curPostId.value, navController)
+            profileVM.isShowDialog.value = false
+        }, title = "Delete this post", text = "Are you sure to delete this post"
+        )
+
+    }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen(
-        User(
-            "1",
-            "John Doe",
-            "abc@mail.com",
-            "1234567890",
-            "android.resource://com.topic_trove/drawable/add_btn",
-            emptyList()
-        ),
-        navController = NavController(LocalContext.current)
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfileScreenPreview() {
+//    ProfileScreen(
+//        navController = NavController(LocalContext.current)
+//    )
+//}

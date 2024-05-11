@@ -7,11 +7,12 @@ import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.coroutines.awaitStringResponse
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.topic_trove.ui.core.values.AppStrings
+import com.topic_trove.ui.routes.AppRoutes
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 val baseUrl = AppStrings.BASE_URL
-fun CheckRefreshToken(refreshToken: String) : String {
+fun CheckRefreshToken(refreshToken: String, navController: NavController) : String {
     var accessToken= ""
     runBlocking {
 
@@ -23,7 +24,15 @@ fun CheckRefreshToken(refreshToken: String) : String {
                 {d-> var jsonObj = JSONObject(d)
                     print(jsonObj)
                     accessToken = jsonObj.getString("access_token")},
-                {err-> println("Navigate to login")}
+                {err->
+                    println("Navigate to login")
+                    navController.navigate(AppRoutes.loginRoute){
+                        popUpTo(navController.graph.startDestinationId){
+                            inclusive=true
+                        }
+                        launchSingleTop=true
+                    }
+                }
             )
     }
     if(accessToken==""){
@@ -33,3 +42,4 @@ fun CheckRefreshToken(refreshToken: String) : String {
         return accessToken
     }
 }
+

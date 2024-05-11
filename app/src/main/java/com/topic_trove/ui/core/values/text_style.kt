@@ -76,5 +76,9 @@ class CustomTextStyle {
         fun contentPostCard(): TextStyle{
             return TextStyle(color= Color.Black, fontWeight = FontWeight(400), fontSize = 11.sp)
         }
+
+        fun textInputField(): TextStyle{
+            return TextStyle(color = Color.Black, fontWeight = FontWeight(400), fontSize = 16.sp)
+        }
     }
 }

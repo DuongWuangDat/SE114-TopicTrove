@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FileDataPart
 import com.github.kittinunf.fuel.core.FuelManager
@@ -31,8 +32,8 @@ import java.util.Locale
 import java.util.logging.SimpleFormatter
 
 class CommunityScreenVM : ViewModel() {
-    private var _postData = MutableStateFlow(Post())
-    var postData: StateFlow<Post> = _postData.asStateFlow()
+    private var _postData =  MutableStateFlow(Post())
+    var postData : StateFlow<Post> = _postData.asStateFlow()
     val base_url = AppStrings.BASE_URL
     var isLoading = mutableStateOf(false)
     var snackbarHostState = SnackbarHostState()
@@ -41,23 +42,22 @@ class CommunityScreenVM : ViewModel() {
     var curPostId = mutableStateOf("")
     var isEnable = mutableStateOf(false)
         private set
-
-    fun inputContent(it: String) {
+    fun inputContent(it: String){
         viewModelScope.launch {
             _postData.value.content = it
         }
 
     }
 
-    fun inputImage(it: String) {
+    fun inputImage(it: String){
         viewModelScope.launch {
             _postData.value.imageUrl = it
         }
     }
 
-    fun inputTitle(it: String) {
+    fun inputTitle(it: String){
         viewModelScope.launch {
-            _postData.value.title = it
+            _postData.value.title=it
         }
     }
 
@@ -65,20 +65,19 @@ class CommunityScreenVM : ViewModel() {
         isEnable.value = postData.value.content.isNotBlank() && postData.value.title.isNotBlank()
     }
 
-    fun createPostApi() {
+    fun createPostApi(navController: NavController){
         viewModelScope.launch {
-            isLoading.value = true
-            val accessToken =
-                CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
-            val json = if (_postData.value.imageUrl == "")
+            isLoading.value= true
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU",navController )
+            val json = if(_postData.value.imageUrl == "")
                 """
                         {
                             "author": "661ded639a9ecc4c2525774d",
                             "communityId": "662385ad314b50e0397a3a90",
-                            "title": "${_postData.value.title.replace("\n", "\\n")}",
+                            "title": "${_postData.value.title.replace("\n","\\n")}",
                             "content": [
                                 {
-                                    "body": "${_postData.value.content.replace("\n", "\\n")}",
+                                    "body": "${_postData.value.content.replace("\n","\\n")}",
                                     "type": "text"
                                 }
                             ]
@@ -88,10 +87,10 @@ class CommunityScreenVM : ViewModel() {
                         {
                             "author": "661ded639a9ecc4c2525774d",
                             "communityId": "662385ad314b50e0397a3a90",
-                            "title": "${_postData.value.title.replace("\n", "\\n")}",
+                            "title": "${_postData.value.title.replace("\n","\\n")}",
                             "content": [
                                 {
-                                    "body": "${_postData.value.content.replace("\n", "\\n")}",
+                                    "body": "${_postData.value.content.replace("\n","\\n")}",
                                     "type": "text"
                                 },
                                 {
@@ -107,23 +106,21 @@ class CommunityScreenVM : ViewModel() {
                 .authentication()
                 .bearer(accessToken)
                 .jsonBody(json)
-                .responseString() { result ->
+                .responseString (){ result ->
                     result.fold(
-                        { d ->
-                            println(d)
+                        {d-> println(d)
 
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Create post successfully")
                             }
-                            isLoading.value = false
+                            isLoading.value= false
 
                         },
-                        { err ->
-                            isLoading.value = false
+                        {err ->
+                            isLoading.value=false
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Something went wrong")
-                            }
-                        }
+                            } }
                     )
                 }
 
@@ -131,10 +128,10 @@ class CommunityScreenVM : ViewModel() {
 
     }
 
-    fun uploadImgApi(file: File) {
+    fun uploadImgApi(file : File){
         viewModelScope.launch {
 
-            isLoading.value = true
+            isLoading.value= true
             // Tải lên hình ảnh
             Fuel.upload("https://topictrovebe.onrender.com/api/v1/upload/image")
                 .add(FileDataPart(file, name = "image"))
@@ -146,7 +143,7 @@ class CommunityScreenVM : ViewModel() {
                             val jsonObject = JSONObject(d)
                             val imageUrl = jsonObject.getString("image")
                             println("Image URL: $imageUrl")
-                            isLoading.value = false
+                            isLoading.value=false
                             inputImage(imageUrl)
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Upload image successfully")
@@ -155,7 +152,7 @@ class CommunityScreenVM : ViewModel() {
 
                         },
                         { err ->
-                            isLoading.value = false
+                            isLoading.value=false
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Something went wrong")
                             }
@@ -168,12 +165,11 @@ class CommunityScreenVM : ViewModel() {
 
     }
 
-    fun getPostList(communityId: String, userId: String) {
+    fun getPostList(communityId : String, userId: String, navController: NavController){
         viewModelScope.launch {
             postList.clear()
             var formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-            val accessToken =
-                CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU", navController)
 
             Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
                 .timeout(Int.MAX_VALUE)
@@ -181,30 +177,28 @@ class CommunityScreenVM : ViewModel() {
                 .header("Content-Type" to "application/json")
                 .authentication()
                 .bearer(accessToken)
-                .responseString() { result ->
+                .responseString(){ result ->
                     result.fold(
-                        { d ->
+                        {d->
                             val response = JSONObject(d)
                             val arrayPost = response.getJSONArray("data")
                             println(arrayPost)
 
-                            for (i in 0 until arrayPost.length()) {
+                            for(i in 0 until arrayPost.length()){
 
                                 val item = arrayPost.getJSONObject(i)
                                 val userLikeList = item.getJSONArray("interestUserList")
-                                val listUser =
-                                    List(userLikeList.length()) { userLikeList.getString(it) }
+                                val listUser = List(userLikeList.length()){userLikeList.getString(it)}
                                 var isLike = false
-                                if (listUser.contains(userId)) {
+                                if(listUser.contains(userId)){
                                     isLike = true
                                 }
 
                                 val content = item.getJSONArray("content")
                                 val authorName = item.getJSONObject("author").getString("username")
-                                val contentText =
-                                    content.getJSONObject(0).getString("body").replace("\\n", "\n")
+                                val contentText = content.getJSONObject(0).getString("body").replace("\\n","\n")
                                 var imageUrl = ""
-                                if (content.length() >= 2) {
+                                if(content.length() >=2){
                                     imageUrl = content.getJSONObject(1).getString("body")
                                 }
                                 var post = Post(
@@ -212,49 +206,45 @@ class CommunityScreenVM : ViewModel() {
                                     authorID = item.getJSONObject("author").getString("_id"),
                                     authorName = item.getJSONObject("author").getString("username"),
                                     avatar = item.getJSONObject("author").getString("avatar"),
-                                    communityID = item.getJSONObject("communityId")
-                                        .getString("_id"),
-                                    communityName = item.getJSONObject("communityId")
-                                        .getString("communityName"),
-                                    content = contentText,
+                                    communityID = item.getJSONObject("communityId").getString("_id"),
+                                    communityName = item.getJSONObject("communityId").getString("communityName"),
+                                    content= contentText,
                                     imageUrl = imageUrl,
                                     createdAt = formatter.parse(item.getString("createdAt")),
                                     interestCount = item.getInt("interestCount"),
                                     title = item.getString("title"),
                                     isLike = isLike,
                                     commentCount = item.getInt("commentCount")
-
                                 )
                                 postList.add(post)
                             }
                         },
-                        { err -> println(err) }
+                        {err-> println(err) }
                     )
                 }
         }
     }
 
-    fun deletePost(id: String) {
+    fun deletePost(id: String, navController: NavController){
         viewModelScope.launch {
-            isLoading.value = true
-            val accessToken =
-                CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
+            isLoading.value= true
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU", navController)
             Fuel.delete("$base_url/post/delete/$id")
                 .timeout(Int.MAX_VALUE)
                 .timeoutRead(Int.MAX_VALUE)
                 .authentication()
                 .bearer(accessToken)
-                .responseString() { result ->
+                .responseString(){ result ->
                     result.fold(
-                        { d ->
-                            postList.removeIf { x -> x.id == id }
-                            isLoading.value = false
+                        {d->
+                            postList.removeIf{x->x.id == id}
+                            isLoading.value= false
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Delete successffuly")
                             }
 
                         },
-                        { err ->
+                        {err->
                             GlobalScope.launch {
                                 snackbarHostState.showSnackbar("Something went wrong")
                             }
@@ -264,12 +254,11 @@ class CommunityScreenVM : ViewModel() {
         }
     }
 
-    fun likePost(id: String, userId: String, isLike: Boolean) {
+    fun likePost(id: String, userId: String, isLike: Boolean, navController: NavController){
         viewModelScope.launch {
-            FuelManager.instance.forceMethods = true
-            val accessToken =
-                CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU")
-            val interest = if (!isLike) 1 else -1
+            FuelManager.instance.forceMethods= true
+            val accessToken = CheckRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU", navController)
+            val interest = if(!isLike) 1 else -1
             val json = """
                 {
                     "userId": "$userId",
@@ -281,10 +270,10 @@ class CommunityScreenVM : ViewModel() {
                 .authentication()
                 .bearer(accessToken)
                 .jsonBody(json)
-                .responseString() { _, response, result ->
+                .responseString(){_,response,result ->
                     result.fold(
-                        { d -> println(d) },
-                        { err -> println(response) }
+                        {d-> println(d) },
+                        {err-> println(response) }
                     )
                 }
 

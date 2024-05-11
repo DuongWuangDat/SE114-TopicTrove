@@ -60,7 +60,6 @@ fun createpostScreen(
     navController: NavController,
     communityName: String
 ){
-
     val communityVM = viewModel<CommunityScreenVM>()
     val post by communityVM.postData.collectAsState()
     val snackbarHostState = communityVM.snackbarHostState
@@ -81,7 +80,7 @@ fun createpostScreen(
                          navController.popBackStack()
                 },
                 onCreateClick = {
-                    communityVM.createPostApi()
+                    communityVM.createPostApi(navController)
 
                 }
             )

@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,23 +43,24 @@ fun CommunityScreen(
     community: Community = Community(),
     idUser: String = "661ded639a9ecc4c2525774d",
     navController: NavController
-){
+) {
     val communityVM = viewModel<CommunityScreenVM>()
     val snackbarHostState = communityVM.snackbarHostState
     LaunchedEffect(key1 = navController) {
-        communityVM.getPostList("662385ad314b50e0397a3a90", idUser)
+        communityVM.getPostList("662385ad314b50e0397a3a90", idUser, navController)
     }
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         }
     ) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            TopbarCommunity(community = community, onNavigateToCreatePost={
+            TopbarCommunity(community = community, onNavigateToCreatePost = {
                 navController.navigate("${AppRoutes.createPostRoute}/${community.communityName}")
             })
             CommunityTitle {
@@ -66,38 +69,53 @@ fun CommunityScreen(
             Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
                 items(communityVM.postList) { post ->
-                    var isCommunityOwner = if(community.id!="") (community.id == idUser) else false
+                    var isCommunityOwner =
+                        if (community.id != "") (community.id == idUser) else false
                     var isPostOwner = (post.authorID == idUser)
 
                     Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
-                    PostCard(data = post, isPostOwner = isPostOwner, isCommunityOwner = isCommunityOwner,
+                    PostCard(data = post,
+                        isPostOwner = isPostOwner,
+                        isCommunityOwner = isCommunityOwner,
                         onLike = {
-                            communityVM.likePost(post.id, idUser, isLike = post.isLike)
+                            communityVM.likePost(
+                                post.id,
+                                idUser,
+                                isLike = post.isLike,
+                                navController
+                            )
                         },
                         onDelete = {
-                        //communityVM.deletePost(post.id)
-                            communityVM.isShowDialog.value=true
+                            //communityVM.deletePost(post.id)
+                            communityVM.isShowDialog.value = true
                             communityVM.curPostId.value = post.id
-                    })
+                        })
                 }
             }
 
         }
-        if(communityVM.isLoading.value){
+        if (communityVM.isLoading.value) {
             OverlayLoading()
         }
-        if(communityVM.isShowDialog.value){
+        if (communityVM.isShowDialog.value) {
             CustomDialog(
                 onDismiss = {
-                    communityVM.isShowDialog.value=false
+                    communityVM.isShowDialog.value = false
                 },
                 onConfirm = {
-                    communityVM.deletePost(communityVM.curPostId.value)
-                    communityVM.isShowDialog.value= false
+                    communityVM.deletePost(communityVM.curPostId.value, navController)
+                    communityVM.isShowDialog.value = false
                 },
                 title = "Delete this post",
-                text = "Are you sure to delete this post")
+                text = "Are you sure to delete this post"
+            )
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CommunityScreenPreview() {
+    CommunityScreen(navController = NavController(LocalContext.current))
 }

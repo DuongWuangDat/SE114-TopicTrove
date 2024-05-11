@@ -6,5 +6,7 @@ class AppRoutes {
         val createPostRoute = "/home/community/createpost"
         val communityRoute = "/home/community"
         val profileRoute = "/home/profile"
+        val loginRoute = "/login"
+        val editProfileRoute = "/home/profile/edit"
     }
 }

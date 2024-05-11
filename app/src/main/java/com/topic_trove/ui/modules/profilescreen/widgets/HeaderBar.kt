@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -17,15 +19,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HeaderBar(onBackButtonPressed: () -> Unit) {
+fun HeaderBar(
+    title: String = "",
+    onBackButtonPressed: () -> Unit
+) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
-        title = { Text(text = "")},
+        title = { Text(text = title) },
         navigationIcon = {
             IconButton(onClick = { onBackButtonPressed() }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", modifier = Modifier.width(27.dp).height(27.dp))
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    modifier = Modifier
+                        .width(27.dp)
+                        .height(27.dp)
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -36,8 +48,8 @@ fun HeaderBar(onBackButtonPressed: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
- fun PreviewHeaderBar() {
-    HeaderBar  {
+fun PreviewHeaderBar() {
+    HeaderBar(title = "Profile") {
 
     }
 }
