@@ -96,7 +96,7 @@ fun PostCard(
             Row {
                 Modifier.padding(5.dp)
                 // Name
-                Text(text = data.authorName, style = CustomTextStyle.PostNameText())
+                Text(text = data.authorName, style = CustomTextStyle.postNameText())
                 Spacer(modifier = Modifier.width(10.dp))
                 // Date
                 Text(

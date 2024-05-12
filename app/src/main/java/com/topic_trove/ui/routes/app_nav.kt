@@ -12,6 +12,7 @@ import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
+import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
 import com.topic_trove.ui.modules.loginscreen.LoginRoute
 import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
@@ -122,6 +123,12 @@ fun NavControl(navController: NavHostController) {
             )
         }
 
+
+        //ĐQP
+        composable(route=AppRoutes.createCommunity) {
+            CreateCommunityScreen(navController = navController)
+        }
+        //ĐQP
         composable(route = AppRoutes.welcome) {
             WelcomeScreen(
                 login = {
@@ -138,6 +145,7 @@ fun NavControl(navController: NavHostController) {
                 onLogin = { navController.navigate(AppRoutes.welcome) },
                 onCommunity = { navController.navigate(AppRoutes.communityRoute) }
             )
+
         }
     }
 }

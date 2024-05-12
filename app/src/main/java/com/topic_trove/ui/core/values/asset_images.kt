@@ -12,5 +12,7 @@ class Assets {
         val CommentIcon = R.drawable.ic_comment
         val AuthorIcon = R.drawable.ic_author
         val UnlikeIcon = R.drawable.ic_unlike
+        val CommunityIcon = R.drawable.community_btn
+        val SearchIcon = R.drawable.search_btn
     }
 }

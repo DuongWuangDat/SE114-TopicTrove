@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +27,7 @@ fun CommentButton(
 ) {
     Row(
         modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
             .background(color = Color.Transparent)
             .border(
                 1.dp,
@@ -43,12 +45,12 @@ fun CommentButton(
             Text(
                 text = commentCount.toString(),
                 modifier = Modifier.padding(start = 8.dp),
-                style = CustomTextStyle.LikeCommentText()
+                style = CustomTextStyle.likeCommentText()
             )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = if (commentCount > 1) "Comments" else "Comment",
-                style = CustomTextStyle.LikeCommentText()
+                style = CustomTextStyle.likeCommentText()
             )
 
         }
