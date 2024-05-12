@@ -9,38 +9,40 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.topic_trove.data.model.Community
 import com.topic_trove.data.model.User
 import com.topic_trove.ui.core.values.AppColors
-import com.topic_trove.ui.global_widgets.CommunityTitle
 import com.topic_trove.ui.global_widgets.CustomDialog
 import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.modules.homescreen.HomeScreenViewModel
 import com.topic_trove.ui.modules.homescreen.widgets.CommunityTab
 import com.topic_trove.ui.modules.homescreen.widgets.TopbarHome
 import com.topic_trove.ui.routes.AppRoutes
+import kotlinx.coroutines.flow.StateFlow
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home_Screen(
-    community : Community,
-    user: User,
+    community: Community,
+    user: StateFlow<User>,
     navController: NavController,
     homeScreenVM: HomeScreenViewModel
 ) {
     val snackbarHostState = homeScreenVM.snackbarHostState
     val isJoin by homeScreenVM.isJoined
+    val user by user.collectAsState()
     val isExpanded = remember { mutableStateOf(false) }
     println(isJoin)
     Scaffold(
@@ -56,12 +58,11 @@ fun Home_Screen(
             Spacer(modifier = Modifier.height(8.dp))
             TopbarHome(
                 navController,
-                user,
-                onNavigateToCommunity = { isExpanded.value = !isExpanded.value}
-            )
+                user
+            ) { isExpanded.value = !isExpanded.value }
             CommunityTab(
                 isVisible = isExpanded.value,
-                communities = listOf(community),
+                communities = homeScreenVM.communityList,
                 navController = navController
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -71,7 +72,7 @@ fun Home_Screen(
                         if (community.id != "") (community.owner == user.id) else false
                     val isPostOwner = (post.authorID == user.id)
 
-                    Divider(color = AppColors.DividerColor, thickness = 0.3.dp)
+                    HorizontalDivider(thickness = 0.3.dp, color = AppColors.DividerColor)
                     PostCard(
                         data = post,
                         isPostOwner = isPostOwner,
@@ -117,24 +118,4 @@ fun Home_Screen(
         }
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    val mockNavController = rememberNavController()
-    val mockHomeScreenViewModel = HomeScreenViewModel()
-    val mockCommunity = Community()
-    val user = User(
-        username = "",
-        email = "",
-        phoneNumber = "",
-        password= "",
-        avatar = "",
-        id ="",
-    )
-    Home_Screen(
-        community = mockCommunity,
-        user,
-        navController = mockNavController,
-        homeScreenVM = mockHomeScreenViewModel
-    )
-}
+

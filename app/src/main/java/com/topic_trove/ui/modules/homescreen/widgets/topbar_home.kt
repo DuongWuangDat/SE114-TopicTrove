@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.topic_trove.data.model.User
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
-import com.topic_trove.ui.routes.AppRoutes
 
 @Composable
 fun TopbarHome(
@@ -112,7 +111,6 @@ fun TopbarHomePreview() {
     )
     TopbarHome(
         mockNavController,
-        user,
-        onNavigateToCommunity = {}
-    )
+        user
+    ) {}
 }

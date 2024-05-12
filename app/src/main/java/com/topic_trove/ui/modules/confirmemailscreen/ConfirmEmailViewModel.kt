@@ -1,14 +1,12 @@
 package com.topic_trove.ui.modules.confirmemailscreen
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.topic_trove.data.repositories.RegisterRepository
+import com.topic_trove.data.sharepref.SharePreferenceProvider
 import com.topic_trove.ui.core.utils.SavedUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,10 +14,10 @@ import javax.inject.Inject
 class ConfirmEmailViewModel @Inject constructor(
     private val repository: RegisterRepository,
     private val savedUser: SavedUser,
+    private val sharePreferenceProvider: SharePreferenceProvider
 ) : ViewModel() {
 
-    private val _message = MutableStateFlow("")
-    val message: StateFlow<String> = _message.asStateFlow()
+    var snackBarHostState = SnackbarHostState()
 
     fun register(
         otpValue: String,
@@ -35,9 +33,14 @@ class ConfirmEmailViewModel @Inject constructor(
                 email = savedUser.email,
                 password = savedUser.password,
             ).onSuccess {
+                sharePreferenceProvider.saveAccessToken(it.accessToken)
+                sharePreferenceProvider.saveRefreshToken(it.refreshToken)
+                sharePreferenceProvider.saveUserId(it.data.id)
+                sharePreferenceProvider.saveUser(it.data)
                 registerSuccess()
+                snackBarHostState.showSnackbar("Register successfully")
             }.onFailure { error ->
-                _message.update { error.message ?: "" }
+                snackBarHostState.showSnackbar("Register fail with message ${error.message}")
             }
         }
     }

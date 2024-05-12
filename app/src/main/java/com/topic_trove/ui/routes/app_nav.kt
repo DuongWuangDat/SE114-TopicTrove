@@ -9,20 +9,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
-import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
 import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
-import com.topic_trove.ui.modules.loginscreen.screens.LoginScreen
+import com.topic_trove.ui.modules.loginscreen.LoginRoute
+import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
+import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "${AppRoutes.communityRoute}") {
+    NavHost(navController = navController, startDestination = AppRoutes.loginRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             ChatScreen()
@@ -33,7 +34,7 @@ fun NavControl(navController: NavHostController) {
                 navArgument("communityName") {
                     type = NavType.StringType
                 },
-                navArgument("communityId"){
+                navArgument("communityId") {
                     type = NavType.StringType
                 }
             )) { entry ->
@@ -54,11 +55,19 @@ fun NavControl(navController: NavHostController) {
         ) {
             //val id = entry.arguments?.getString("communityId")
             //requireNotNull(id)
-            CommunityScreenRoute(navController = navController, communityId = "662385ad314b50e0397a3a90")
+            CommunityScreenRoute(
+                navController = navController,
+                communityId = "662385ad314b50e0397a3a90"
+            )
         }
 
         composable(route = AppRoutes.loginRoute) {
-            LoginScreen()
+            LoginRoute(
+                onNavUp = navController::navigateUp,
+                onSubmitted = {
+                    navController.navigate(AppRoutes.communityRoute)
+                }
+            )
         }
 
         composable(route = AppRoutes.registerRoute) {
@@ -66,14 +75,14 @@ fun NavControl(navController: NavHostController) {
                 onSignUpSubmitted = {
                     navController.navigate(AppRoutes.confirmEmailRoute)
                 },
+                onNavUp = navController::navigateUp,
             )
         }
 
         composable(route = AppRoutes.confirmEmailRoute) {
             ConfirmEmailRoute(
                 onSubmitted = {
-                    // TODO navigation to login
-                    navController.navigate(AppRoutes.communityRoute)
+                    navController.navigate(AppRoutes.loginRoute)
                 },
                 onNavUp = navController::navigateUp,
             )
@@ -114,9 +123,29 @@ fun NavControl(navController: NavHostController) {
             )
         }
 
+
         //ĐQP
-        composable(route=AppRoutes.createCommunity){
+        composable(route=AppRoutes.createCommunity) {
             CreateCommunityScreen(navController = navController)
+        }
+        //ĐQP
+        composable(route = AppRoutes.welcome) {
+            WelcomeScreen(
+                login = {
+                    navController.navigate(AppRoutes.loginRoute)
+                },
+                register = {
+                    navController.navigate(AppRoutes.registerRoute)
+                },
+            )
+        }
+
+        composable(route = AppRoutes.splash) {
+            SplashRoute(
+                onLogin = { navController.navigate(AppRoutes.welcome) },
+                onCommunity = { navController.navigate(AppRoutes.communityRoute) }
+            )
+
         }
     }
 }

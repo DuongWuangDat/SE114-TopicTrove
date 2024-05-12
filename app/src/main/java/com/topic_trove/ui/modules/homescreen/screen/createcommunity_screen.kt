@@ -36,9 +36,9 @@ fun CreateCommunityScreen(
     userId: String = "661ded639a9ecc4c2525774d"
 ) {
 
-    val communityVM = viewModel<HomeScreenViewModel>()
-    val post by communityVM.postData.collectAsState()
-    val snackbarHostState = communityVM.snackbarHostState
+    val homeVM = viewModel<HomeScreenViewModel>()
+    val community by homeVM.community.collectAsState()
+    val snackbarHostState = homeVM.snackbarHostState
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -51,15 +51,15 @@ fun CreateCommunityScreen(
                 .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            TopbarCreateCommunity(navController = navController)
+            TopbarCreateCommunity(navController = navController, homeVM = homeVM)
             collumnContent(
-                communityVM = communityVM,
+                homeVM = homeVM,
                 snackbarHostState = snackbarHostState,
                 communityName = ""
             )
 
         }
-        if (communityVM.isLoading.value) {
+        if (homeVM.isLoading.value) {
             OverlayLoading()
         }
     }
@@ -67,7 +67,7 @@ fun CreateCommunityScreen(
 
 @Composable
 fun collumnContent(
-    communityVM: HomeScreenViewModel,
+    homeVM: HomeScreenViewModel,
     communityName: String,
     snackbarHostState: SnackbarHostState
 ) {
@@ -81,24 +81,24 @@ fun collumnContent(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         ImageBlock(
-            isLoading = communityVM.isLoading,
+            isLoading = homeVM.isLoading,
             snackbarHostState = snackbarHostState,
             uploadImage = { file ->
-                communityVM.uploadImgApi(file)
+                homeVM.uploadImgApi(file)
             },
             inputImage = {
-                communityVM.inputImage(it)
+                homeVM.inputImage(it)
             }
         )
         Spacer(modifier = Modifier.height(15.dp))
         TextFieldCard(title = "Name") {
-            communityVM.inputCommunityName(it)
-            communityVM.checkIsEnable()
+            homeVM.inputCommunityName(it)
+            homeVM.checkIsEnable()
         }
         Spacer(modifier = Modifier.height(16.dp))
         TextFieldCard(title = "Description") {
-            communityVM.inputCommunityDescription(it)
-            communityVM.checkIsEnable()
+            homeVM.inputCommunityDescription(it)
+            homeVM.checkIsEnable()
         }
 
 

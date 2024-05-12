@@ -25,5 +25,9 @@
     <string name="reply">Reply</string>
     <string name="post">Post</string>
     <string name="add_comment">Add comment</string>
+<<<<<<< HEAD
     <string name="title_activity_homescreen_view_model">homescreenViewModel</string>
+=======
+    <string name="login">Login</string>
+>>>>>>> c7ae3126c326e56978b4eefbffb18f902234ad3d
 </resources>

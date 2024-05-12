@@ -25,11 +25,13 @@ import androidx.navigation.compose.rememberNavController
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.core.values.convertHex
+import com.topic_trove.ui.modules.homescreen.HomeScreenViewModel
 import com.topic_trove.ui.routes.AppRoutes
 
 @Composable
 fun TopbarCreateCommunity(
-    navController: NavController
+    navController: NavController,
+    homeVM: HomeScreenViewModel
 ){
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
@@ -74,17 +76,9 @@ fun TopbarCreateCommunity(
             textStyle = TextStyle(color = Color(convertHex("#686868")), fontSize = 12.sp, fontWeight = FontWeight(600)),
             btncolor = Color(convertHex("#DFDFDF")),
             onUseFunc = {
-                // Your function here
+                homeVM.createCommunity(navController)
             }
         )
 
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun TopbarCreateCommunityPreview() {
-    val mockNavController = rememberNavController()
-    TopbarCreateCommunity(
-        mockNavController
-    )
 }

@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
+import com.topic_trove.data.model.User
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,29 +16,48 @@ class SharePreferenceProvider @Inject constructor(
     companion object {
         const val NAME_SHARE_PREFERENCE = "topic_trove_share_preference"
         const val USER_ID = "user_id"
+        const val ACCESS_TOKEN = "access_token"
         const val REFRESH_TOKEN = "refresh_token"
+        const val USER = "user"
     }
 
-    // Phương thức để lưu refresh token
-    fun saveRefreshToken(token: String) {
-        sharedPreferences.edit().putString(REFRESH_TOKEN, token).apply()
+    // Save refresh token
+    fun saveRefreshToken(refreshToken: String){
+        sharedPreferences.edit().putString(REFRESH_TOKEN, refreshToken).apply()
     }
 
-    // Phương thức để lấy refresh token
-    fun getRefreshToken(): String? {
-        return sharedPreferences.getString(REFRESH_TOKEN, null)
-    }
-
-    // Phương thức để lưu user ID
-    fun saveUserId(userId: String) {
+    // Save user id
+    fun saveUserId(userId: String){
         sharedPreferences.edit().putString(USER_ID, userId).apply()
     }
 
-    // Phương thức để lấy user ID
-    fun getUserId(): String? {
+    // Save access token
+    fun saveAccessToken(accessToken: String){
+        sharedPreferences.edit().putString(ACCESS_TOKEN, accessToken).apply()
+    }
+
+    //Get refresh token
+    fun getRefreshToken(): String?{
+        return sharedPreferences.getString(REFRESH_TOKEN, null)
+    }
+
+    //Get user id
+    fun getUserId(): String?{
         return sharedPreferences.getString(USER_ID, null)
     }
 
+    //Get access token
+    fun getAccessToken(): String?{
+        return sharedPreferences.getString(ACCESS_TOKEN, null)
+    }
+
+    fun saveUser(data : Any){
+        save<User>(USER, data)
+    }
+    //Get user
+    fun getUser(): User? {
+        return get(USER);
+    }
     @ToJson
     inline fun <reified T> save(key: String, any: Any) {
         val editor = sharedPreferences.edit()
@@ -54,6 +74,9 @@ class SharePreferenceProvider @Inject constructor(
         }
         editor.apply()
     }
+
+
+
 
     @FromJson
     inline fun <reified T> get(key: String): T? {
