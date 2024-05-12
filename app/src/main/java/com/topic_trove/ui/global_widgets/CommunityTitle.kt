@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,17 +39,21 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 @Composable
 fun CommunityTitle(
     community: Community = Community(),
-    isJoin: Boolean = false,
-    joinFunction: (isJoined: Boolean)-> Unit
+    isJoin: MutableState<Boolean>,
+    isAuthor: Boolean = false,
+    joinFunction: ()-> Unit
+
 ){
 
     Column (modifier = Modifier.background(color = Color.White)){
         CommunityHeader(
             community = community,
-            isJoin = isJoin
-        ){
-            joinFunction(it)
-        }
+            isJoin = isJoin,
+            isAuthor = isAuthor,
+            joinFunction = {
+                joinFunction()
+            }
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = if(community.description == "") "Community description... Community 1 is a place for you to share your experience" else  community.description ,
             style = CustomTextStyle.communityDescription(),
@@ -62,8 +67,9 @@ fun CommunityTitle(
 @Composable
 fun CommunityHeader(
     community: Community,
-    isJoin: Boolean = false,
-    joinFunction: (isJoin: Boolean) -> Unit
+    isJoin: MutableState<Boolean>,
+    joinFunction: () -> Unit,
+    isAuthor: Boolean
 ){
 
     ConstraintLayout(modifier = Modifier
@@ -97,28 +103,29 @@ fun CommunityHeader(
         }
 
         var buttonJoin =createRef()
-        var isJoined by remember {
-            mutableStateOf(isJoin)
-        }
-        if(!isJoined){
-            JoinButton(
-                modifier = Modifier
-                    .constrainAs(buttonJoin) {
-                        top.linkTo(parent.top, margin = 14.dp)
-                        end.linkTo(parent.end, margin = 10.dp)
-                    }){
-                isJoined = true
-                joinFunction(isJoined)
+
+        if(!isAuthor){
+            if(!isJoin.value){
+                JoinButton(
+                    modifier = Modifier
+                        .constrainAs(buttonJoin) {
+                            top.linkTo(parent.top, margin = 14.dp)
+                            end.linkTo(parent.end, margin = 10.dp)
+                        }){
+                    isJoin.value = true
+                    joinFunction()
+                }
+            } else{
+                JoinedButton(modifier = Modifier.constrainAs(buttonJoin) {
+                    top.linkTo(parent.top, margin = 14.dp)
+                    end.linkTo(parent.end, margin = 10.dp)
+                }) {
+                    isJoin.value= false
+                    joinFunction()
+                }
             }
-        } else{
-            JoinedButton(modifier = Modifier.constrainAs(buttonJoin) {
-                top.linkTo(parent.top, margin = 14.dp)
-                end.linkTo(parent.end, margin = 10.dp)
-            }) {
-                isJoined= false
-                joinFunction(isJoined)
-            }
         }
+
 
 
 
@@ -165,18 +172,4 @@ fun JoinedButton(
 }
 
 
-@Preview(name = "Community title", showBackground = true)
-@Composable
-fun CommunityTitlePreview(){
-    CommunityTitle(){
 
-    }
-}
-
-@Preview(name = "Community header", showBackground = true)
-@Composable
-fun CommunityHeaderPreview(){
-    CommunityHeader(community = Community()){
-
-    }
-}

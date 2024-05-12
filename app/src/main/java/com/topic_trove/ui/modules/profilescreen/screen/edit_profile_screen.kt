@@ -14,10 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -51,19 +47,19 @@ fun EditProfile(
             .fillMaxSize()
             .background(Color.White),
         topBar = {
-        HeaderBarActionBtn(title = "Edit Profile",
-            actionText = "Save",
-            state = profileVM.actionState,
-            onActionClick = {
-                profileVM.isEditing.value = true
-                val file = getFileFromUri(context, profileVM.imageLocalUri.value)
-                file?.let {
-                    // Here you can start the upload
-                    profileVM.uploadImgApi(it)
-                }
-            },
-            onBackButtonPressed = { navController.popBackStack() })
-    },
+            HeaderBarActionBtn(title = "Edit Profile",
+                actionText = "Save",
+                state = profileVM.actionState,
+                onActionClick = {
+                    profileVM.isEditing.value = true
+                    val file = getFileFromUri(context, profileVM.imageLocalUri.value)
+                    file?.let {
+                        // Here you can start the upload
+                        profileVM.uploadImgApi(it)
+                    }
+                },
+                onBackButtonPressed = { navController.popBackStack() })
+        },
 
         ) { paddingValues ->
         Column(
@@ -106,10 +102,9 @@ fun EditProfile(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextFieldCard(
                     title = "Phone number",
-                    placeholder = user.phoneNumber
+                    placeholder = user.phoneNumber,
                 ) {
                     profileVM.inputPhoneNumber(it)
-                    profileVM.checkIsEnable()
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

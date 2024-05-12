@@ -31,7 +31,7 @@ fun TextFieldCard(
     isPasswordField: Boolean = false,
     placeholder: String = title,
     onTextChange: (String) -> Unit,
-    validateInput: (String) -> Boolean
+//    validateInput: (String) -> Boolean
 ) {
     var value by remember {
         mutableStateOf("")
@@ -54,7 +54,7 @@ fun TextFieldCard(
                 value = value, onValueChange = {
                     onTextChange(it)
                     value = it
-                    isValid = validateInput(it)
+//                    isValid = validateInput(it)
                 },
                 
                 textStyle = CustomTextStyle.textInputField(),

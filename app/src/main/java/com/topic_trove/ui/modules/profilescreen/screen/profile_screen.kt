@@ -1,7 +1,6 @@
 package com.topic_trove.ui.modules.profilescreen.screen
 
 import HeaderBar
-import PostCard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +42,7 @@ import com.topic_trove.ui.core.values.AppColors
 import com.topic_trove.ui.core.values.convertHex
 import com.topic_trove.ui.global_widgets.CustomDialog
 import com.topic_trove.ui.global_widgets.OverlayLoading
+import com.topic_trove.ui.global_widgets.PostCard
 import com.topic_trove.ui.modules.profilescreen.ProfileScreenVM
 import com.topic_trove.ui.routes.AppRoutes
 
@@ -146,7 +146,6 @@ fun ProfileScreen(
             profileVM.isShowDialog.value = false
         }, title = "Delete this post", text = "Are you sure to delete this post"
         )
-
     }
 }
 
