@@ -41,11 +41,12 @@ fun CommunityTitle(
     community: Community = Community(),
     isJoin: MutableState<Boolean> ,
     isAuthor: Boolean = false,
+    modifier: Modifier= Modifier,
     joinFunction: ()-> Unit
 
 ){
 
-    Column (modifier = Modifier.background(color = Color.White)){
+    Column (modifier = modifier.background(color = Color.White)){
         CommunityHeader(
             community = community,
             isJoin = isJoin,

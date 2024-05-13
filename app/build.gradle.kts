@@ -99,4 +99,6 @@ dependencies {
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
     implementation ("org.greenrobot:eventbus:3.3.1")
     implementation("androidx.compose.material3:material3:1.2.1")
+
+    //Swipe refresh
 }

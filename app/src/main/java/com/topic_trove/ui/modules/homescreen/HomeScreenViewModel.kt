@@ -58,7 +58,7 @@ class HomeScreenViewModel @Inject constructor(
     var accessToken = sharePreferenceProvider.getAccessToken()
     var isEnable = mutableStateOf(false)
         private set
-
+    var isRefreshing = mutableStateOf(false)
     fun inputCommunityName(it: String) {
         viewModelScope.launch {
             _communityData.value.communityName = it
@@ -232,7 +232,7 @@ class HomeScreenViewModel @Inject constructor(
                     }
                 }
             }
-
+            isRefreshing.value=false
         }
     }
 
