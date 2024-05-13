@@ -24,7 +24,8 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 fun TopbarCommunity(
     isJoin : Boolean,
     community: Community,
-    onNavigateToCreatePost: ()->Unit
+    onNavigateToCreatePost: ()->Unit,
+    onNavigateBack: ()->Unit
 ){
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
@@ -34,7 +35,7 @@ fun TopbarCommunity(
         val icon = createRef()
         Box(modifier = Modifier
             .clickable {
-                println("Back")
+                onNavigateBack()
             }
             .width(30.dp)
             .height(30.dp)

@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.topic_trove.data.provider.Provider
 import com.topic_trove.data.model.User
 import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
@@ -26,8 +27,9 @@ import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
 @Composable
-fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.profileRoute) {
+fun NavControl() {
+    val navController = Provider.LocalNavController.current
+    NavHost(navController = navController, startDestination = AppRoutes.loginRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
@@ -75,7 +77,7 @@ fun NavControl(navController: NavHostController) {
             LoginRoute(
                 onNavUp = navController::navigateUp,
                 onSubmitted = {
-                    navController.navigate(AppRoutes.communityRoute)
+                    navController.navigate(AppRoutes.homeRoute)
                 }
             )
         }

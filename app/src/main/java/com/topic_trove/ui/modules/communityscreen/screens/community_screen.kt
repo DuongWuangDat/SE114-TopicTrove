@@ -53,6 +53,8 @@ fun CommunityScreen(
             Spacer(modifier = Modifier.height(8.dp))
             TopbarCommunity(isJoin = communityVM.isJoined.value,community = community, onNavigateToCreatePost = {
                 navController.navigate("${AppRoutes.createPostRoute}/${community.communityName}/${community.id}")
+            }, onNavigateBack = {
+                navController.popBackStack()
             })
             CommunityTitle (community= community,
                 isAuthor = isAuthor,
