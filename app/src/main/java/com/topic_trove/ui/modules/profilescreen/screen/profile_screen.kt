@@ -22,6 +22,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,23 +46,35 @@ import com.topic_trove.ui.global_widgets.CustomDialog
 import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.global_widgets.PostCard
 import com.topic_trove.ui.modules.profilescreen.ProfileScreenVM
+import com.topic_trove.ui.modules.profilescreen.widgets.AlertDialogCustom
 import com.topic_trove.ui.routes.AppRoutes
 
 @Composable
 fun ProfileScreen(
-    user: User = User(
-        "662cc6b65b4d055e982936ce",
-        "Eren Yeager",
-        "quoctruong@mail.com",
-        "0987654321",
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbuffer.com%2Flibrary%2Ffree-images%2F&psig=AOvVaw3ahVGsupVozBkj6Vj13Mhz&ust=1714487449663000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLi6ns3R54UDFQAAAAAdAAAAABAE"
-    ), navController: NavController
+    user: User,
+    navController: NavController
 ) {
+    val openAlertDialog = remember { mutableStateOf(false) }
     val profileVM = viewModel<ProfileScreenVM>()
     val snackBarHostState = profileVM.snackBarHostState
     LaunchedEffect(key1 = navController) {
         profileVM.getPosts(userId = user.id, navController = navController)
     }
+
+    when {
+        openAlertDialog.value -> {
+            AlertDialogCustom(
+                onDismissRequest = { openAlertDialog.value = false },
+                onConfirmation = {
+                    openAlertDialog.value = false
+                    println("Confirmation registered") // Add logic here to handle confirmation.
+                },
+                dialogTitle = "Logout?",
+                dialogText = "Are you sure you want to logout?",
+            )
+        }
+    }
+
     Scaffold(topBar = {
         HeaderBar(onBackButtonPressed = { navController.popBackStack() })
     }, snackbarHost = {
@@ -107,7 +121,10 @@ fun ProfileScreen(
                 Text(text = "Edit")
             }
             Button(
-                onClick = { profileVM.logout(navController) },
+                onClick = {
+                    openAlertDialog.value = true
+                    profileVM.logout(navController)
+                },
                 colors = ButtonColors(
                     containerColor = Color(convertHex("#E90000")),
                     contentColor = Color.White,

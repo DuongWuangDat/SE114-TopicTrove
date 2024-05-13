@@ -23,14 +23,16 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.res.painterResource
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.topic_trove.R
 
 @Composable
 fun ImagePicker(
     initialImage: String,
     onImageSelected: (Uri) -> Unit
 ) {
-    val context = LocalContext.current
     val imageUri = remember { mutableStateOf<Uri?>(null) }
 
     val launcher =
@@ -57,8 +59,9 @@ fun ImagePicker(
                 contentScale = ContentScale.Crop
             )
         } ?: run {
-            Image(
-                painter = rememberAsyncImagePainter(model = initialImage),
+            AsyncImage(
+                model = initialImage,
+                placeholder = painterResource(id = R.drawable.avatar_default),
                 contentDescription = "Initial Profile Picture",
                 modifier = Modifier
                     .size(80.dp)
