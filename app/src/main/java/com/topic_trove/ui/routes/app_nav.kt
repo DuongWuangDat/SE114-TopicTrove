@@ -52,7 +52,7 @@ fun NavControl() {
         }
 
         composable(
-            route = "${AppRoutes.communityRoute}",
+            route = AppRoutes.communityRoute,
 //            arguments = listOf(
 //                navArgument("communityId") {
 //                    type = NavType.StringType
