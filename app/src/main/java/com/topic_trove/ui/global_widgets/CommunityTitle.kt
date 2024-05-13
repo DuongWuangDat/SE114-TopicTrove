@@ -39,7 +39,7 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 @Composable
 fun CommunityTitle(
     community: Community = Community(),
-    isJoin: MutableState<Boolean>,
+    isJoin: MutableState<Boolean> ,
     isAuthor: Boolean = false,
     joinFunction: ()-> Unit
 
@@ -61,6 +61,7 @@ fun CommunityTitle(
                 start = 10.dp
             ))
         )
+
     }
 }
 
