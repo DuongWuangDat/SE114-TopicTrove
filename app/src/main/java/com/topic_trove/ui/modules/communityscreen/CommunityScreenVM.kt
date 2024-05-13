@@ -272,8 +272,9 @@ class CommunityScreenVM @Inject constructor(
 
                                             )
                                             postList.add(post)
-                                            isRetry = false
+
                                         }
+                                        isRetry = false
                                     },
                                     { err ->
                                             isRetry = false

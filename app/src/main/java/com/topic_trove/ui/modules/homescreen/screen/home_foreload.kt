@@ -11,20 +11,20 @@ import com.topic_trove.ui.modules.homescreen.HomeScreenViewModel
 
 @Composable
 fun HomeForeLoad(
-    homeVM: HomeScreenViewModel = viewModel<HomeScreenViewModel>(),
     navController: NavController,
-    communityId: String
 ){
     // Lấy ViewModel đã được inject
     val homeVM: HomeScreenViewModel = hiltViewModel()
 
     // Lấy User
-    homeVM.getUserById(navController)
-    homeVM.IdUser?.let { homeVM.getAllJoinedCommunity(navController) }
-    homeVM.IdUser?.let { homeVM.getPostList(it,navController) }
+
+
 
     LaunchedEffect(key1 = true) {
        // homeVM.getPostList(communityId, user.id, navController)
+        homeVM.getUserById(navController)
+        homeVM.IdUser?.let { homeVM.getAllJoinedCommunity(navController) }
+        homeVM.IdUser?.let { homeVM.getPostList(it,navController) }
     }
     val community by homeVM.community.collectAsStateWithLifecycle()
     Home_Screen(

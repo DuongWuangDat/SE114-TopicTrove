@@ -33,12 +33,12 @@ fun Item_Community(
         .fillMaxWidth()
         .height(25.dp)
         .background(color = Color.White)
+        .clickable {
+            navController.navigate("${AppRoutes.communityRoute}/${community.id}")
+        }
     ) {
         val icon = createRef()
         Box(modifier = Modifier
-            .clickable {
-                navController.navigate("${AppRoutes.communityRoute}/${community.id}")
-            }
             .width(20.dp)
             .height(20.dp)
             .background(color = Color.Transparent)

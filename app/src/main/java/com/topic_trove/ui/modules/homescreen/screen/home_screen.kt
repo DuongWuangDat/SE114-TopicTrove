@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
@@ -72,7 +71,7 @@ fun Home_Screen(
                         if (community.id != "") (community.owner == user.id) else false
                     val isPostOwner = (post.authorID == user.id)
 
-                    HorizontalDivider(thickness = 0.3.dp, color = AppColors.DividerColor)
+                    Divider(thickness = 0.3.dp, color = AppColors.DividerColor)
                     PostCard(
                         data = post,
                         isPostOwner = isPostOwner,
