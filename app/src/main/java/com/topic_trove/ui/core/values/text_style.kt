@@ -89,5 +89,9 @@ class CustomTextStyle {
             return TextStyle(color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight(700))
         }
         // ĐQP
+
+        fun textInputField(): TextStyle{
+            return TextStyle(color = Color.Black, fontWeight = FontWeight(400), fontSize = 16.sp)
+        }
     }
 }
