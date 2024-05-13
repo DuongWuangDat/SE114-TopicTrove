@@ -29,7 +29,6 @@ fun HomeForeLoad(
     val community by homeVM.community.collectAsStateWithLifecycle()
     Home_Screen(
         navController = navController,
-        community = community,
         user = homeVM.userData,
         homeScreenVM = homeVM
     )

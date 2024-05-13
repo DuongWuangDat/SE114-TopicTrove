@@ -2,6 +2,7 @@ package com.topic_trove.ui.modules.homescreen.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,8 +55,7 @@ fun CreateCommunityScreen(
             TopbarCreateCommunity(navController = navController, homeVM = homeVM)
             collumnContent(
                 homeVM = homeVM,
-                snackbarHostState = snackbarHostState,
-                communityName = ""
+                snackbarHostState = snackbarHostState
             )
 
         }
@@ -67,7 +68,6 @@ fun CreateCommunityScreen(
 @Composable
 fun collumnContent(
     homeVM: HomeScreenViewModel,
-    communityName: String,
     snackbarHostState: SnackbarHostState
 ) {
     val scrollState = rememberScrollState()
@@ -79,16 +79,18 @@ fun collumnContent(
             )
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        ImageBlock(
-            isLoading = homeVM.isLoading,
-            snackbarHostState = snackbarHostState,
-            uploadImage = { file ->
-                homeVM.uploadImgApi(file)
-            },
-            inputImage = {
-                homeVM.inputImage(it)
-            }
-        )
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            ImageBlock(
+                isLoading = homeVM.isLoading,
+                snackbarHostState = snackbarHostState,
+                uploadImage = { file ->
+                    homeVM.uploadImgApi(file)
+                },
+                inputImage = {
+                    homeVM.inputImage(it)
+                }
+            )
+        }
         Spacer(modifier = Modifier.height(15.dp))
         TextFieldCard(title = "Name") {
             homeVM.inputCommunityName(it)
@@ -97,6 +99,11 @@ fun collumnContent(
         Spacer(modifier = Modifier.height(16.dp))
         TextFieldCard(title = "Description") {
             homeVM.inputCommunityDescription(it)
+            homeVM.checkIsEnable()
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TextFieldCard(title = "Rules") {
+            homeVM.inputCommunityRules(it)
             homeVM.checkIsEnable()
         }
 
