@@ -8,10 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.topic_trove.data.provider.Provider
+import com.topic_trove.data.model.User
 import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
+import com.topic_trove.ui.modules.profilescreen.screen.ProfileScreen
+import com.topic_trove.ui.modules.profilescreen.screen.EditProfile
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
 import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
 import com.topic_trove.ui.modules.homescreen.screen.HomeForeLoad
@@ -61,6 +64,12 @@ fun NavControl() {
             CommunityScreenRoute(
                 navController = navController,
                 communityId = id
+            )
+        }
+
+        composable(route = AppRoutes.profileRoute) {
+            ProfileScreen(
+                navController = navController
             )
         }
 
@@ -149,6 +158,12 @@ fun NavControl() {
                 onCommunity = { navController.navigate(AppRoutes.homeRoute) }
             )
 
+        }
+
+        composable(route = AppRoutes.editProfileRoute) {
+            EditProfile(
+                navController = navController
+            )
         }
     }
 }

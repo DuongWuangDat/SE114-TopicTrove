@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -97,4 +98,5 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
     implementation ("org.greenrobot:eventbus:3.3.1")
+    implementation("androidx.compose.material3:material3:1.2.1")
 }
