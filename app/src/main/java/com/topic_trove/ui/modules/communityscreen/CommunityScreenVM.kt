@@ -117,7 +117,7 @@ class CommunityScreenVM @Inject constructor(
                             ]
                         }""".trimIndent()
                 while(isRetry){
-                    if (accessToken != null || accessToken == "") {
+                    if (accessToken != null && accessToken != "") {
                         Fuel.post("$base_url/post/create")
                             .timeout(Int.MAX_VALUE)
                             .timeoutRead(Int.MAX_VALUE)
@@ -218,7 +218,7 @@ class CommunityScreenVM @Inject constructor(
             var isRetry : Boolean = true
 
             while(isRetry){
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.get("$base_url/post/findbycommunityid?communityId=$communityId")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
@@ -313,7 +313,7 @@ class CommunityScreenVM @Inject constructor(
             println(accessToken)
             var isRetry : Boolean = true
             while (isRetry){
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.delete("$base_url/post/delete/$id")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
@@ -379,7 +379,7 @@ class CommunityScreenVM @Inject constructor(
                 }
             """.trimIndent()
             while(isRetry){
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.patch("$base_url/post/likepost/$id")
                         .header("Content-Type" to "application/json")
                         .authentication()
@@ -430,7 +430,7 @@ class CommunityScreenVM @Inject constructor(
         viewModelScope.launch {
             var isRetry : Boolean = true
             while(isRetry){
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.get("$base_url/community/findbyid/$communityId")
                         .authentication()
                         .bearer(accessToken!!)
@@ -499,7 +499,7 @@ class CommunityScreenVM @Inject constructor(
                 }
             """.trimIndent()
             while(isRetry){
-                if (accessToken != null|| accessToken=="") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.post("$base_url/community/checkisjoin/$communityId")
                         .header("Content-Type" to "application/json")
                         .authentication()
@@ -558,7 +558,7 @@ class CommunityScreenVM @Inject constructor(
                 }
             """.trimIndent()
             while(isRetry){
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.post("$base_url/user/joincommunity")
                         .header("Content-Type" to "application/json")
                         .authentication()
