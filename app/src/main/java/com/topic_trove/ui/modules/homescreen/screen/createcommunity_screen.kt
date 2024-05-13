@@ -35,7 +35,6 @@ import com.topic_trove.ui.modules.homescreen.widgets.TopbarCreateCommunity
 fun CreateCommunityScreen(
     navController: NavController,
 ) {
-
     val homeVM : HomeScreenViewModel = hiltViewModel()
     val snackbarHostState = homeVM.snackbarHostState
     Scaffold(
