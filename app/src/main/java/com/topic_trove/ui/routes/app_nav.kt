@@ -24,7 +24,7 @@ import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.splash) {
+    NavHost(navController = navController, startDestination = AppRoutes.homeRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)

@@ -58,6 +58,14 @@ class SharePreferenceProvider @Inject constructor(
     fun getUser(): User? {
         return get(USER);
     }
+
+    //Clear all
+    fun clearAll(){
+        sharedPreferences.edit().remove(USER).apply()
+        sharedPreferences.edit().remove(USER_ID).apply()
+        sharedPreferences.edit().remove(REFRESH_TOKEN).apply()
+        sharedPreferences.edit().remove(ACCESS_TOKEN).apply()
+    }
     @ToJson
     inline fun <reified T> save(key: String, any: Any) {
         val editor = sharedPreferences.edit()
