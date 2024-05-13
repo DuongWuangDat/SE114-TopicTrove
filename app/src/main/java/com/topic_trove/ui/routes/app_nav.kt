@@ -29,7 +29,7 @@ import com.topic_trove.ui.modules.splashscreen.SplashRoute
 @Composable
 fun NavControl() {
     val navController = Provider.LocalNavController.current
-    NavHost(navController = navController, startDestination = AppRoutes.loginRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.splash) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
