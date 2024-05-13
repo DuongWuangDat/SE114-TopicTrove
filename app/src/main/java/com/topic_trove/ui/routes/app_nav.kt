@@ -27,7 +27,7 @@ import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.splash) {
+    NavHost(navController = navController, startDestination = AppRoutes.profileRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
@@ -67,13 +67,6 @@ fun NavControl(navController: NavHostController) {
 
         composable(route = AppRoutes.profileRoute) {
             ProfileScreen(
-                user = User(
-                    "662cc6b65b4d055e982936ce",
-                    "Eren Yeager",
-                    "quoctruong@mail.com",
-                    "0987654321",
-                    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbuffer.com%2Flibrary%2Ffree-images%2F&psig=AOvVaw3ahVGsupVozBkj6Vj13Mhz&ust=1714487449663000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLi6ns3R54UDFQAAAAAdAAAAABAE"
-                ),
                 navController = navController
             )
         }
@@ -166,9 +159,7 @@ fun NavControl(navController: NavHostController) {
         }
 
         composable(route = AppRoutes.editProfileRoute) {
-
             EditProfile(
-
                 navController = navController
             )
         }

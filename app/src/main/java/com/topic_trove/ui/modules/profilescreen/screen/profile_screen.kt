@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -51,13 +52,20 @@ import com.topic_trove.ui.routes.AppRoutes
 
 @Composable
 fun ProfileScreen(
-    user: User,
-    navController: NavController
+    navController: NavController,
+    profileVM: ProfileScreenVM = hiltViewModel()
 ) {
+//    val user = profileVM.useSession!!
+    val user = User(
+        id = "6641d0ca43c8abf74b9b768c",
+        username = "Eren Yeager",
+        email = "eren@gmail.com",
+        phoneNumber = "0987654321",
+        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2Fcoding.jpg?alt=media&token=de22115f-4cab-487d-836e-78060d019ddc"
+    )
     val openAlertDialog = remember { mutableStateOf(false) }
-    val profileVM = viewModel<ProfileScreenVM>()
     val snackBarHostState = profileVM.snackBarHostState
-    LaunchedEffect(key1 = navController) {
+    LaunchedEffect(key1 = true) {
         profileVM.getPosts(userId = user.id, navController = navController)
     }
 
@@ -96,7 +104,7 @@ fun ProfileScreen(
                     .size(80.dp)
                     .clip(CircleShape),
                 model = user.avatar,
-                placeholder = painterResource(R.drawable.suzy),
+                placeholder = painterResource(R.drawable.avatar_default),
                 contentDescription = "Profile Picture",
             )
             Text(

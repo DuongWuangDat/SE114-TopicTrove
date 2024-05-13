@@ -20,6 +20,7 @@ import com.topic_trove.ui.core.utils.baseUrl
 import com.topic_trove.ui.core.values.AppStrings
 import com.topic_trove.ui.core.values.AppStrings.Companion.BASE_URL
 import com.topic_trove.ui.routes.AppRoutes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -28,10 +29,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
 
+@HiltViewModel
 class ProfileScreenVM @Inject constructor(
     private val sharePreferenceProvider: SharePreferenceProvider,
 ) : ViewModel() {
     private val baseUrl = AppStrings.BASE_URL
+    val useSession = sharePreferenceProvider.getUser()
     val userId = sharePreferenceProvider.getUserId()
     var isLoading = mutableStateOf(false)
     var isEditing = mutableStateOf(false)

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.topic_trove.data.model.User
@@ -30,16 +31,18 @@ import java.io.File
 
 @Composable
 fun EditProfile(
-    user: User = User(
-        "662cc6b65b4d055e982936ce",
-        "Eren Yeager",
-        "quoctruong@mail.com",
-        "0987654321",
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbuffer.com%2Flibrary%2Ffree-images%2F&psig=AOvVaw3ahVGsupVozBkj6Vj13Mhz&ust=1714487449663000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLi6ns3R54UDFQAAAAAdAAAAABAE"
-    ), navController: NavController
+    profileVM: ProfileScreenVM = hiltViewModel(),
+    navController: NavController
 ) {
+//    val user = profileVM.useSession!!
+    val user = User(
+        id = "6641d0ca43c8abf74b9b768c",
+        username = "Eren Yeager",
+        email = "eren@gmail.com",
+        phoneNumber = "0987654321",
+        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2Fcoding.jpg?alt=media&token=de22115f-4cab-487d-836e-78060d019ddc"
+    )
     val scrollState = rememberScrollState()
-    val profileVM = viewModel<ProfileScreenVM>()
     val horizontalPadding = 25.dp
     val context = LocalContext.current
     Scaffold(
@@ -58,7 +61,9 @@ fun EditProfile(
                         profileVM.uploadImgApi(it)
                     }
                 },
-                onBackButtonPressed = { navController.popBackStack() })
+                onBackButtonPressed = {
+                    navController.popBackStack()
+                })
         },
 
         ) { paddingValues ->
