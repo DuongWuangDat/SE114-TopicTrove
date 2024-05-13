@@ -13,6 +13,7 @@ import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
 import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
+import com.topic_trove.ui.modules.homescreen.screen.HomeForeLoad
 import com.topic_trove.ui.modules.loginscreen.LoginRoute
 import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
@@ -26,7 +27,7 @@ fun NavControl(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AppRoutes.splash) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
-            ChatScreen()
+            HomeForeLoad(navController = navController)
         }
 
         composable(route = "${AppRoutes.createPostRoute}/{communityName}/{communityId}",
@@ -46,18 +47,18 @@ fun NavControl(navController: NavHostController) {
         }
 
         composable(
-            route = "${AppRoutes.communityRoute}",
-            //arguments = listOf(
-            //    navArgument("communityId") {
-            //        type = NavType.StringType
-            //    }
-            //)
-        ) {
-            //val id = entry.arguments?.getString("communityId")
-            //requireNotNull(id)
+            route = "${AppRoutes.communityRoute}/{communityId}",
+            arguments = listOf(
+                navArgument("communityId") {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            val id = entry.arguments?.getString("communityId")
+            requireNotNull(id)
             CommunityScreenRoute(
                 navController = navController,
-                communityId = "662385ad314b50e0397a3a90"
+                communityId = id
             )
         }
 
@@ -143,7 +144,7 @@ fun NavControl(navController: NavHostController) {
         composable(route = AppRoutes.splash) {
             SplashRoute(
                 onLogin = { navController.navigate(AppRoutes.welcome) },
-                onCommunity = { navController.navigate(AppRoutes.communityRoute) }
+                onCommunity = { navController.navigate(AppRoutes.homeRoute) }
             )
 
         }

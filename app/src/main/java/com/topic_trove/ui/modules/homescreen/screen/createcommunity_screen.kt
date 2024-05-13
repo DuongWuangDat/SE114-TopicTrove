@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -33,11 +34,9 @@ import com.topic_trove.ui.modules.homescreen.widgets.TopbarCreateCommunity
 @Composable
 fun CreateCommunityScreen(
     navController: NavController,
-    userId: String = "661ded639a9ecc4c2525774d"
 ) {
 
-    val homeVM = viewModel<HomeScreenViewModel>()
-    val community by homeVM.community.collectAsState()
+    val homeVM : HomeScreenViewModel = hiltViewModel()
     val snackbarHostState = homeVM.snackbarHostState
     Scaffold(
         snackbarHost = {

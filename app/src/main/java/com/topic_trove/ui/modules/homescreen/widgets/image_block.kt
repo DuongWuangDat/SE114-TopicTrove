@@ -91,6 +91,7 @@ fun ImageBlock(
                         .clip(CircleShape)
                         .border(2.dp, Color.Gray, CircleShape)
                         .background(Color.LightGray)
+                        .align(Alignment.CenterHorizontally)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
