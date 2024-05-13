@@ -1,5 +1,6 @@
 package com.topic_trove.ui.modules.homescreen.widgets
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import com.topic_trove.data.model.User
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun TopbarHome(
     navController: NavController,
@@ -89,7 +91,7 @@ fun TopbarHome(
             }
             .background(color = Color.Transparent))
         {
-            Image(painter =  painterResource(id = if(user.avatar=="") Assets.AuthorIcon else user.avatar as Int), contentDescription = null,
+            Image(painter =  painterResource(id = if(user.avatar=="" || user.avatar == null) Assets.AuthorIcon else user.avatar as Int), contentDescription = null,
                 modifier = Modifier.width(27.dp).height(27.dp)
             )
         }

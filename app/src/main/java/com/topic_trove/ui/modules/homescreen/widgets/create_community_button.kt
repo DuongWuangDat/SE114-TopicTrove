@@ -30,12 +30,12 @@ fun CreateCommunityButton(
             .fillMaxWidth()
             .height(25.dp)
             .background(color = Color.White)
+            .clickable {
+                navController.navigate(AppRoutes.createCommunity)
+            }
     ) {
         val icon = createRef()
         Box(modifier = Modifier
-            .clickable {
-                navController.navigate(AppRoutes.communityRoute)
-            }
             .width(20.dp)
             .height(20.dp)
             .background(color = Color.Transparent)

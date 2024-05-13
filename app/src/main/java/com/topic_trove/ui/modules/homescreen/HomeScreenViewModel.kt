@@ -21,6 +21,7 @@ import com.topic_trove.data.model.User
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import com.topic_trove.ui.core.utils.CheckRefreshToken
 import com.topic_trove.ui.core.values.AppStrings
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +33,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
-
+@HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     val sharePreferenceProvider: SharePreferenceProvider
 ) : ViewModel() {
@@ -128,7 +129,7 @@ class HomeScreenViewModel @Inject constructor(
 
             while (isRetry) {
                 if (accessToken != null || accessToken == "") {
-                    Fuel.get("$base_url/api/v1/post/findall")
+                    Fuel.get("$base_url/post/findall")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
                         .header("Content-Type" to "application/json")
@@ -191,8 +192,8 @@ class HomeScreenViewModel @Inject constructor(
 
                                             )
                                             postList.add(post)
-                                            isRetry = false
                                         }
+                                        isRetry = false
                                         postList.shuffle()
                                     },
                                     { err ->
@@ -351,7 +352,7 @@ class HomeScreenViewModel @Inject constructor(
     fun getUserById(navController: NavController) {
         viewModelScope.launch {
             if (accessToken != null || accessToken == ""){
-                Fuel.get("$base_url/api/v1/user/findbyid/:id?id=$IdUser")
+                Fuel.get("$base_url/user/findbyid/$IdUser")
                     .timeout(Int.MAX_VALUE)
                     .timeoutRead(Int.MAX_VALUE)
                     .header("Content-Type" to "application/json")
@@ -362,8 +363,10 @@ class HomeScreenViewModel @Inject constructor(
                         when (response.statusCode) {
                             200 -> result.fold({
                                     d->
-                                val response = JSONObject(d)
+                                val data = JSONObject(d)
+                                val response = data.getJSONObject("data")
                                 val avatar = response.getString("avatar")
+                                println(avatar)
                                 val id = response.getString("_id")
                                 val name =response.getString("username")
                                 val email = response.getString("email")
@@ -404,7 +407,7 @@ class HomeScreenViewModel @Inject constructor(
             var isRetry: Boolean = true
             while (isRetry) {
                 if (accessToken != null || accessToken == "") {
-                    Fuel.get("$base_url/api/v1/community/findjoinedcommunity")
+                    Fuel.get("$base_url/community/findjoinedcommunity")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
                         .header("Content-Type" to "application/json")
@@ -423,7 +426,7 @@ class HomeScreenViewModel @Inject constructor(
                                             val item = arrayCommunity.getJSONObject(i)
                                             val community = Community(
                                                 id = item.getString("_id"),
-                                                owner = item.getJSONObject("owner").getString("_id"),
+                                                owner = item.getString("owner"),
                                                 icon = item.getString("icon"),
                                                 description = item.getString("description"),
                                                 rules = item.getString("rules"),
@@ -431,8 +434,9 @@ class HomeScreenViewModel @Inject constructor(
                                                 memberCount = item.getInt("memberCount")
                                             )
                                             communityList.add(community)
-                                            isRetry = false
+
                                         }
+                                        isRetry = false
                                     },
                                     {
                                         err ->
@@ -484,7 +488,7 @@ class HomeScreenViewModel @Inject constructor(
 
             while (isRetry) {
                 if (accessToken != null || accessToken != "") {
-                    Fuel.post("$base_url/api/v1/community/create")
+                    Fuel.post("$base_url/community/create")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
                         .header("Content-Type" to "application/json")
@@ -504,7 +508,7 @@ class HomeScreenViewModel @Inject constructor(
                                         isRetry = false
                                     },
                                     {
-                                            err ->
+                                        err ->
                                         isLoading.value = false
                                         isRetry = false
                                         GlobalScope.launch {
@@ -520,6 +524,10 @@ class HomeScreenViewModel @Inject constructor(
                                 }
                                 else -> {
                                     println(response)
+                                    isLoading.value = false
+                                    GlobalScope.launch {
+                                        snackbarHostState.showSnackbar("Something went wrong")
+                                    }
                                     isRetry = false
                                 }
                             }
