@@ -53,9 +53,7 @@ fun Home_Screen(
     homeScreenVM: HomeScreenViewModel
 ) {
     val snackbarHostState = homeScreenVM.snackbarHostState
-    val communityList = homeScreenVM.communityList
     val ownedCommunity = homeScreenVM.ownedCommunity
-    val isJoin by homeScreenVM.isJoined
     val user by user.collectAsState()
     val isExpanded = remember { mutableStateOf(false) }
     val pullToRefreshState = rememberPullToRefreshState()

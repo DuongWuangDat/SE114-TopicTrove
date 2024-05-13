@@ -19,10 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.topic_trove.data.model.Community
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.routes.AppRoutes
+import coil.compose.AsyncImage
 
 @Composable
 fun Item_Community(
@@ -46,10 +48,11 @@ fun Item_Community(
                 top.linkTo(parent.top, margin = 5.dp)
                 start.linkTo(parent.start, margin = 5.dp)
             }){
-            Image(painter =  painterResource(id = (if(community.icon == "") Assets.AuthorIcon else community.icon) as Int),  contentDescription = null,
+            AsyncImage(if(community.icon == "") "https://firebasestorage.googleapis.com/v0/b/skillexchange-62da0.appspot.com/o/files%2FAssessment%20Techniques.png?alt=media&token=4e5db0b9-9ef7-47bf-9fa9-c9dc3d851d9a"
+            else community.icon,  contentDescription = null,
                 modifier = Modifier
-                    .width(27.dp)
-                    .height(27.dp)
+                    .width(30.dp)
+                    .height(30.dp)
             )
         }
 
