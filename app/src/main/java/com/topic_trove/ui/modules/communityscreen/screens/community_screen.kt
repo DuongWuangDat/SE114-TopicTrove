@@ -51,9 +51,14 @@ fun CommunityScreen(
                 .background(color = Color.White)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            TopbarCommunity(isJoin = communityVM.isJoined.value,community = community, onNavigateToCreatePost = {
+            TopbarCommunity(
+                isAuthor= isAuthor,
+                isJoin = communityVM.isJoined.value,
+                community = community,
+                onNavigateToCreatePost = {
                 navController.navigate("${AppRoutes.createPostRoute}/${community.communityName}/${community.id}")
-            }, onNavigateBack = {
+            },
+                onNavigateBack = {
                 navController.popBackStack()
             })
             CommunityTitle (community= community,

@@ -22,6 +22,7 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 
 @Composable
 fun TopbarCommunity(
+    isAuthor: Boolean,
     isJoin : Boolean,
     community: Community,
     onNavigateToCreatePost: ()->Unit,
@@ -62,7 +63,7 @@ fun TopbarCommunity(
         }
 
         val icon2 = createRef()
-        if(isJoin){
+        if(isJoin || isAuthor){
             Box(modifier = Modifier
                 .clickable {
                     println("Create post")
