@@ -53,7 +53,7 @@ class CommunityScreenVM @Inject constructor(
     var accessToken = sharePreferenceProvider.getAccessToken()
     var isEnable = mutableStateOf(false)
         private set
-
+    var isRefreshing = mutableStateOf(false)
 
     fun inputContent(it: String) {
         viewModelScope.launch {
@@ -304,7 +304,7 @@ class CommunityScreenVM @Inject constructor(
                     }
                 }
             }
-
+            isRefreshing.value=false
         }
     }
 
