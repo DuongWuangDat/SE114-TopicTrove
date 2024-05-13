@@ -447,8 +447,8 @@ class CommunityScreenVM @Inject constructor(
                                                 id = data.getString("_id"),
                                                 owner = data.getJSONObject("owner").getString("_id"),
                                                 icon = data.getString("icon"),
-                                                description = data.getString("description"),
-                                                rules = data.getString("rules"),
+                                                description = data.getString("description").replace("\\n","\n"),
+                                                rules = data.getString("rules").replace("\\n","\n"),
                                                 communityName = data.getString("communityName"),
                                                 memberCount = data.getInt("memberCount"),
                                             )

@@ -490,8 +490,8 @@ class HomeScreenViewModel @Inject constructor(
                 {
                     "owner": "$IdUser",
                     "icon": "${_communityData.value.icon}",
-                    "description": "${_communityData.value.description}",
-                    "rules": "${_communityData.value.rules}",
+                    "description": "${_communityData.value.description.replace("\n","\\n")}",
+                    "rules": "${_communityData.value.rules.replace("\n","\\n")}",
                     "communityName": "${_communityData.value.communityName}"
                 }
                 """.trimIndent()
