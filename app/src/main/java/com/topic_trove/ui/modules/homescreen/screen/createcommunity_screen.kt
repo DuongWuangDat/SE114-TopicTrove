@@ -28,7 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.modules.communityscreen.widgets.CommunityCard
 import com.topic_trove.ui.modules.homescreen.widgets.ImageBlock
-import com.topic_trove.ui.modules.communityscreen.widgets.TextFieldCard
+import com.topic_trove.ui.modules.homescreen.widgets.TextFieldCard
 import com.topic_trove.ui.modules.homescreen.HomeScreenViewModel
 import com.topic_trove.ui.modules.homescreen.widgets.TopbarCreateCommunity
 
@@ -78,7 +78,6 @@ fun collumnContent(
             )
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             ImageBlock(
                 isLoading = homeVM.isLoading,
                 snackbarHostState = snackbarHostState,
@@ -89,9 +88,8 @@ fun collumnContent(
                     homeVM.inputImage(it)
                 }
             )
-        }
         Spacer(modifier = Modifier.height(15.dp))
-        TextFieldCard(title = "Name") {
+        TextFieldCard(title = "Name", singleLine = true) {
             homeVM.inputCommunityName(it)
             homeVM.checkIsEnable()
         }

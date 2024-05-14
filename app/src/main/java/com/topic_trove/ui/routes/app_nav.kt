@@ -23,13 +23,14 @@ import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
+import com.topic_trove.ui.modules.searchscreen.SearchScreenRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
 @Composable
 fun NavControl() {
     val navController = Provider.LocalNavController.current
-    NavHost(navController = navController, startDestination = AppRoutes.homeRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.splash) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
@@ -52,18 +53,18 @@ fun NavControl() {
         }
 
         composable(
-            route = AppRoutes.communityRoute,
-//            arguments = listOf(
-//                navArgument("communityId") {
-//                    type = NavType.StringType
-//                }
-//            )
-        ) {
-//            val id = entry.arguments?.getString("communityId")
-//            requireNotNull(id)
+            route = "${AppRoutes.communityRoute}/{communityId}",
+            arguments = listOf(
+                navArgument("communityId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {entry ->
+            val id = entry.arguments?.getString("communityId")
+            requireNotNull(id)
             CommunityScreenRoute(
                 navController = navController,
-                communityId = "662385ad314b50e0397a3a90"
+                communityId = id
             )
         }
 
@@ -165,5 +166,10 @@ fun NavControl() {
                 navController = navController
             )
         }
+
+        composable(route = AppRoutes.searchRoute) {
+            SearchScreenRoute(navController = navController)
+        }
+
     }
 }
