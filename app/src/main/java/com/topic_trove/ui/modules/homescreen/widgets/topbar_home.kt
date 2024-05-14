@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +25,8 @@ import androidx.navigation.compose.rememberNavController
 import com.topic_trove.data.model.User
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
+import coil.compose.AsyncImage
+import com.topic_trove.ui.core.values.AppStrings
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -87,12 +91,13 @@ fun TopbarHome(
             }
             .constrainAs(icon3) {
                 top.linkTo(parent.top, margin = 4.5.dp)
-                end.linkTo(parent.end, margin = 14.dp)
+                end.linkTo(parent.end, margin = 10.dp)
             }
             .background(color = Color.Transparent))
         {
-            Image(painter =  painterResource(id = if(user.avatar=="" || user.avatar == null) Assets.AuthorIcon else user.avatar as Int), contentDescription = null,
-                modifier = Modifier.width(27.dp).height(27.dp)
+            AsyncImage(if(user.avatar=="") AppStrings.MODEL_IMG
+            else user.avatar, contentDescription = null,
+                modifier = Modifier.width(27.dp).height(27.dp).clip(CircleShape)
             )
         }
 

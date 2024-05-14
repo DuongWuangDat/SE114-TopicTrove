@@ -27,12 +27,10 @@ import com.topic_trove.ui.modules.searchscreen.SearchScreenRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
-
-
 @Composable
 fun NavControl() {
     val navController = Provider.LocalNavController.current
-    NavHost(navController = navController, startDestination = AppRoutes.searchRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.homeRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
@@ -66,7 +64,7 @@ fun NavControl() {
             requireNotNull(id)
             CommunityScreenRoute(
                 navController = navController,
-                communityId = id
+                communityId = "662385ad314b50e0397a3a90"
             )
         }
 
@@ -80,7 +78,7 @@ fun NavControl() {
             LoginRoute(
                 onNavUp = navController::navigateUp,
                 onSubmitted = {
-                    navController.navigate(AppRoutes.searchRoute)
+                    navController.navigate(AppRoutes.homeRoute)
                 }
             )
         }

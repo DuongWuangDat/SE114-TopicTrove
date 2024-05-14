@@ -53,9 +53,7 @@ fun Home_Screen(
     homeScreenVM: HomeScreenViewModel
 ) {
     val snackbarHostState = homeScreenVM.snackbarHostState
-    val communityList = homeScreenVM.communityList
     val ownedCommunity = homeScreenVM.ownedCommunity
-    val isJoin by homeScreenVM.isJoined
     val user by user.collectAsState()
     val isExpanded = remember { mutableStateOf(false) }
     val pullToRefreshState = rememberPullToRefreshState()
@@ -139,30 +137,30 @@ fun Home_Screen(
 
             }
             if (isExpanded.value) {
-                Surface(color = Color.Black.copy(alpha = 0.5f)) {
-                    Modifier.clickable { isExpanded.value = false }
-                }
+                Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)).clickable { isExpanded.value = false })
                 CommunityTab(
                     isVisible = isExpanded.value,
                     communities = homeScreenVM.communityList,
                     navController = navController
                 )
-                if (homeScreenVM.isLoading.value) {
-                    OverlayLoading()
-                }
-                if (homeScreenVM.isShowDialog.value) {
-                    CustomDialog(
-                        onDismiss = {
-                            homeScreenVM.isShowDialog.value = false
-                        },
-                        onConfirm = {
-                            homeScreenVM.deletePost(homeScreenVM.curPostId.value, navController)
-                            homeScreenVM.isShowDialog.value = false
-                        },
-                        title = "Delete this post",
-                        text = "Are you sure to delete this post"
-                    )
-                }
+
+            }
+
+            if (homeScreenVM.isLoading.value) {
+                OverlayLoading()
+            }
+            if (homeScreenVM.isShowDialog.value) {
+                CustomDialog(
+                    onDismiss = {
+                        homeScreenVM.isShowDialog.value = false
+                    },
+                    onConfirm = {
+                        homeScreenVM.deletePost(homeScreenVM.curPostId.value, navController)
+                        homeScreenVM.isShowDialog.value = false
+                    },
+                    title = "Delete this post",
+                    text = "Are you sure to delete this post"
+                )
             }
 
         }
