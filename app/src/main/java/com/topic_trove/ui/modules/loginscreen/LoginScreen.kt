@@ -64,7 +64,7 @@ fun LoginScreen(
             val onSubmit = {
                 if (emailState.isValid && passwordState.isValid) {
                     onSignInSubmitted(
-                        emailState.text, passwordState.text
+                        emailState.text.trim(), passwordState.text.trim()
                     )
                 }
             }
