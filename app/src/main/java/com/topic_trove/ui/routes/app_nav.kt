@@ -26,6 +26,8 @@ import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
+
+
 @Composable
 fun NavControl() {
     val navController = Provider.LocalNavController.current
@@ -165,5 +167,10 @@ fun NavControl() {
                 navController = navController
             )
         }
+
+        composable(route = AppRoutes.searchRoute) {
+
+        }
+
     }
 }
