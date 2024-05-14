@@ -52,15 +52,15 @@ fun NavControl() {
         }
 
         composable(
-            route = "${AppRoutes.communityRoute}",
-//            arguments = listOf(
-//                navArgument("communityId") {
-//                    type = NavType.StringType
-//                }
-//            )
-        ) {
-//            val id = entry.arguments?.getString("communityId")
-//            requireNotNull(id)
+            route = "${AppRoutes.communityRoute}/{communityId}",
+            arguments = listOf(
+                navArgument("communityId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {entry->
+            val id = entry.arguments?.getString("communityId")
+            requireNotNull(id)
             CommunityScreenRoute(
                 navController = navController,
                 communityId = "662385ad314b50e0397a3a90"
