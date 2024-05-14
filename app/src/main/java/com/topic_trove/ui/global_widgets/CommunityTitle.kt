@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -42,11 +43,14 @@ fun CommunityTitle(
     isJoin: MutableState<Boolean> ,
     isAuthor: Boolean = false,
     modifier: Modifier= Modifier,
+    onClick: () -> Unit = {},
     joinFunction: ()-> Unit
 
 ){
 
-    Column (modifier = modifier.background(color = Color.White)){
+    Column (modifier = modifier.background(color = Color.White).clickable {
+        onClick()
+    }){
         CommunityHeader(
             community = community,
             isJoin = isJoin,

@@ -24,10 +24,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.topic_trove.R
+import com.topic_trove.ui.core.values.AppColors
+import com.topic_trove.ui.modules.searchscreen.SearchResultViewModel
 import com.topic_trove.ui.modules.searchscreen.TopicImage
 
 @Composable
 fun ListContractSearchComponentUI(
+    searchResultViewModel: SearchResultViewModel,
+    selectTabIndex : Int = 0
 ){
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -46,7 +50,7 @@ fun ListContractSearchComponentUI(
                 .fillMaxWidth()
                 .height(36.dp)
                 .padding(end = 16.dp)
-                .background(colorResource(id = R.color.gray_400), shape = RoundedCornerShape(5.dp))
+                .background(AppColors.TextFieldColorSearch, shape = RoundedCornerShape(5.dp))
 
 
         ) {
@@ -69,9 +73,9 @@ fun ListContractSearchComponentUI(
                 )
 
                 BasicTextField(
-                    value = " ",
+                    value = searchResultViewModel.searchValue.value,
                     onValueChange = { newQuery ->
-
+                        searchResultViewModel.searchFunction(selectTabIndex,newQuery)
                     },
                     singleLine = true,
                     textStyle = TextStyle.Default,
@@ -93,8 +97,3 @@ fun ListContractSearchComponentUI(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PreviewListContractSearchComponentUI(){
-    ListContractSearchComponentUI()
-}
