@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +44,7 @@ fun LikeButton(
             likeCount = if (isLiked) likeCount - 1 else likeCount + 1
             isLiked = !isLiked
         }
+        .clip(RoundedCornerShape(20.dp))
         .background(color = Color.Transparent)
         .border(
             1.dp,
@@ -60,7 +62,7 @@ fun LikeButton(
         Text(
             text = likeCount.toString(),
             modifier = Modifier.padding(start = 8.dp),
-            style = CustomTextStyle.LikeCommentText()
+            style = CustomTextStyle.likeCommentText()
         )
         Spacer(modifier = Modifier.width(10.dp))
     }
@@ -89,7 +91,7 @@ fun LikeDetailPostButton(
         Text(
             text = interestCount.toString(),
             modifier = Modifier.padding(start = 8.dp),
-            style = CustomTextStyle.LikeCommentText()
+            style = CustomTextStyle.likeCommentText()
         )
         Spacer(modifier = Modifier.width(10.dp))
     }

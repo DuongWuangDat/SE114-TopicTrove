@@ -7,11 +7,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.topic_trove.data.model.User
 import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
 import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
+import com.topic_trove.ui.modules.profilescreen.screen.ProfileScreen
+import com.topic_trove.ui.modules.profilescreen.screen.EditProfile
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
+import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
+import com.topic_trove.ui.modules.homescreen.screen.HomeForeLoad
 import com.topic_trove.ui.modules.loginscreen.LoginRoute
 import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
@@ -20,12 +25,14 @@ import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
+
+
 @Composable
 fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.loginRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.profileRoute) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
-            ChatScreen()
+            HomeForeLoad(navController = navController)
         }
 
         composable(route = "${AppRoutes.createPostRoute}/{communityName}/{communityId}",
@@ -45,18 +52,24 @@ fun NavControl(navController: NavHostController) {
         }
 
         composable(
-            route = "${AppRoutes.communityRoute}",
-            //arguments = listOf(
-            //    navArgument("communityId") {
-            //        type = NavType.StringType
-            //    }
-            //)
-        ) {
-            //val id = entry.arguments?.getString("communityId")
-            //requireNotNull(id)
+            route = "${AppRoutes.communityRoute}/{communityId}",
+            arguments = listOf(
+                navArgument("communityId") {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            val id = entry.arguments?.getString("communityId")
+            requireNotNull(id)
             CommunityScreenRoute(
                 navController = navController,
-                communityId = "662385ad314b50e0397a3a90"
+                communityId = id
+            )
+        }
+
+        composable(route = AppRoutes.profileRoute) {
+            ProfileScreen(
+                navController = navController
             )
         }
 
@@ -122,6 +135,12 @@ fun NavControl(navController: NavHostController) {
             )
         }
 
+
+        //ĐQP
+        composable(route=AppRoutes.createCommunity) {
+            CreateCommunityScreen(navController = navController)
+        }
+        //ĐQP
         composable(route = AppRoutes.welcome) {
             WelcomeScreen(
                 login = {
@@ -136,8 +155,20 @@ fun NavControl(navController: NavHostController) {
         composable(route = AppRoutes.splash) {
             SplashRoute(
                 onLogin = { navController.navigate(AppRoutes.welcome) },
-                onCommunity = { navController.navigate(AppRoutes.communityRoute) }
+                onCommunity = { navController.navigate(AppRoutes.homeRoute) }
+            )
+
+        }
+
+        composable(route = AppRoutes.editProfileRoute) {
+            EditProfile(
+                navController = navController
             )
         }
+
+        composable(route = AppRoutes.searchRoute) {
+
+        }
+
     }
 }

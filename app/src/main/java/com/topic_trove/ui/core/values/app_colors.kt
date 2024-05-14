@@ -21,6 +21,8 @@ class AppColors {
         val BackgroundIndicatorr = Color.Black.copy(alpha = 0.23f)
         val BorderStrokeColor = Color(convertHex("#A1A1A1"))
         val DividerColor = Color(convertHex("#555555"))
+        val HomeTitleColor = Color.Red
+        val TabColor = Color(convertHex("#0072DB"))
     }
 }
 

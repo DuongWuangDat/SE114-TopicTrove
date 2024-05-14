@@ -38,7 +38,7 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController): Strin
 
                     401 -> {
                         println("Navigate to login")
-                        navController.navigate(AppRoutes.loginRoute) {
+                        navController.navigate(AppRoutes.welcome) {
                             popUpTo(navController.graph.startDestinationId) {
                                 inclusive = true
                             }
@@ -59,3 +59,4 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController): Strin
         return accessToken
     }
 }
+
