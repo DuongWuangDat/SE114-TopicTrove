@@ -4,7 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.topic_trove.data.model.User
-import com.topic_trove.data.repositories.RegisterRepository
+import com.topic_trove.data.repositories.AuthRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: RegisterRepository,
+    private val authRepository: AuthRepository,
     private val sharePreferenceProvider: SharePreferenceProvider,
 ) : ViewModel() {
 

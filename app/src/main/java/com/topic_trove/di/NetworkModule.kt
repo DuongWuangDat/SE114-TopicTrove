@@ -23,6 +23,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofitClient(
         sharePreferenceProvider: SharePreferenceProvider,
+        authenticator: ClientAuthenticator,
     ): OkHttpClient {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
         return OkHttpClient.Builder()
@@ -33,13 +34,10 @@ object NetworkModule {
                     "Bearer $accessToken"
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", authorization).build()
-                chain.proceed(request).apply {
-                    if (code == HttpsURLConnection.HTTP_UNAUTHORIZED) {
-                        EventBus.getDefault().post(AppEvent.LogOut)
-                    }
-                }
+                chain.proceed(request)
             }
             .addInterceptor(logger)
+            .authenticator(authenticator)
             .build()
     }
 

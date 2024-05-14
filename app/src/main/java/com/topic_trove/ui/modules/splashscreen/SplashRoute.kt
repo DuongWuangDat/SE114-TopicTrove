@@ -3,6 +3,7 @@ package com.topic_trove.ui.modules.splashscreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashRoute(
@@ -12,6 +13,7 @@ fun SplashRoute(
 ) {
 
     LaunchedEffect(key1 = Unit) {
+        delay(1000)
         viewModel.refresh(
             onLogin = onLogin,
             onCommunity = onCommunity,

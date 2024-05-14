@@ -3,7 +3,7 @@ package com.topic_trove.ui.modules.registerscreen
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.topic_trove.data.repositories.RegisterRepository
+import com.topic_trove.data.repositories.AuthRepository
 import com.topic_trove.ui.core.utils.SavedUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val repository: RegisterRepository,
+    private val repository: AuthRepository,
     private val savedUser: SavedUser,
 ) : ViewModel() {
 
