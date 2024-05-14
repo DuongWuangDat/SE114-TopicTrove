@@ -27,6 +27,7 @@ import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
 import coil.compose.AsyncImage
 import com.topic_trove.ui.core.values.AppStrings
+import com.topic_trove.ui.routes.AppRoutes
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -71,7 +72,7 @@ fun TopbarHome(
         val icon2 = createRef()
             Box(modifier = Modifier
                 .clickable {
-                    navController.navigate("")
+                    navController.navigate(AppRoutes.searchRoute)
                 }
                 .constrainAs(icon2) {
                     top.linkTo(parent.top, margin = 4.5.dp)
@@ -87,7 +88,7 @@ fun TopbarHome(
         val icon3 = createRef()
         Box(modifier = Modifier
             .clickable {
-                navController.navigate("")
+                //navController.navigate("")
             }
             .constrainAs(icon3) {
                 top.linkTo(parent.top, margin = 4.5.dp)

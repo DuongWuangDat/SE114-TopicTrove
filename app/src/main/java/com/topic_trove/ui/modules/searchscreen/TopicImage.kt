@@ -18,32 +18,7 @@ import coil.compose.rememberImagePainter
 import com.topic_trove.R
 
 
-@Composable
-fun TopicImage(
-    link: String,
-    resDrawable: Int = R.color.divider_tooltip,
-    modifier: Modifier = Modifier,
-    alignment: Alignment = Alignment.Center,
-    contentScale: ContentScale = ContentScale.Fit,
-    alpha: Float = DefaultAlpha,
-    colorFilter: ColorFilter? = null
-) {
 
-    val painter = rememberImagePainter(data = link, builder = {
-        placeholder(resDrawable)
-        error(resDrawable)
-//        scale(Scale.FILL)
-    })
-    Image(
-        painter = painter,
-        contentDescription = "",
-        modifier = modifier,
-        alignment = alignment,
-        contentScale = contentScale,
-        alpha = alpha,
-        colorFilter = colorFilter
-    )
-}
 
 @Composable
 fun TopicImage(

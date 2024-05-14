@@ -64,7 +64,7 @@ fun NavControl() {
             requireNotNull(id)
             CommunityScreenRoute(
                 navController = navController,
-                communityId = "662385ad314b50e0397a3a90"
+                communityId = id
             )
         }
 

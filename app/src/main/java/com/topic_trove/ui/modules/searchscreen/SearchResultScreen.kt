@@ -43,7 +43,9 @@ fun SearchResultScreen(
                 .background(colorResource(id = R.color.white))
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            ListContractSearchComponentUI(searchResultViewModel, selectTabIndex = selectedTabIndex)
+            ListContractSearchComponentUI(onNavBack = {
+                                                      navController.popBackStack()
+            },searchResultViewModel, selectTabIndex = selectedTabIndex)
             TabHeader(selectedTabIndex = selectedTabIndex) { index ->
                 selectedTabIndex = index
             }

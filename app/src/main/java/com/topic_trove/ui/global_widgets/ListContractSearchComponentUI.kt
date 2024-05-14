@@ -30,6 +30,7 @@ import com.topic_trove.ui.modules.searchscreen.TopicImage
 
 @Composable
 fun ListContractSearchComponentUI(
+    onNavBack: ()-> Unit,
     searchResultViewModel: SearchResultViewModel,
     selectTabIndex : Int = 0
 ){
@@ -42,7 +43,9 @@ fun ListContractSearchComponentUI(
                 .padding(start = 16.dp, end = 16.dp)
                 .align(Alignment.CenterVertically)
                 .size(24.dp)
-                .clickable {},
+                .clickable {
+                    onNavBack()
+                },
             resDrawable = R.drawable.back_arrow,
         )
         Box(
