@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +27,7 @@ import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
 import com.topic_trove.ui.routes.AppRoutes
 import coil.compose.AsyncImage
+import com.topic_trove.ui.core.values.AppStrings
 
 @Composable
 fun Item_Community(
@@ -44,11 +47,12 @@ fun Item_Community(
             .width(20.dp)
             .height(20.dp)
             .background(color = Color.Transparent)
+            .clip(CircleShape)
             .constrainAs(icon) {
                 top.linkTo(parent.top, margin = 5.dp)
                 start.linkTo(parent.start, margin = 5.dp)
             }){
-            AsyncImage(if(community.icon == "") "https://firebasestorage.googleapis.com/v0/b/skillexchange-62da0.appspot.com/o/files%2FAssessment%20Techniques.png?alt=media&token=4e5db0b9-9ef7-47bf-9fa9-c9dc3d851d9a"
+            AsyncImage(if(community.icon == "") AppStrings.MODEL_IMG
             else community.icon,  contentDescription = null,
                 modifier = Modifier
                     .width(30.dp)
@@ -63,7 +67,7 @@ fun Item_Community(
             start.linkTo(icon.end, margin = 20.dp)
         }) {
             Text(text = if (community.communityName== "") "community2" else community.communityName, style = CustomTextStyle.itemCommunity())
-            Spacer(modifier = Modifier.height(3.dp))
+            Spacer(modifier = Modifier.height(5.dp))
         }
 
     }

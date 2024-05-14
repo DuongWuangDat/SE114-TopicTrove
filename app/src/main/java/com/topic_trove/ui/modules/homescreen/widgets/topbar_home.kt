@@ -26,6 +26,7 @@ import com.topic_trove.data.model.User
 import com.topic_trove.ui.core.values.Assets
 import com.topic_trove.ui.core.values.CustomTextStyle
 import coil.compose.AsyncImage
+import com.topic_trove.ui.core.values.AppStrings
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -94,7 +95,7 @@ fun TopbarHome(
             }
             .background(color = Color.Transparent))
         {
-            AsyncImage(if(user.avatar=="") "https://firebasestorage.googleapis.com/v0/b/skillexchange-62da0.appspot.com/o/files%2FAssessment%20Techniques.png?alt=media&token=4e5db0b9-9ef7-47bf-9fa9-c9dc3d851d9a"
+            AsyncImage(if(user.avatar=="") AppStrings.MODEL_IMG
             else user.avatar, contentDescription = null,
                 modifier = Modifier.width(27.dp).height(27.dp).clip(CircleShape)
             )
