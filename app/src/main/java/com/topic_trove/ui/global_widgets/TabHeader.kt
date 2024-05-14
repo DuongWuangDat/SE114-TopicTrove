@@ -3,6 +3,8 @@ package com.topic_trove.ui.global_widgets
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -29,9 +31,10 @@ fun TabHeader(
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                color = AppColors.TabColor
+                color = Color.Transparent
             )
-        }
+        },
+        divider = {}
     ) {
         Tab(
             selected = selectedTabIndex == 0,

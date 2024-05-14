@@ -19,7 +19,7 @@ import com.topic_trove.ui.global_widgets.ListContractSearchComponentUI
 
 @Preview(showBackground = true)
 @Composable
-fun ListItemSearchComponent0() {
+fun SearchResultScreen() {
 
     var selectedTabIndex by remember { mutableStateOf(0) }
     Column(
