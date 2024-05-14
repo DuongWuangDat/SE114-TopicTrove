@@ -25,6 +25,8 @@ import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
+
+
 @Composable
 fun NavControl(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AppRoutes.profileRoute) {
@@ -163,5 +165,10 @@ fun NavControl(navController: NavHostController) {
                 navController = navController
             )
         }
+
+        composable(route = AppRoutes.searchRoute) {
+
+        }
+
     }
 }
