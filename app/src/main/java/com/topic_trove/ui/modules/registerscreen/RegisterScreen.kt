@@ -71,7 +71,7 @@ fun RegisterScreen(
             val onSubmit = {
                 if (nameState.isValid && phoneState.isValid && emailState.isValid && passwordState.isValid && confirmPasswordState.isValid) {
                     onSignInSubmitted(
-                        nameState.text, phoneState.text, emailState.text, passwordState.text
+                        nameState.text.trim(), phoneState.text.trim(), emailState.text.trim(), passwordState.text.trim()
                     )
                 }
             }
