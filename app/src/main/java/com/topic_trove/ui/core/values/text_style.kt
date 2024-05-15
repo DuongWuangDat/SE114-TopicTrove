@@ -90,6 +90,10 @@ class CustomTextStyle {
         }
         // ĐQP
 
+        fun tabText() : TextStyle{
+            return TextStyle(fontWeight = FontWeight(600), fontSize = 12.sp)
+        }
+
         fun textInputField(): TextStyle{
             return TextStyle(color = Color.Black, fontWeight = FontWeight(400), fontSize = 16.sp)
         }

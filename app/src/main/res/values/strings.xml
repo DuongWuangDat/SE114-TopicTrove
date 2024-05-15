@@ -8,6 +8,7 @@
     <string name="title_activity_post_card">PostCard</string>
     <string name="title_activity_delete_button">Delete_Button</string>
     <string name="email">email</string>
+    <string name="txt_email">Email</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
     <string name="back">Back</string>

@@ -53,7 +53,7 @@ class CommunityScreenVM @Inject constructor(
     var accessToken = sharePreferenceProvider.getAccessToken()
     var isEnable = mutableStateOf(false)
         private set
-
+    var isRefreshing = mutableStateOf(false)
 
     fun inputContent(it: String) {
         viewModelScope.launch {
@@ -304,7 +304,7 @@ class CommunityScreenVM @Inject constructor(
                     }
                 }
             }
-
+            isRefreshing.value=false
         }
     }
 
@@ -447,8 +447,8 @@ class CommunityScreenVM @Inject constructor(
                                                 id = data.getString("_id"),
                                                 owner = data.getJSONObject("owner").getString("_id"),
                                                 icon = data.getString("icon"),
-                                                description = data.getString("description"),
-                                                rules = data.getString("rules"),
+                                                description = data.getString("description").replace("\\n","\n"),
+                                                rules = data.getString("rules").replace("\\n","\n"),
                                                 communityName = data.getString("communityName"),
                                                 memberCount = data.getInt("memberCount"),
                                             )

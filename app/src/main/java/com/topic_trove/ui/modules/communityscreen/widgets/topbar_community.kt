@@ -22,9 +22,11 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 
 @Composable
 fun TopbarCommunity(
+    isAuthor: Boolean,
     isJoin : Boolean,
     community: Community,
-    onNavigateToCreatePost: ()->Unit
+    onNavigateToCreatePost: ()->Unit,
+    onNavigateBack: ()->Unit
 ){
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
@@ -34,7 +36,7 @@ fun TopbarCommunity(
         val icon = createRef()
         Box(modifier = Modifier
             .clickable {
-                println("Back")
+                onNavigateBack()
             }
             .width(30.dp)
             .height(30.dp)
@@ -61,7 +63,7 @@ fun TopbarCommunity(
         }
 
         val icon2 = createRef()
-        if(isJoin){
+        if(isJoin || isAuthor){
             Box(modifier = Modifier
                 .clickable {
                     println("Create post")

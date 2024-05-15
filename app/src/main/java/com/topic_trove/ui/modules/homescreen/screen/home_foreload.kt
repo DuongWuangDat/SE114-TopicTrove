@@ -16,12 +16,8 @@ fun HomeForeLoad(
     // Lấy ViewModel đã được inject
     val homeVM: HomeScreenViewModel = hiltViewModel()
 
-    // Lấy User
-
-
-
+    // Lấy postlist & joined community
     LaunchedEffect(key1 = true) {
-       // homeVM.getPostList(communityId, user.id, navController)
         homeVM.getUserById(navController)
         homeVM.IdUser?.let { homeVM.getAllJoinedCommunity(navController) }
         homeVM.IdUser?.let { homeVM.getPostList(it,navController) }
@@ -29,7 +25,6 @@ fun HomeForeLoad(
     val community by homeVM.community.collectAsStateWithLifecycle()
     Home_Screen(
         navController = navController,
-        community = community,
         user = homeVM.userData,
         homeScreenVM = homeVM
     )

@@ -74,6 +74,7 @@ fun CommunityTab(
                     LazyColumn {
                         items(communities) { community ->
                             Item_Community(community = community, navController = navController)
+                            Spacer(modifier = Modifier.height(3.dp))
                         }
                     }
             }

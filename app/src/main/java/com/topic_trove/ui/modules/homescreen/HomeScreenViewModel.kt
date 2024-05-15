@@ -49,8 +49,7 @@ class HomeScreenViewModel @Inject constructor(
     var curPostId = mutableStateOf("")
     private var _communityData = MutableStateFlow(Community())
     var community: StateFlow<Community> = _communityData.asStateFlow()
-    private var _joinedCommunityData = MutableStateFlow(Community())
-    var joinedCommunity: StateFlow<Community> = _joinedCommunityData.asStateFlow()
+    var ownedCommunity = mutableStateListOf<String>()
     var communityList = mutableStateListOf<Community>()
     var isJoined = mutableStateOf(false)
     var IdUser = sharePreferenceProvider.getUserId()
@@ -59,10 +58,16 @@ class HomeScreenViewModel @Inject constructor(
     var accessToken = sharePreferenceProvider.getAccessToken()
     var isEnable = mutableStateOf(false)
         private set
-
+    var isRefreshing = mutableStateOf(false)
     fun inputCommunityName(it: String) {
         viewModelScope.launch {
             _communityData.value.communityName = it
+        }
+    }
+
+    fun inputCommunityRules(it: String) {
+        viewModelScope.launch {
+            _communityData.value.rules = it
         }
     }
 
@@ -111,7 +116,9 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun checkIsEnable() {
-        isEnable.value = community.value.description.isNotBlank() && community.value.communityName.isNotBlank()
+        isEnable.value = community.value.description.isNotBlank()
+        && community.value.communityName.isNotBlank()
+        && community.value.rules.isNotBlank()
     }
 
 
@@ -128,7 +135,7 @@ class HomeScreenViewModel @Inject constructor(
             var isRetry: Boolean = true
 
             while (isRetry) {
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.get("$base_url/post/findall")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
@@ -225,7 +232,7 @@ class HomeScreenViewModel @Inject constructor(
                     }
                 }
             }
-
+            isRefreshing.value=false
         }
     }
 
@@ -235,7 +242,7 @@ class HomeScreenViewModel @Inject constructor(
             println(accessToken)
             var isRetry: Boolean = true
             while (isRetry) {
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.delete("$base_url/post/delete/$id")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
@@ -301,7 +308,7 @@ class HomeScreenViewModel @Inject constructor(
                 }
             """.trimIndent()
             while (isRetry) {
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.patch("$base_url/post/likepost/$id")
                         .header("Content-Type" to "application/json")
                         .authentication()
@@ -351,7 +358,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun getUserById(navController: NavController) {
         viewModelScope.launch {
-            if (accessToken != null || accessToken == ""){
+            if (accessToken != null && accessToken != ""){
                 Fuel.get("$base_url/user/findbyid/$IdUser")
                     .timeout(Int.MAX_VALUE)
                     .timeoutRead(Int.MAX_VALUE)
@@ -406,7 +413,7 @@ class HomeScreenViewModel @Inject constructor(
             communityList.clear()
             var isRetry: Boolean = true
             while (isRetry) {
-                if (accessToken != null || accessToken == "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.get("$base_url/community/findjoinedcommunity")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)
@@ -434,6 +441,9 @@ class HomeScreenViewModel @Inject constructor(
                                                 memberCount = item.getInt("memberCount")
                                             )
                                             communityList.add(community)
+                                            if(community.owner == IdUser){
+                                                ownedCommunity.add(community.id)
+                                            }
 
                                         }
                                         isRetry = false
@@ -480,14 +490,14 @@ class HomeScreenViewModel @Inject constructor(
                 {
                     "owner": "$IdUser",
                     "icon": "${_communityData.value.icon}",
-                    "description": "${_communityData.value.description}",
-                    "rules": "${_communityData.value.rules}",
+                    "description": "${_communityData.value.description.replace("\n","\\n")}",
+                    "rules": "${_communityData.value.rules.replace("\n","\\n")}",
                     "communityName": "${_communityData.value.communityName}"
                 }
                 """.trimIndent()
 
             while (isRetry) {
-                if (accessToken != null || accessToken != "") {
+                if (accessToken != null && accessToken != "") {
                     Fuel.post("$base_url/community/create")
                         .timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE)

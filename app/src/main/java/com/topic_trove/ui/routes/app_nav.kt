@@ -1,33 +1,48 @@
 package com.topic_trove.ui.routes
 
 
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.topic_trove.data.model.User
+import com.topic_trove.MainViewModel
+import com.topic_trove.data.provider.Provider
+import com.topic_trove.ui.core.utils.AppEvent
 import com.topic_trove.ui.modules.addcommentscreen.AddCommentRoute
-import com.topic_trove.ui.modules.chatscreen.screen.ChatScreen
 import com.topic_trove.ui.modules.communityscreen.screens.CommunityScreenRoute
 import com.topic_trove.ui.modules.communityscreen.screens.createpostScreen
-import com.topic_trove.ui.modules.profilescreen.screen.ProfileScreen
-import com.topic_trove.ui.modules.profilescreen.screen.EditProfile
 import com.topic_trove.ui.modules.confirmemailscreen.ConfirmEmailRoute
 import com.topic_trove.ui.modules.homescreen.screen.CreateCommunityScreen
 import com.topic_trove.ui.modules.homescreen.screen.HomeForeLoad
 import com.topic_trove.ui.modules.loginscreen.LoginRoute
 import com.topic_trove.ui.modules.loginscreen.WelcomeScreen
 import com.topic_trove.ui.modules.postdetailscreen.PostDetailRoute
+import com.topic_trove.ui.modules.profilescreen.screen.EditProfile
+import com.topic_trove.ui.modules.profilescreen.screen.ProfileScreen
 import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
+import com.topic_trove.ui.modules.searchscreen.SearchScreenRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
 
 
 @Composable
-fun NavControl(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AppRoutes.profileRoute) {
+fun NavControl(
+    viewModel: MainViewModel = hiltViewModel(),
+) {
+    val navController = Provider.LocalNavController.current
+    LaunchedEffect(key1 = Unit) {
+        viewModel.event.collect {
+            Log.e("diepdb", "NavControl: $it", )
+            if (it == AppEvent.LogOut) {
+                navController.navigate(AppRoutes.welcome)
+            }
+        }
+    }
+    NavHost(navController = navController, startDestination = AppRoutes.splash) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
@@ -75,7 +90,7 @@ fun NavControl(navController: NavHostController) {
             LoginRoute(
                 onNavUp = navController::navigateUp,
                 onSubmitted = {
-                    navController.navigate(AppRoutes.communityRoute)
+                    navController.navigate(AppRoutes.homeRoute)
                 }
             )
         }
@@ -135,7 +150,7 @@ fun NavControl(navController: NavHostController) {
 
 
         //ĐQP
-        composable(route=AppRoutes.createCommunity) {
+        composable(route = AppRoutes.createCommunity) {
             CreateCommunityScreen(navController = navController)
         }
         //ĐQP
@@ -163,5 +178,10 @@ fun NavControl(navController: NavHostController) {
                 navController = navController
             )
         }
+
+        composable(route = AppRoutes.searchRoute) {
+            SearchScreenRoute(navController = navController)
+        }
+
     }
 }
