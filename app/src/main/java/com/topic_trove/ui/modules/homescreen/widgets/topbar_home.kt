@@ -29,6 +29,8 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 import coil.compose.AsyncImage
 import com.topic_trove.ui.core.values.AppStrings
 import com.topic_trove.ui.routes.AppRoutes
+import androidx.compose.ui.layout.ContentScale
+
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -89,7 +91,7 @@ fun TopbarHome(
         val icon3 = createRef()
         Box(modifier = Modifier
             .clickable {
-                //navController.navigate("")
+                navController.navigate(AppRoutes.profileRoute)
             }
             .constrainAs(icon3) {
                 top.linkTo(parent.top, margin = 4.5.dp)
@@ -101,6 +103,7 @@ fun TopbarHome(
             else user.avatar, contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.width(27.dp).height(27.dp).clip(CircleShape)
+
             )
         }
 
