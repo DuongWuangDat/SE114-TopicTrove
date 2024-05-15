@@ -90,7 +90,7 @@ fun TopbarHome(
         val icon3 = createRef()
         Box(modifier = Modifier
             .clickable {
-                //navController.navigate("")
+                navController.navigate(AppRoutes.profileRoute)
             }
             .constrainAs(icon3) {
                 top.linkTo(parent.top, margin = 4.5.dp)
