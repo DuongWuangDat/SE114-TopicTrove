@@ -35,6 +35,8 @@ import com.topic_trove.ui.core.values.CustomTextStyle.Companion.createPostTitle
 import com.topic_trove.ui.routes.AppRoutes
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.compose.ui.layout.ContentScale
+
 
 @Composable
 fun PostCard(
@@ -81,7 +83,8 @@ fun PostCard(
                 AsyncImage(
                     if (data.avatar == "") "https://firebasestorage.googleapis.com/v0/b/skillexchange-62da0.appspot.com/o/files%2FArtificial%20Intelligence%20Programming.png?alt=media&token=3accd6fe-5296-4e68-94e4-eefe98660110" else data.avatar,
                     "avatar",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp).clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
             }
             // Author
