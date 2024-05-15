@@ -28,6 +28,8 @@ import com.topic_trove.ui.core.values.CustomTextStyle
 import coil.compose.AsyncImage
 import com.topic_trove.ui.core.values.AppStrings
 import com.topic_trove.ui.routes.AppRoutes
+import androidx.compose.ui.layout.ContentScale
+
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -98,7 +100,9 @@ fun TopbarHome(
         {
             AsyncImage(if(user.avatar=="") AppStrings.MODEL_IMG
             else user.avatar, contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.width(27.dp).height(27.dp).clip(CircleShape)
+
             )
         }
 
