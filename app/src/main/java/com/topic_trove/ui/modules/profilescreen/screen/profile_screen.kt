@@ -56,16 +56,11 @@ fun ProfileScreen(
     profileVM: ProfileScreenVM = hiltViewModel()
 ) {
 //    val user = profileVM.useSession!!
-    val user = User(
-        id = "6641d0ca43c8abf74b9b768c",
-        username = "Eren Yeager",
-        email = "eren@gmail.com",
-        phoneNumber = "0987654321",
-        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2Fcoding.jpg?alt=media&token=de22115f-4cab-487d-836e-78060d019ddc"
-    )
+    val user = profileVM.useSession
+
     val openAlertDialog = remember { mutableStateOf(false) }
     val snackBarHostState = profileVM.snackBarHostState
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         profileVM.getPosts(userId = user.id, navController = navController)
     }
 
