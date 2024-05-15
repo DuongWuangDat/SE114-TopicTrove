@@ -36,10 +36,9 @@ import java.io.File
 
 @Composable
 fun EditProfile(
-    profileVM: ProfileScreenVM = hiltViewModel(),
     navController: NavController
 ) {
-//    val user = profileVM.useSession!!
+    var profileVM: ProfileScreenVM = hiltViewModel()
     val user = profileVM.useSession
     val snackBarHostState = profileVM.snackBarHostState
     val scrollState = rememberScrollState()
@@ -54,15 +53,7 @@ fun EditProfile(
                 actionText = "Save",
                 state = profileVM.actionState,
                 onActionClick = {
-                   profileVM.viewModelScope.launch {
-                       if (profileVM.imageLocalUri.value != Uri.EMPTY) {
-                           val file = getFileFromUri(context, profileVM.imageLocalUri.value)
-                           file?.let {
-                               profileVM.uploadImgApi(it)
-                           }
-                       }
-                       profileVM.updateUser(navController)
-                   }
+                    profileVM.updateUser(navController)
                 },
                 onBackButtonPressed = {
                     navController.popBackStack()
@@ -92,13 +83,15 @@ fun EditProfile(
 
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                ImagePicker(initialImage = user.avatar) { uri ->
+                ImagePicker(initialImage = profileVM.userAvatar.value) { uri ->
                     profileVM.imageLocalUri.value = uri
-                    profileVM.checkIsEnable()
+                    profileVM.user.value.avatar = ""
+                    profileVM.uploadImgApi(getFileFromUri(context, uri)!!)
+//                    profileVM.checkIsEnable()
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                TextFieldCard(title = "Display name", placeholder = user.username) {
+                TextFieldCard(title = "Display name", placeholder = profileVM.userUsername.value) {
                     profileVM.inputDisplayName(it)
                     profileVM.checkIsEnable()
                 }
@@ -106,7 +99,7 @@ fun EditProfile(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextFieldCard(
                     title = "Email",
-                    placeholder = user.email
+                    placeholder = profileVM.userEmail.value,
                 ) {
                     profileVM.inputEmail(it)
                     profileVM.checkIsEnable()
@@ -115,7 +108,7 @@ fun EditProfile(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextFieldCard(
                     title = "Phone number",
-                    placeholder = user.phoneNumber,
+                    placeholder = profileVM.userPhoneNumber.value,
                 ) {
                     profileVM.inputPhoneNumber(it)
                 }

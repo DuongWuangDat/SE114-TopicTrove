@@ -24,6 +24,7 @@ import com.topic_trove.ui.routes.AppRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -36,25 +37,10 @@ class ProfileScreenVM @Inject constructor(
 ) : ViewModel() {
     private val baseUrl = AppStrings.BASE_URL
 
-//    val useSession = sharePreferenceProvider.getUser()
-//    val userId = sharePreferenceProvider.getUserId()
+    var useSession = sharePreferenceProvider.getUser()
 
     private var refreshToken = sharePreferenceProvider.getRefreshToken()
     var accessToken = sharePreferenceProvider.getAccessToken()
-
-    init {
-        sharePreferenceProvider.saveAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQxZDBjYTQzYzhhYmY3NGI5Yjc2OGMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzE1NzYxNjMxLCJleHAiOjE3MTU3NjUyMzF9.4faTZ8y6p1UHY3NlLYM_-rrqQ0eVSQ-nGEmXQlu33iQ")
-
-        sharePreferenceProvider.saveRefreshToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQxZDBjYTQzYzhhYmY3NGI5Yjc2OGMiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxNTc2MTYzMSwiZXhwIjoxNzE4MzUzNjMxfQ.jrAiySnX_SMMO__dMPoKhyB6RpwQuw8E9uNgHMlVf0E")
-    }
-
-    val useSession = User(
-        id = "6641d0ca43c8abf74b9b768c",
-        username = "Eren Yeager",
-        email = "eren@gmail.com",
-        phoneNumber = "0987654321",
-        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2Fcoding.jpg?alt=media&token=de22115f-4cab-487d-836e-78060d019ddc"
-    )
 
     var isLoading = mutableStateOf(false)
     var isEditing = mutableStateOf(false)
@@ -64,13 +50,35 @@ class ProfileScreenVM @Inject constructor(
     var snackBarHostState = SnackbarHostState()
 
     var actionState = mutableStateOf(false)
-    var user = mutableStateOf(User())
+
+    var user = mutableStateOf(
+        User(
+            id = useSession!!.id,
+            username = "",
+            email = "",
+            phoneNumber = "",
+            avatar = ""
+        )
+    )
+
     private var password = mutableStateOf("")
     private var confirmPassword = mutableStateOf("")
     var imageLocalUri = mutableStateOf(Uri.EMPTY)
 
+    var userAvatar = mutableStateOf(useSession!!.avatar)
+    var userUsername = mutableStateOf(useSession!!.username)
+    var userEmail = mutableStateOf(useSession!!.email)
+    var userPhoneNumber = mutableStateOf(useSession!!.phoneNumber)
+
+    init {
+        println("username ${userUsername.value}")
+        println("avatar ${userAvatar.value}")
+        println("email ${userEmail.value}")
+        println("phone ${userPhoneNumber.value}")
+    }
+
     fun isValidEmail(email: String): Boolean {
-        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})".toRegex()
+        val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$".toRegex()
         return emailRegex.matches(email)
     }
 
@@ -118,7 +126,8 @@ class ProfileScreenVM @Inject constructor(
     fun checkIsEnable() {
         viewModelScope.launch {
             if (
-                (imageLocalUri.value.toString().isNotEmpty()
+                ((imageLocalUri.value.toString()
+                    .isNotEmpty() && user.value.avatar != useSession!!.avatar)
                         || user.value.username.isNotEmpty()
                         || user.value.email.isNotEmpty()
                         || user.value.phoneNumber.isNotEmpty())
@@ -133,6 +142,9 @@ class ProfileScreenVM @Inject constructor(
 
     fun updateUser(navController: NavController) {
         viewModelScope.launch {
+            var isError = false
+            FuelManager.instance.forceMethods = true
+            println("Updating user")
             isEditing.value = true
             if (user.value.email.isNotEmpty() && !isValidEmail(user.value.email)) {
                 GlobalScope.launch {
@@ -157,15 +169,15 @@ class ProfileScreenVM @Inject constructor(
                         .authentication().bearer(accessToken!!).jsonBody(
                             """
                     {
-                        "email": "${useSession.email}",
+                        "email": "${useSession!!.email}",
                         "password": "${password.value}"
                     }
                 """.trimIndent()
                         ).awaitStringResponseResult().let { (_, response, result) ->
+                            println("Status code: ${response.statusCode}")
                             when (response.statusCode) {
                                 200 -> {
                                     isRetry = false
-
                                     GlobalScope.launch {
                                         snackBarHostState.showSnackbar("Change password successfully")
                                     }
@@ -184,6 +196,7 @@ class ProfileScreenVM @Inject constructor(
                                     GlobalScope.launch {
                                         snackBarHostState.showSnackbar("Error when change password")
                                     }
+                                    isError = true
                                 }
                             }
                         }
@@ -194,30 +207,41 @@ class ProfileScreenVM @Inject constructor(
                     .isNotEmpty() || user.value.username.isNotEmpty() || user.value.email.isNotEmpty() || user.value.phoneNumber.isNotEmpty()
             ) {
                 var isRetry: Boolean = true
-                val json = """
-                    {
-                    ${
-                    if (user.value.username.isNotEmpty()) """"username": "${user.value.username}", """ else ""
+                val json = StringBuilder("{")
+                if (user.value.username.isNotEmpty()) {
+                    json.append("\"username\": \"${user.value.username}\", ")
+                } else {
+                    user.value.username = useSession!!.username
                 }
-                    ${
-                    if (imageLocalUri.value.toString()
-                            .isNotEmpty()
-                    ) """"avatar": "${user.value.avatar}", """ else ""
+                if (imageLocalUri.value.toString().isNotEmpty()) {
+                    json.append("\"avatar\": \"${user.value.avatar}\", ")
+                } else {
+                    user.value.avatar = useSession!!.avatar
                 }
-                    ${
-                    if (user.value.email.isNotEmpty()) """"email": "${user.value.email}", """ else ""
+                if (user.value.email.isNotEmpty()) {
+                    json.append("\"email\": \"${user.value.email}\", ")
+                } else {
+                    user.value.email = useSession!!.email
                 }
-                    ${
-                    if (user.value.phoneNumber.isNotEmpty()) """"phoneNumber": "${user.value.phoneNumber}" """ else ""
+                if (user.value.phoneNumber.isNotEmpty()) {
+                    json.append("\"phoneNumber\": \"${user.value.phoneNumber}\", ")
+                } else {
+                    user.value.phoneNumber = useSession!!.phoneNumber
                 }
-                    }
-                """.trimIndent()
+
+                if (json.length > 1) {
+                    json.setLength(json.length - 2)
+                }
+
+                json.append("}")
                 println("json $json")
+                println("User id: ${useSession!!.id}")
+                sharePreferenceProvider.saveUser(user.value)
                 while (isRetry) {
-                    Fuel.patch("${baseUrl}/user/update/${useSession.id}").timeout(Int.MAX_VALUE)
+                    Fuel.patch("${baseUrl}/user/update/${useSession!!.id}").timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE).header("Content-Type" to "application/json")
                         .authentication().bearer(accessToken!!).jsonBody(
-                            json
+                            json.toString()
                         ).awaitStringResponseResult().let { (_, response, result) ->
                             when (response.statusCode) {
                                 200 -> {
@@ -229,13 +253,19 @@ class ProfileScreenVM @Inject constructor(
 
                                 401 -> {
                                     accessToken =
-                                        refreshToken?.let { CheckRefreshToken(it, navController) }
+                                        refreshToken?.let {
+                                            CheckRefreshToken(
+                                                it,
+                                                navController
+                                            )
+                                        }
                                     sharePreferenceProvider.saveAccessToken(accessToken!!)
                                 }
 
                                 else -> {
                                     println("Error when update information: $response")
                                     isRetry = false
+                                    isError = true
                                     GlobalScope.launch {
                                         snackBarHostState.showSnackbar("Error when update information")
                                     }
@@ -245,35 +275,43 @@ class ProfileScreenVM @Inject constructor(
                 }
             }
             isEditing.value = false
+            if (!isError) {
+                navController.popBackStack()
+            }
         }
     }
 
-    suspend fun uploadImgApi(file: File) {
-        isEditing.value = true
-        Fuel.upload("https://topictrovebe.onrender.com/api/v1/upload/image")
-            .add(FileDataPart(file, name = "image")).timeout(Int.MAX_VALUE)
-            .timeoutRead(Int.MAX_VALUE).responseString() { result ->
-                result.fold({ d ->
-                    val jsonObject = JSONObject(d)
-                    val imageUrl = jsonObject.getString("image")
-                    println("Image URL: $imageUrl")
-                    user.value.avatar = imageUrl
-                    isLoading.value = false
-                    inputImage(imageUrl)
-                    GlobalScope.launch {
-                        snackBarHostState.showSnackbar("Upload image successfully")
-                    }
 
-                }, { err ->
-                    isLoading.value = false
-                    GlobalScope.launch {
-                        snackBarHostState.showSnackbar("Error when upload image")
-                    }
-                })
-            }
-
-        isEditing.value = false
+    fun uploadImgApi(file: File) {
+        viewModelScope.launch {
+            isEditing.value = true
+            println("Uploading image")
+            Fuel.upload("https://topictrovebe.onrender.com/api/v1/upload/image")
+                .add(FileDataPart(file, name = "image")).timeout(Int.MAX_VALUE)
+                .timeoutRead(Int.MAX_VALUE).responseString() { result ->
+                    result.fold({ d ->
+                        val jsonObject = JSONObject(d)
+                        val imageUrl = jsonObject.getString("image")
+                        println("Image URL: $imageUrl")
+                        user.value.avatar = imageUrl
+                        userAvatar.value = imageUrl
+                        isLoading.value = false
+                        inputImage(imageUrl)
+                        checkIsEnable()
+                        GlobalScope.launch {
+                            snackBarHostState.showSnackbar("Upload image successfully")
+                        }
+                    }, { err ->
+                        isLoading.value = false
+                        GlobalScope.launch {
+                            snackBarHostState.showSnackbar("Error when upload image")
+                        }
+                    })
+                }
+            isEditing.value = false
+        }
     }
+
 
     fun logout(navController: NavController) {
         viewModelScope.launch {
@@ -289,8 +327,21 @@ class ProfileScreenVM @Inject constructor(
 //                    })
 //                }
             sharePreferenceProvider.clearAll()
-            navController.navigate(AppRoutes.splash)
+            navController.navigate(AppRoutes.splash) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
         }
+    }
+
+    fun updateData() {
+        useSession = sharePreferenceProvider.getUser()
+        user.value = useSession!!
+        userAvatar.value = useSession!!.avatar
+        userUsername.value = useSession!!.username
+        userEmail.value = useSession!!.email
+        userPhoneNumber.value = useSession!!.phoneNumber
     }
 
     fun getPosts(userId: String, navController: NavController) {
@@ -300,6 +351,7 @@ class ProfileScreenVM @Inject constructor(
             var isRetry: Boolean = true
 
             while (isRetry) {
+                println("retry get post")
                 if (accessToken != null && accessToken != "") {
                     Fuel.get("$baseUrl/post/findbyuid?authorId=$userId").timeout(Int.MAX_VALUE)
                         .timeoutRead(Int.MAX_VALUE).header("Content-Type" to "application/json")
@@ -356,8 +408,8 @@ class ProfileScreenVM @Inject constructor(
 
                                         )
                                         posts.add(post)
-                                        isRetry = false
                                     }
+                                    isRetry = false
                                 }, { err ->
                                     println("error $err")
                                     isRetry = false
@@ -373,12 +425,11 @@ class ProfileScreenVM @Inject constructor(
                                         )
                                     }
                                     sharePreferenceProvider.saveAccessToken(accessToken!!)
-                                    println(accessToken)
+                                    println("access token + $accessToken")
                                     isRetry = true
                                 }
 
                                 else -> {
-                                    println(response)
                                     isRetry = false
                                 }
                             }

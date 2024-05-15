@@ -61,7 +61,8 @@ fun ProfileScreen(
     val openAlertDialog = remember { mutableStateOf(false) }
     val snackBarHostState = profileVM.snackBarHostState
     LaunchedEffect(Unit) {
-        profileVM.getPosts(userId = user.id, navController = navController)
+        profileVM.getPosts(userId = user!!.id, navController = navController)
+        profileVM.updateData()
     }
 
     when {
@@ -70,7 +71,7 @@ fun ProfileScreen(
                 onDismissRequest = { openAlertDialog.value = false },
                 onConfirmation = {
                     openAlertDialog.value = false
-                    println("Confirmation registered") // Add logic here to handle confirmation.
+                    profileVM.logout(navController) // Add logic here to handle confirmation.
                 },
                 dialogTitle = "Logout?",
                 dialogText = "Are you sure you want to logout?",
@@ -98,12 +99,12 @@ fun ProfileScreen(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape),
-                model = user.avatar,
+                model = profileVM.userAvatar.value,
                 placeholder = painterResource(R.drawable.avatar_default),
                 contentDescription = "Profile Picture",
             )
             Text(
-                text = user.username,
+                text = profileVM.userUsername.value,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
@@ -126,7 +127,6 @@ fun ProfileScreen(
             Button(
                 onClick = {
                     openAlertDialog.value = true
-                    profileVM.logout(navController)
                 },
                 colors = ButtonColors(
                     containerColor = Color(convertHex("#E90000")),
@@ -143,12 +143,16 @@ fun ProfileScreen(
                     HorizontalDivider(thickness = 0.3.dp, color = AppColors.DividerColor)
                     PostCard(data = post, isPostOwner = true, isCommunityOwner = false, onLike = {
                         profileVM.likePost(
-                            post.id, user.id, isLike = post.isLike, navController
+                            post.id, user!!.id, isLike = post.isLike, navController
                         )
                     }, onDelete = {
                         //profileVM.deletePost(post.id)
                         profileVM.isShowDialog.value = true
                         profileVM.curPostId.value = post.id
+                    }, onClickable = {
+                        navController.navigate(
+                            "${AppRoutes.postDetailRoute}/${post.id}"
+                        )
                     })
                 }
             }
