@@ -42,7 +42,7 @@ fun NavControl(
             }
         }
     }
-    NavHost(navController = navController, startDestination = AppRoutes.profileRoute) {
+    NavHost(navController = navController, startDestination = AppRoutes.splash) {
         composable(route = AppRoutes.homeRoute) {
             //Sample
             HomeForeLoad(navController = navController)
