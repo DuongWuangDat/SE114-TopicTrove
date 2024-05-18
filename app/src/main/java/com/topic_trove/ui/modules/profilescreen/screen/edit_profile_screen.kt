@@ -13,13 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.topic_trove.data.model.User
@@ -27,21 +30,17 @@ import com.topic_trove.ui.global_widgets.OverlayLoading
 import com.topic_trove.ui.modules.profilescreen.widgets.TextFieldCard
 import com.topic_trove.ui.modules.profilescreen.ProfileScreenVM
 import com.topic_trove.ui.modules.profilescreen.widgets.HeaderBarActionBtn
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 @Composable
 fun EditProfile(
-    profileVM: ProfileScreenVM = hiltViewModel(),
     navController: NavController
 ) {
-//    val user = profileVM.useSession!!
-    val user = User(
-        id = "6641d0ca43c8abf74b9b768c",
-        username = "Eren Yeager",
-        email = "eren@gmail.com",
-        phoneNumber = "0987654321",
-        avatar = "https://firebasestorage.googleapis.com/v0/b/topictrove-a1b0c.appspot.com/o/files%2Fcoding.jpg?alt=media&token=de22115f-4cab-487d-836e-78060d019ddc"
-    )
+    var profileVM: ProfileScreenVM = hiltViewModel()
+    val user = profileVM.useSession
+    val snackBarHostState = profileVM.snackBarHostState
     val scrollState = rememberScrollState()
     val horizontalPadding = 25.dp
     val context = LocalContext.current
@@ -54,19 +53,18 @@ fun EditProfile(
                 actionText = "Save",
                 state = profileVM.actionState,
                 onActionClick = {
-                    profileVM.isEditing.value = true
-                    val file = getFileFromUri(context, profileVM.imageLocalUri.value)
-                    file?.let {
-                        // Here you can start the upload
-                        profileVM.uploadImgApi(it)
-                    }
+                    profileVM.updateUser(navController)
                 },
                 onBackButtonPressed = {
                     navController.popBackStack()
                 })
         },
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        }
 
-        ) { paddingValues ->
+
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,12 +83,15 @@ fun EditProfile(
 
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                ImagePicker(initialImage = user.avatar) { uri ->
+                ImagePicker(initialImage = profileVM.userAvatar.value) { uri ->
                     profileVM.imageLocalUri.value = uri
+                    profileVM.user.value.avatar = ""
+                    profileVM.uploadImgApi(getFileFromUri(context, uri)!!)
+//                    profileVM.checkIsEnable()
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                TextFieldCard(title = "Display name", placeholder = user.username) {
+                TextFieldCard(title = "Display name", placeholder = profileVM.userUsername.value) {
                     profileVM.inputDisplayName(it)
                     profileVM.checkIsEnable()
                 }
@@ -98,7 +99,7 @@ fun EditProfile(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextFieldCard(
                     title = "Email",
-                    placeholder = user.email
+                    placeholder = profileVM.userEmail.value,
                 ) {
                     profileVM.inputEmail(it)
                     profileVM.checkIsEnable()
@@ -107,7 +108,7 @@ fun EditProfile(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextFieldCard(
                     title = "Phone number",
-                    placeholder = user.phoneNumber,
+                    placeholder = profileVM.userPhoneNumber.value,
                 ) {
                     profileVM.inputPhoneNumber(it)
                 }
