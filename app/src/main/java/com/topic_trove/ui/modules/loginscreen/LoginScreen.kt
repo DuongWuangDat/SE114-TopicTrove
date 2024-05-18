@@ -85,7 +85,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = stringResource(R.string.email), style = TextStyle(
+                        text = stringResource(R.string.txt_email), style = TextStyle(
                             color = AppColors.TitleFieldCreatePost,
                             fontSize = 14.sp,
                             fontWeight = FontWeight(500),

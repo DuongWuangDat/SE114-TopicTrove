@@ -1,7 +1,6 @@
 package com.topic_trove.ui.routes
 
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,7 +35,6 @@ fun NavControl(
     val navController = Provider.LocalNavController.current
     LaunchedEffect(key1 = Unit) {
         viewModel.event.collect {
-            Log.e("diepdb", "NavControl: $it", )
             if (it == AppEvent.LogOut) {
                 navController.navigate(AppRoutes.welcome)
             }
