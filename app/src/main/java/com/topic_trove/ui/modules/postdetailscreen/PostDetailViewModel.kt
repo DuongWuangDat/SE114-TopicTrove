@@ -42,7 +42,7 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.likePost(
                 id = postId,
-                likeRequest = LikeRequest(authorId, interest),
+                likeRequest = LikeRequest(idUser, interest),
             ).onSuccess {
                 _postDetailUiState.update { uiState ->
                     uiState.copy(
@@ -139,7 +139,7 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.likeComment(
                 id = commentId,
-                likeRequest = LikeRequest(authorId, interest),
+                likeRequest = LikeRequest(idUser, interest),
             ).onSuccess {
                 getCommentByPostId(postDetailUiState.value.post.id)
             }.onFailure {

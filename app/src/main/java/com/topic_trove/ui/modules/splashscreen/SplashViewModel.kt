@@ -31,6 +31,7 @@ class SplashViewModel @Inject constructor(
                             SharePreferenceProvider.ACCESS_TOKEN,
                             it.accessToken
                         )
+                        println(sharePreferenceProvider.getUserId())
                         onCommunity()
                     }.onFailure {
                         println("Error" + it.message)
