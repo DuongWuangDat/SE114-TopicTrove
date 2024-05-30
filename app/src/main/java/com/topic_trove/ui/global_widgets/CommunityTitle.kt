@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -24,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -84,20 +86,22 @@ fun CommunityHeader(
 
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
-        .height(IntrinsicSize.Min)
+        .wrapContentHeight()
         .background(color = Color.White)
+
         ) {
         var icon = createRef()
         Image(painter = rememberAsyncImagePainter(model = if(community.icon=="") "https://firebasestorage.googleapis.com/v0/b/skillexchange-62da0.appspot.com/o/files%2FArtificial%20Intelligence%20Programming.png?alt=media&token=3accd6fe-5296-4e68-94e4-eefe98660110" else community.icon), contentDescription = null,
             modifier = Modifier
-                .width(30.dp)
-                .height(30.dp)
-                .background(color = Color.Transparent, shape = CircleShape)
-                .clip(CircleShape)
                 .constrainAs(icon) {
                     top.linkTo(parent.top, margin = 12.5.dp)
                     start.linkTo(parent.start, margin = 10.dp)
                 }
+                .width(30.dp)
+                .height(30.dp)
+                .background(color = Color.Transparent, shape = CircleShape)
+                .clip(CircleShape)
+
         )
 
         var column = createRef()
