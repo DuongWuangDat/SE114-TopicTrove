@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringEscapeUtils
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -490,8 +491,8 @@ class HomeScreenViewModel @Inject constructor(
                 {
                     "owner": "$IdUser",
                     "icon": "${_communityData.value.icon}",
-                    "description": "${_communityData.value.description.replace("\n","\\n")}",
-                    "rules": "${_communityData.value.rules.replace("\n","\\n")}",
+                    "description": "${StringEscapeUtils.escapeJava("${_communityData.value.description}")}",
+                    "rules": "${StringEscapeUtils.escapeJava("${_communityData.value.rules}")}",
                     "communityName": "${_communityData.value.communityName}"
                 }
                 """.trimIndent()
