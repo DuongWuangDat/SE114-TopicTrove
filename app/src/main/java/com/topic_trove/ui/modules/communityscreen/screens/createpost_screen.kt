@@ -31,11 +31,11 @@ import com.topic_trove.ui.modules.communityscreen.widgets.TopBarCreatePost
 fun createpostScreen(
     navController: NavController,
     communityName: String,
-    communityId: String,
-    userId: String = "661ded639a9ecc4c2525774d"
+    communityId: String
 ) {
 
     val communityVM :CommunityScreenVM = hiltViewModel()
+    val userId = communityVM.IdUser
     val snackbarHostState = communityVM.snackbarHostState
     Scaffold(
         snackbarHost = {
@@ -55,7 +55,9 @@ fun createpostScreen(
                     navController.popBackStack()
                 },
                 onCreateClick = {
-                    communityVM.createPostApi(navController, communityId, userId)
+                    if (userId != null) {
+                        communityVM.createPostApi(navController, communityId, userId)
+                    }
 
                 }
             )
