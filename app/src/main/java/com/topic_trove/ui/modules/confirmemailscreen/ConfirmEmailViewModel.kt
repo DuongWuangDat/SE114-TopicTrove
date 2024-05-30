@@ -33,6 +33,7 @@ class ConfirmEmailViewModel @Inject constructor(
                 email = savedUser.email,
                 password = savedUser.password,
             ).onSuccess {
+                println(it.accessToken)
                 sharePreferenceProvider.saveAccessToken(it.accessToken)
                 sharePreferenceProvider.saveRefreshToken(it.refreshToken)
                 sharePreferenceProvider.saveUserId(it.data.id)
