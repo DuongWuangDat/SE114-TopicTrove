@@ -21,7 +21,9 @@ class SplashViewModel @Inject constructor(
     ) {
         val refreshToken =
             sharePreferenceProvider.get<String>(SharePreferenceProvider.REFRESH_TOKEN)
+        println(refreshToken)
         if (refreshToken.isNullOrEmpty()) {
+            println("haha")
             onLogin()
         } else {
             runBlocking{

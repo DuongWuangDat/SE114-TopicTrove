@@ -116,6 +116,7 @@ class CommunityScreenVM @Inject constructor(
                                 }
                             ]
                         }""".trimIndent()
+            println("${_postData.value.content.replace("\n", "\\n")}")
                 while(isRetry){
                     if (accessToken != null && accessToken != "") {
                         Fuel.post("$base_url/post/create")
@@ -169,6 +170,7 @@ class CommunityScreenVM @Inject constructor(
                     }
 
                 }
+                isLoading.value = false
 
         }
 
