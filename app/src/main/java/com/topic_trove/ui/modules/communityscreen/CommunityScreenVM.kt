@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringEscapeUtils
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -91,10 +92,10 @@ class CommunityScreenVM @Inject constructor(
                         {
                             "author": "$userId",
                             "communityId": "$communityId",
-                            "title": "${_postData.value.title.replace("\n", "\\n")}",
+                            "title": "${StringEscapeUtils.escapeJava(_postData.value.title)}",
                             "content": [
                                 {
-                                    "body": "${_postData.value.content.replace("\n", "\\n")}",
+                                    "body": "${StringEscapeUtils.escapeJava(_postData.value.content)}",
                                     "type": "text"
                                 }
                             ]
@@ -104,10 +105,10 @@ class CommunityScreenVM @Inject constructor(
                         {
                             "author": "$userId",
                             "communityId": "$communityId",
-                            "title": "${_postData.value.title.replace("\n", "\\n")}",
+                            "title": "${StringEscapeUtils.escapeJava(_postData.value.title)}",
                             "content": [
                                 {
-                                    "body": "${_postData.value.content.replace("\n", "\\n")}",
+                                    "body": "${StringEscapeUtils.escapeJava(_postData.value.content)}",
                                     "type": "text"
                                 },
                                 {
@@ -116,7 +117,6 @@ class CommunityScreenVM @Inject constructor(
                                 }
                             ]
                         }""".trimIndent()
-            println("${_postData.value.content.replace("\n", "\\n")}")
                 while(isRetry){
                     if (accessToken != null && accessToken != "") {
                         Fuel.post("$base_url/post/create")
@@ -250,7 +250,9 @@ class CommunityScreenVM @Inject constructor(
                                             val content = item.getJSONArray("content")
                                             val authorName = item.getJSONObject("author").getString("username")
                                             val contentText =
-                                                content.getJSONObject(0).getString("body").replace("\\n", "\n")
+                                                content.getJSONObject(0).getString("body")
+                                            val contentEscape =
+                                                StringEscapeUtils.unescapeJava(contentText)
                                             var imageUrl = ""
                                             if (content.length() >= 2) {
                                                 imageUrl = content.getJSONObject(1).getString("body")
@@ -264,11 +266,11 @@ class CommunityScreenVM @Inject constructor(
                                                     .getString("_id"),
                                                 communityName = item.getJSONObject("communityId")
                                                     .getString("communityName"),
-                                                content = contentText,
+                                                content = contentEscape,
                                                 imageUrl = imageUrl,
                                                 createdAt = formatter.parse(item.getString("createdAt")),
                                                 interestCount = item.getInt("interestCount"),
-                                                title = item.getString("title"),
+                                                title = StringEscapeUtils.unescapeJava(item.getString("title")),
                                                 isLike = isLike,
                                                 commentCount = item.getInt("commentCount")
 
@@ -449,8 +451,8 @@ class CommunityScreenVM @Inject constructor(
                                                 id = data.getString("_id"),
                                                 owner = data.getJSONObject("owner").getString("_id"),
                                                 icon = data.getString("icon"),
-                                                description = data.getString("description").replace("\\n","\n"),
-                                                rules = data.getString("rules").replace("\\n","\n"),
+                                                description = StringEscapeUtils.unescapeJava(data.getString("description")),
+                                                rules = StringEscapeUtils.unescapeJava(data.getString("rules")),
                                                 communityName = data.getString("communityName"),
                                                 memberCount = data.getInt("memberCount"),
                                             )

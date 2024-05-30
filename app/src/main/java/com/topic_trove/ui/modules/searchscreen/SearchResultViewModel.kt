@@ -23,6 +23,7 @@ import com.topic_trove.ui.core.values.AppStrings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringEscapeUtils
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -337,8 +338,8 @@ class SearchResultViewModel @Inject constructor(
                                                 id = item.getString("_id"),
                                                 owner = item.getJSONObject("owner").getString("_id"),
                                                 icon = item.getString("icon"),
-                                                description = item.getString("description"),
-                                                rules = item.getString("rules"),
+                                                description =StringEscapeUtils.unescapeJava( item.getString("description")),
+                                                rules = StringEscapeUtils.unescapeJava(item.getString("rules")),
                                                 communityName = item.getString("communityName"),
                                                 memberCount = item.getInt("memberCount")
                                             )
