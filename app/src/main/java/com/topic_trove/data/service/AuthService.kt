@@ -22,5 +22,5 @@ interface AuthService {
     suspend fun login(@Body loginRequest: LoginRequest): RegisterResponse
 
     @GET("/api/v1/token/refresh-token")
-    fun refresh(): RefreshResponse
+    suspend fun refresh(): RefreshResponse
 }

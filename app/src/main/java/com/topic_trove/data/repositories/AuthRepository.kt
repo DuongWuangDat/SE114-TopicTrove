@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Retrofit
+import retrofit2.await
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.net.ssl.HttpsURLConnection
@@ -30,7 +31,7 @@ interface AuthRepository {
     suspend fun sendEmail(email: String): Result<SendEmailResponse>
 
     suspend fun login(email: String, password: String): Result<RegisterResponse>
-    fun refresh(): Result<RefreshResponse>
+    suspend fun refresh(): Result<RefreshResponse>
 }
 
 class AuthRepositoryImpl @Inject constructor(
@@ -69,7 +70,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun refresh(): Result<RefreshResponse> {
+    override suspend fun refresh(): Result<RefreshResponse> {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -105,6 +106,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = authService.refresh()
             Result.success(response)
         } catch (e: Exception) {
+            sharePreferenceProvider.clearAll()
             Result.failure(e)
         }
     }

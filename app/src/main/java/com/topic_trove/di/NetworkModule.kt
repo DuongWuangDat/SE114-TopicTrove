@@ -3,6 +3,7 @@ package com.topic_trove.di
 import com.google.gson.GsonBuilder
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import com.topic_trove.ui.core.utils.AppEvent
+import com.topic_trove.ui.core.utils.SavedUser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

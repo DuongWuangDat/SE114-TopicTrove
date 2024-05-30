@@ -4,6 +4,10 @@ package com.topic_trove.di
 import com.topic_trove.data.repositories.AuthRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import dagger.Lazy
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -23,16 +27,18 @@ class ClientAuthenticator @Inject constructor(
                 if (isRefreshTokenRequest) return null
             }
             val authRepository = authRepositoryWrapper.get()
-            authRepository.refresh()
-                .onSuccess {
-                    sharePreferenceProvider.save<String>(
-                        SharePreferenceProvider.ACCESS_TOKEN,
-                        it.accessToken
-                    )
-                    return response.request.newBuilder()
-                        .header("Authorization", "Bearer ${it.accessToken}")
-                        .build()
-                }
+            GlobalScope.async {
+                authRepository.refresh()
+                    .onSuccess {
+                        sharePreferenceProvider.save<String>(
+                            SharePreferenceProvider.ACCESS_TOKEN,
+                            it.accessToken
+                        )
+                        return@async response.request.newBuilder()
+                            .header("Authorization", "Bearer ${it.accessToken}")
+                            .build()
+                    }
+            }
             return null
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -48,9 +50,11 @@ fun CommunityTitle(
 
 ){
 
-    Column (modifier = modifier.background(color = Color.White).clickable {
-        onClick()
-    }){
+    Column (modifier = modifier
+        .background(color = Color.White)
+        .clickable {
+            onClick()
+        }){
         CommunityHeader(
             community = community,
             isJoin = isJoin,
@@ -80,7 +84,7 @@ fun CommunityHeader(
 
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
-        .height(45.dp)
+        .height(IntrinsicSize.Min)
         .background(color = Color.White)
         ) {
         var icon = createRef()
@@ -102,13 +106,19 @@ fun CommunityHeader(
             top.linkTo(parent.top, margin = 14.dp)
             start.linkTo(icon.end, margin = 10.dp)
         }) {
-            Text(text = if (community.communityName=="") "community1" else community.communityName, style = CustomTextStyle.communityTitle())
+            Text(text = if (community.communityName=="") "community1" else community.communityName,
+                modifier = Modifier.fillMaxWidth(fraction = 0.7f),
+                style = CustomTextStyle.communityTitle(),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+
+            )
             Spacer(modifier = Modifier.height(3.dp))
             Text(text = "${community.memberCount} member", style = CustomTextStyle.communityCountMember())
-
         }
-
         var buttonJoin =createRef()
+
+
 
         if(!isAuthor){
             if(!isJoin.value){
@@ -131,6 +141,8 @@ fun CommunityHeader(
                 }
             }
         }
+
+
 
 
 

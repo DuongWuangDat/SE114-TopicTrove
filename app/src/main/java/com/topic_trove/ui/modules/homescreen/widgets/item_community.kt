@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -62,11 +63,17 @@ fun Item_Community(
 
 
         val column = createRef()
-        Column(modifier = Modifier.constrainAs(column){
+        Column(modifier = Modifier.fillMaxWidth(fraction = 0.7f).constrainAs(column){
             top.linkTo(parent.top, margin = 5.dp)
             start.linkTo(icon.end, margin = 20.dp)
         }) {
-            Text(text = if (community.communityName== "") "community2" else community.communityName, style = CustomTextStyle.itemCommunity())
+
+            Text(text = if (community.communityName== "") "community2" else community.communityName,
+                style = CustomTextStyle.itemCommunity(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+
+            )
             Spacer(modifier = Modifier.height(5.dp))
         }
 

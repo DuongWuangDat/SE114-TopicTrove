@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.topic_trove.data.model.Community
@@ -57,7 +58,12 @@ fun TopbarCommunity(
             top.linkTo(parent.top, margin = 5.dp)
             start.linkTo(icon.end, margin = 20.dp)
         }) {
-            Text(text = if (community.communityName== "") "community1" else community.communityName, style = CustomTextStyle.communityTitle())
+            Text(text = if (community.communityName== "") "community1" else community.communityName,
+                modifier = Modifier.fillMaxWidth(fraction = 0.7f),
+                style = CustomTextStyle.communityTitle(),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+                )
             Spacer(modifier = Modifier.height(3.dp))
             Text(text = "${community.memberCount} member", style = CustomTextStyle.communityCountMember())
         }

@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.topic_trove.ui.routes.AppRoutes
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -47,9 +48,9 @@ fun CommunityTab(
     navController: NavController
 ) {
 
-
     AnimatedVisibility(
         visible = isVisible,
+        modifier = Modifier.fillMaxWidth(fraction = 0.6f).background(Color.White),
         enter = slideInHorizontally(
             initialOffsetX = { -200 },
             animationSpec = tween(durationMillis = 300)
@@ -62,7 +63,7 @@ fun CommunityTab(
         Box(
             Modifier
                 .fillMaxHeight()
-                .width(200.dp)
+                .fillMaxWidth(fraction = 0.8f)
                 .background(Color.White)
                 .padding(16.dp)
         ) {

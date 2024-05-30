@@ -75,7 +75,7 @@ class PostDetailViewModel @Inject constructor(
                             communityName = response.communityId?.communityName ?: "",
                             content = response.content?.get(0)?.body ?: "",
                             title = response.title ?: "",
-                            imageUrl = "",
+                            imageUrl = if(response.content?.size!! >1) response.content?.get(1)?.body ?: "" else "",
                             avatar = response.author?.avatar ?: "",
                             createdAt = response.createdAt ?: Date(),
                             interestCount = response.interestCount ?: 0,
