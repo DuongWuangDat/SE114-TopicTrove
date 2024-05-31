@@ -28,6 +28,7 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController): Strin
                                 var jsonObj = JSONObject(d)
                                 print(jsonObj)
                                 accessToken = jsonObj.getString("access_token")
+
                             },
                             { err ->
                                 println("Error: $err")
@@ -37,7 +38,7 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController): Strin
 
                     401 -> {
                         println("Navigate to login")
-                        navController.navigate(AppRoutes.loginRoute) {
+                        navController.navigate(AppRoutes.welcome) {
                             popUpTo(navController.graph.startDestinationId) {
                                 inclusive = true
                             }
@@ -58,3 +59,4 @@ fun CheckRefreshToken(refreshToken: String, navController: NavController): Strin
         return accessToken
     }
 }
+

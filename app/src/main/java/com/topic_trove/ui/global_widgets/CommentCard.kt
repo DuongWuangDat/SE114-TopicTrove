@@ -98,7 +98,7 @@ fun CommentCard(
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
                         text = data.authorName,
-                        style = CustomTextStyle.PostNameText()
+                        style = CustomTextStyle.postNameText()
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     // Date

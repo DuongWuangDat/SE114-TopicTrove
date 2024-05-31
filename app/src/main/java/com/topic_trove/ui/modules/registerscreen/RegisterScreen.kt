@@ -43,8 +43,9 @@ import com.topic_trove.ui.modules.registerscreen.states.TextFieldState
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
-    onSignInSubmitted: (name: String, phone: String, email: String, password: String) -> Unit,
     snackBarHostState: SnackbarHostState = SnackbarHostState(),
+    onNavUp: () -> Unit,
+    onSignInSubmitted: (name: String, phone: String, email: String, password: String) -> Unit,
 ) {
 
     Scaffold(
@@ -54,6 +55,7 @@ fun RegisterScreen(
         topBar = {
             MyTopCenterAppBar(
                 topAppBarText = stringResource(id = R.string.register),
+                onNavUp = onNavUp,
             )
         },
         content = { contentPadding ->
@@ -69,7 +71,10 @@ fun RegisterScreen(
             val onSubmit = {
                 if (nameState.isValid && phoneState.isValid && emailState.isValid && passwordState.isValid && confirmPasswordState.isValid) {
                     onSignInSubmitted(
-                        nameState.text, phoneState.text, emailState.text, passwordState.text
+                        nameState.text.trim(),
+                        phoneState.text.trim(),
+                        emailState.text.trim(),
+                        passwordState.text.trim()
                     )
                 }
             }
@@ -121,7 +126,7 @@ fun RegisterScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = stringResource(R.string.email), style = TextStyle(
+                        text = stringResource(R.string.txt_email), style = TextStyle(
                             color = AppColors.TitleFieldCreatePost,
                             fontSize = 14.sp,
                             fontWeight = FontWeight(500),
@@ -201,5 +206,6 @@ fun RegisterScreen(
 private fun RegisterScreenPreview() {
     RegisterScreen(
         onSignInSubmitted = { _, _, _, _ -> },
+        onNavUp = {}
     )
 }

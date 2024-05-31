@@ -11,14 +11,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.topic_trove.ui.global_widgets.OverlayLoading
@@ -32,11 +30,12 @@ import com.topic_trove.ui.modules.communityscreen.widgets.TopBarCreatePost
 @Composable
 fun createpostScreen(
     navController: NavController,
-    communityName: String
+    communityName: String,
+    communityId: String
 ) {
 
-    val communityVM = viewModel<CommunityScreenVM>()
-    val post by communityVM.postData.collectAsState()
+    val communityVM :CommunityScreenVM = hiltViewModel()
+    val userId = communityVM.IdUser
     val snackbarHostState = communityVM.snackbarHostState
     Scaffold(
         snackbarHost = {
@@ -56,13 +55,14 @@ fun createpostScreen(
                     navController.popBackStack()
                 },
                 onCreateClick = {
-                    communityVM.createPostApi(navController)
+                    if (userId != null) {
+                        communityVM.createPostApi(navController, communityId, userId)
+                    }
 
                 }
             )
-            collumnContent(
+            CollumnContent(
                 communityVM = communityVM,
-                snackbarHostState = snackbarHostState,
                 communityName = communityName
             )
 
@@ -74,10 +74,9 @@ fun createpostScreen(
 }
 
 @Composable
-fun collumnContent(
+fun CollumnContent(
     communityVM: CommunityScreenVM,
     communityName: String,
-    snackbarHostState: SnackbarHostState
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -101,13 +100,8 @@ fun collumnContent(
         }
         Spacer(modifier = Modifier.height(16.dp))
         ImageBlock(
-            isLoading = communityVM.isLoading,
-            snackbarHostState = snackbarHostState,
             uploadImage = { file ->
                 communityVM.uploadImgApi(file)
-            },
-            inputImage = {
-                communityVM.inputImage(it)
             }
         )
 

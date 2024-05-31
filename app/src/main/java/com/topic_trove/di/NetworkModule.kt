@@ -1,15 +1,20 @@
 package com.topic_trove.di
 
 import com.google.gson.GsonBuilder
+import com.topic_trove.data.sharepref.SharePreferenceProvider
+import com.topic_trove.ui.core.utils.AppEvent
+import com.topic_trove.ui.core.utils.SavedUser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import javax.net.ssl.HttpsURLConnection
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -17,19 +22,23 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitClient(): OkHttpClient {
+    fun provideRetrofitClient(
+        sharePreferenceProvider: SharePreferenceProvider,
+        authenticator: ClientAuthenticator,
+    ): OkHttpClient {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
-                // TODO access token when login
+                val accessToken =
+                    sharePreferenceProvider.getAccessToken()
                 val authorization =
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFkZWQ2MzlhOWVjYzRjMjUyNTc3NGQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcxMzYwNTAxNSwiZXhwIjoxNzE2MTk3MDE1fQ.OYasn0W85JmIRWeOiTl69Br3z7l6lZDglRaz94dnbQU"
+                    "Bearer $accessToken"
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", authorization).build()
-
                 chain.proceed(request)
             }
             .addInterceptor(logger)
+            .authenticator(authenticator)
             .build()
     }
 

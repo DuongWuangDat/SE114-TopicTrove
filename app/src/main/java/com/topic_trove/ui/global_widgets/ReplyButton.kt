@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +28,7 @@ fun ReplyButton(
 ) {
 
     Row(modifier = modifier
+        .height(27.dp)
         .clickable {
             onReplyFunc()
         }
@@ -41,13 +43,13 @@ fun ReplyButton(
         Text(
             text = "Reply",
             color = AppColors.CreatePostButton,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
             style = TextStyle(
                 fontSize = 10.sp,
                 fontWeight = FontWeight(500),
                 lineHeight = 12.sp 
             )
         )
-        Spacer(modifier = Modifier.width(10.dp))
+      //  Spacer(modifier = Modifier.width(10.dp))
     }
 }

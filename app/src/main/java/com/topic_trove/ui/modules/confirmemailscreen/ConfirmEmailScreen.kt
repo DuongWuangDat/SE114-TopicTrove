@@ -47,7 +47,7 @@ fun ConfirmEmailScreen(
     modifier: Modifier = Modifier,
     onSubmitted: (otpValue: String) -> Unit,
     onNavUp: () -> Unit,
-    snackBarHostState: SnackbarHostState = SnackbarHostState()
+    snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     Scaffold(
         snackbarHost = {

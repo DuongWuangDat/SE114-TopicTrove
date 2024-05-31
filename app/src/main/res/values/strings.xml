@@ -8,6 +8,7 @@
     <string name="title_activity_post_card">PostCard</string>
     <string name="title_activity_delete_button">Delete_Button</string>
     <string name="email">email</string>
+    <string name="txt_email">Email</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
     <string name="back">Back</string>
@@ -25,6 +26,8 @@
     <string name="reply">Reply</string>
     <string name="post">Post</string>
     <string name="add_comment">Add comment</string>
+    <string name="title_activity_homescreen_view_model">homescreenViewModel</string>
+    <string name="login">Login</string>
     <string name="upload_your_avatar">Upload your avatar</string>
     <string name="upload_another">Upload another</string>
 </resources>

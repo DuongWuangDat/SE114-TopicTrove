@@ -9,7 +9,6 @@ import com.topic_trove.data.model.Post
 import com.topic_trove.data.repositories.PostRepository
 import com.topic_trove.data.sharepref.SharePreferenceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,7 +42,7 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.likePost(
                 id = postId,
-                likeRequest = LikeRequest(authorId, interest),
+                likeRequest = LikeRequest(idUser, interest),
             ).onSuccess {
                 _postDetailUiState.update { uiState ->
                     uiState.copy(
@@ -54,7 +53,7 @@ class PostDetailViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
-                // TODO handle error
+                snackBarHostState.showSnackbar("Like post fail with message ${it.message}")
             }
         }
     }
@@ -76,7 +75,7 @@ class PostDetailViewModel @Inject constructor(
                             communityName = response.communityId?.communityName ?: "",
                             content = response.content?.get(0)?.body ?: "",
                             title = response.title ?: "",
-                            imageUrl = "",
+                            imageUrl = if(response.content?.size!! >1) response.content?.get(1)?.body ?: "" else "",
                             avatar = response.author?.avatar ?: "",
                             createdAt = response.createdAt ?: Date(),
                             interestCount = response.interestCount ?: 0,
@@ -127,7 +126,7 @@ class PostDetailViewModel @Inject constructor(
                 getCommentByPostId(postDetailUiState.value.post.id)
                 snackBarHostState.showSnackbar("Delete comment successfully")
             }.onFailure {
-                // TODO handle error
+                snackBarHostState.showSnackbar("Delete comment fail")
             }
         }
     }
@@ -140,11 +139,11 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.likeComment(
                 id = commentId,
-                likeRequest = LikeRequest(authorId, interest),
+                likeRequest = LikeRequest(idUser, interest),
             ).onSuccess {
                 getCommentByPostId(postDetailUiState.value.post.id)
             }.onFailure {
-                // TODO handle error
+                snackBarHostState.showSnackbar("Like comment fail with message ${it.message}")
             }
         }
     }

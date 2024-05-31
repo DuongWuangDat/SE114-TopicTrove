@@ -7,11 +7,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun RegisterRoute(
     registerViewModel: RegisterViewModel = hiltViewModel(),
     onSignUpSubmitted: () -> Unit,
+    onNavUp: () -> Unit,
 ) {
     RegisterScreen(
         snackBarHostState = registerViewModel.snackBarHostState,
         onSignInSubmitted = { name, phone, email, password ->
             registerViewModel.sendEmail(name, phone, email, password, onSignUpSubmitted)
         },
+        onNavUp = onNavUp,
     )
 }
