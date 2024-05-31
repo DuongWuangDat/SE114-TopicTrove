@@ -26,6 +26,7 @@ import com.topic_trove.ui.modules.registerscreen.RegisterRoute
 import com.topic_trove.ui.modules.replyscreen.ReplyCommentRoute
 import com.topic_trove.ui.modules.searchscreen.SearchScreenRoute
 import com.topic_trove.ui.modules.splashscreen.SplashRoute
+import com.topic_trove.ui.modules.uploadavatar.UploadAvatarRoute
 
 
 @Composable
@@ -96,7 +97,7 @@ fun NavControl(
         composable(route = AppRoutes.registerRoute) {
             RegisterRoute(
                 onSignUpSubmitted = {
-                    navController.navigate(AppRoutes.confirmEmailRoute)
+                    navController.navigate(AppRoutes.uploadAvatar)
                 },
                 onNavUp = navController::navigateUp,
             )
@@ -181,5 +182,14 @@ fun NavControl(
             SearchScreenRoute(navController = navController)
         }
 
+
+        composable(route = AppRoutes.uploadAvatar) {
+            UploadAvatarRoute(
+                onSubmitted = {
+                    navController.navigate(AppRoutes.confirmEmailRoute)
+                },
+                onNavUp = navController::navigateUp,
+            )
+        }
     }
 }

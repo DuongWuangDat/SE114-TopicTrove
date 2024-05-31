@@ -63,7 +63,7 @@ fun ConfirmEmailScreen(
         ConstraintLayout(
             modifier = modifier
                 .background(color = AppColors.White)
-                .padding(horizontal = 24.dp)
+                .padding(start = 22.dp, end = 16.dp)
                 .fillMaxSize()
         ) {
             var otpValue by remember {
@@ -85,7 +85,7 @@ fun ConfirmEmailScreen(
                 contentPadding = contentPadding,
             ) {
                 item {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         textAlign = TextAlign.Center,
                         text = stringResource(R.string.enter_the_code),
@@ -96,7 +96,7 @@ fun ConfirmEmailScreen(
                             lineHeight = 17.sp,
                         )
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
                     BasicTextField(
                         value = otpValue,
                         onValueChange = {
@@ -109,7 +109,7 @@ fun ConfirmEmailScreen(
                         ),
                         decorationBox = {
                             Row(
-                                horizontalArrangement = Arrangement.Center,
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 repeat(6) { index ->
@@ -120,7 +120,7 @@ fun ConfirmEmailScreen(
                                     val isFocused = index == otpValue.length
                                     Box(
                                         modifier = Modifier
-                                            .width(50.dp)
+                                            .weight(1f)
                                             .height(80.dp)
                                             .border(
                                                 width = if (isFocused) 2.dp else 1.dp,
@@ -142,7 +142,6 @@ fun ConfirmEmailScreen(
 
                                     Spacer(modifier = Modifier.width(6.dp))
                                 }
-
                             }
                         }
                     )

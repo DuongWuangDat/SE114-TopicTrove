@@ -17,5 +17,6 @@ class AppRoutes {
         val splash = "/splash"
         val editProfileRoute = "/home/profile/edit"
         val searchRoute = "/home/search"
+        val uploadAvatar = "/uploadavatar"
     }
 }

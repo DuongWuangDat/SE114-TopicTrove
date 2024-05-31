@@ -23,7 +23,10 @@ class ConfirmEmailViewModel @Inject constructor(
         otpValue: String,
         registerSuccess: () -> Unit,
     ) {
-        if (otpValue != savedUser.userCode) {
+        if (otpValue.lowercase() != savedUser.userCode.lowercase()) {
+            viewModelScope.launch {
+                snackBarHostState.showSnackbar("Invalid OTP")
+            }
             return
         }
         viewModelScope.launch {
@@ -32,6 +35,7 @@ class ConfirmEmailViewModel @Inject constructor(
                 phone = savedUser.phoneNumber,
                 email = savedUser.email,
                 password = savedUser.password,
+                avatar = savedUser.avatar,
             ).onSuccess {
                 println(it.accessToken)
                 sharePreferenceProvider.saveAccessToken(it.accessToken)
